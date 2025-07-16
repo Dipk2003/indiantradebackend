@@ -183,6 +183,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jcache</artifactId>
+			<version>6.6.4.Final</version>
 		</dependency>
 	</dependencies>
 
