@@ -1,5 +1,5 @@
 # Multi-stage build for optimal image size
-FROM maven:3.9.4-openjdk-21-slim AS builder
+FROM maven:3.9.6-eclipse-temurin-21-jammy AS builder
 
 # Set working directory
 WORKDIR /app
