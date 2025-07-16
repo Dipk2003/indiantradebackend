@@ -177,6 +177,17 @@
 		<dependency>
 			<groupId>org.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
+			<version>3.10.8</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.glassfish.jaxb</groupId>
+					<artifactId>jaxb-runtime</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<!-- Hibernate JCache Integration -->
@@ -184,6 +195,18 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jcache</artifactId>
 			<version>6.6.4.Final</version>
+		</dependency>
+		
+		<!-- JAXB API for Java 21 compatibility -->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+		</dependency>
+		
+		<!-- JAXB Runtime for Java 21 compatibility -->
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
 		</dependency>
 	</dependencies>
 
