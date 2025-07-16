@@ -27,12 +27,8 @@ WORKDIR /app
 # Copy built JAR from builder stage
 COPY --from=builder /app/target/itech-backend-0.0.1-SNAPSHOT.jar app.jar
 
-# Copy startup script
-COPY start.sh /app/start.sh
-
 # Create necessary directories and set permissions
 RUN mkdir -p uploads logs && \
-    chmod +x /app/start.sh && \
     chown -R appuser:appuser /app
 
 # Switch to non-root user
