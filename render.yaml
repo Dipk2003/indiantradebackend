@@ -1,0 +1,69 @@
+services:
+  - type: web
+    name: itech-backend
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
+    autoDeploy: true
+    region: ohio
+    branch: main
+    buildCommand: echo "Building with Docker..."
+    startCommand: echo "Starting with Docker..."
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: PORT
+        value: 8080
+      - key: DATABASE_URL
+        fromDatabase:
+          name: itech-mysql
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: itech-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: itech-mysql
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION
+        value: 86400000
+      - key: ALLOWED_ORIGINS
+        value: https://your-frontend-domain.com,https://www.your-frontend-domain.com
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: QUICKO_API_BASE_URL
+        value: https://api.quicko.com
+      - key: QUICKO_API_KEY
+        sync: false
+      - key: QUICKO_API_ENABLED
+        value: true
+      - key: QUICKO_API_TIMEOUT
+        value: 30
+      - key: QUICKO_API_RETRY_ATTEMPTS
+        value: 3
+      - key: QUICKO_API_RETRY_DELAY
+        value: 1000
+
+databases:
+  - name: itech-mysql
+    plan: starter
+    databaseName: itech_db_prod
+    user: itech_user
+    region: ohio
