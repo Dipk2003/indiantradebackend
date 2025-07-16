@@ -166,6 +166,24 @@
 			<artifactId>s3</artifactId>
 			<version>2.20.162</version>
 		</dependency>
+
+		<!-- JCache API for Hibernate Second Level Cache -->
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+		</dependency>
+		
+		<!-- EhCache as JCache Implementation -->
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+		</dependency>
+		
+		<!-- Hibernate JCache Integration -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jcache</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
