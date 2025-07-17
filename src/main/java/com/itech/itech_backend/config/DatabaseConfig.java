@@ -78,7 +78,7 @@ public class DatabaseConfig {
             if ("postgres".equals(scheme) || "postgresql".equals(scheme)) {
                 // Use default PostgreSQL port 5432 if not specified
                 int actualPort = port != -1 ? port : 5432;
-                jdbcUrl = String.format("jdbc:postgresql://%s:%d%s", host, actualPort, path);
+                jdbcUrl = String.format("jdbc:postgresql://%s:%d%s?sslmode=require", host, actualPort, path);
                 driverClassName = "org.postgresql.Driver";
             } else if ("mysql".equals(scheme)) {
                 // Use default MySQL port 3306 if not specified
