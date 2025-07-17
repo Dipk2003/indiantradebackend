@@ -1,5 +1,7 @@
 package com.itech.itech_backend.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,10 +76,14 @@ public class DatabaseConfig {
             String driverClassName;
             
             if ("postgres".equals(scheme) || "postgresql".equals(scheme)) {
-                jdbcUrl = String.format("jdbc:postgresql://%s:%d%s", host, port, path);
+                // Use default PostgreSQL port 5432 if not specified
+                int actualPort = port != -1 ? port : 5432;
+                jdbcUrl = String.format("jdbc:postgresql://%s:%d%s", host, actualPort, path);
                 driverClassName = "org.postgresql.Driver";
             } else if ("mysql".equals(scheme)) {
-                jdbcUrl = String.format("jdbc:mysql://%s:%d%s", host, port, path);
+                // Use default MySQL port 3306 if not specified
+                int actualPort = port != -1 ? port : 3306;
+                jdbcUrl = String.format("jdbc:mysql://%s:%d%s", host, actualPort, path);
                 driverClassName = "com.mysql.cj.jdbc.Driver";
             } else {
                 throw new IllegalArgumentException("Unsupported database scheme: " + scheme);
