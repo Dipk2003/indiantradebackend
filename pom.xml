@@ -88,6 +88,12 @@
 			<scope>runtime</scope>
 		</dependency>
 		
+		<!-- HikariCP Connection Pool -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+		</dependency>
+		
 		<!-- Flyway for database migrations -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
