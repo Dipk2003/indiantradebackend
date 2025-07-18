@@ -4,7 +4,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,7 +26,6 @@ public class RenderDataSourceConfig {
 
     @Bean
     @Primary
-    @ConfigurationProperties("spring.datasource.hikari")
     public DataSource dataSource() {
         logger.info("Configuring DataSource for Render deployment");
         
@@ -35,12 +33,17 @@ public class RenderDataSourceConfig {
         String username = env.getProperty("JDBC_DATABASE_USERNAME");
         String password = env.getProperty("JDBC_DATABASE_PASSWORD");
         
-        // Ensure SSL is configured
-        if (jdbcUrl != null && !jdbcUrl.contains("sslmode=")) {
+        // Validate required properties
+        if (jdbcUrl == null || username == null || password == null) {
+            throw new IllegalStateException("Missing required database environment variables");
+        }
+        
+        // Ensure SSL is configured for PostgreSQL
+        if (jdbcUrl.contains("postgresql") && !jdbcUrl.contains("sslmode=")) {
             jdbcUrl = jdbcUrl + (jdbcUrl.contains("?") ? "&" : "?") + "sslmode=require";
         }
         
-        logger.info("Database URL: {}", jdbcUrl);
+        logger.info("Database URL: {}", jdbcUrl.replaceAll("password=[^&]*", "password=***"));
         logger.info("Database Username: {}", username);
         
         HikariConfig config = new HikariConfig();
@@ -49,7 +52,7 @@ public class RenderDataSourceConfig {
         config.setPassword(password);
         config.setDriverClassName("org.postgresql.Driver");
         
-        // Connection pool settings optimized for Render
+        // Optimized connection pool settings for Render free tier
         config.setMaximumPoolSize(3);
         config.setMinimumIdle(1);
         config.setConnectionTimeout(30000);
@@ -58,9 +61,13 @@ public class RenderDataSourceConfig {
         config.setMaxLifetime(1800000);
         config.setLeakDetectionThreshold(60000);
         config.setConnectionTestQuery("SELECT 1");
-        config.setConnectionInitSql("SELECT 1");
         config.setPoolName("RenderHikariCP");
         
+        // Additional stability settings
+        config.addDataSourceProperty("ApplicationName", "itech-backend");
+        config.addDataSourceProperty("stringtype", "unspecified");
+        
+        logger.info("HikariCP configuration completed successfully");
         return new HikariDataSource(config);
     }
 }
