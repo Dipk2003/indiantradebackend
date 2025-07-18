@@ -4,22 +4,22 @@ import com.itech.itech_backend.model.User;
 import com.itech.itech_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserMigrationService implements CommandLineRunner {
+public class UserMigrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public void run(String... args) throws Exception {
+    @PostConstruct
+    public void init() {
         migrateUsersWithoutPasswords();
     }
 
