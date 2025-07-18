@@ -8,12 +8,24 @@
   ],
   "routes": [
     {
+      "src": "/actuator/(.*)",
+      "dest": "/actuator/$1"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     },
     {
-      "src": "/actuator/(.*)",
-      "dest": "/actuator/$1"
+      "src": "/health",
+      "dest": "/health"
+    },
+    {
+      "src": "/status",
+      "dest": "/status"
+    },
+    {
+      "src": "/",
+      "dest": "/"
     },
     {
       "src": "/(.*)",
@@ -21,11 +33,12 @@
     }
   ],
   "env": {
-    "SPRING_PROFILES_ACTIVE": "production"
+    "SPRING_PROFILES_ACTIVE": "vercel"
   },
   "functions": {
-    "src/main/java/com/itech/itech_backend/ItechBackendApplication.java": {
+    "target/itech-backend-0.0.1-SNAPSHOT.jar": {
       "runtime": "java11"
     }
-  }
+  },
+  "buildCommand": "./mvnw clean package -DskipTests"
 }
