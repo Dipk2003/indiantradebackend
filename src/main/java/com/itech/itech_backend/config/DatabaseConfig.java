@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 @Profile("!render")
 public class DatabaseConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
     private final Environment env;
 
     public DatabaseConfig(Environment env) {
@@ -28,14 +29,15 @@ public class DatabaseConfig {
 
     @Bean
     @Primary
-    @ConfigurationProperties("spring.datasource.hikari")
     public DataSource dataSource() {
         String databaseUrl = env.getProperty("DATABASE_URL");
         
         if (databaseUrl != null && !databaseUrl.isEmpty()) {
+            logger.info("Configuring DataSource from DATABASE_URL");
             // Parse DATABASE_URL for Render/Heroku style URLs
             return createDataSourceFromUrl(databaseUrl);
         } else {
+            logger.info("Configuring DataSource from individual properties");
             // Use standard Spring Boot configuration
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(env.getProperty("spring.datasource.url"));
@@ -43,12 +45,12 @@ public class DatabaseConfig {
             config.setPassword(env.getProperty("spring.datasource.password"));
             config.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
             
-            // Connection pool settings
-            config.setMaximumPoolSize(20);
-            config.setMinimumIdle(5);
-            config.setConnectionTimeout(60000);
+            // Connection pool settings - reduced for stability
+            config.setMaximumPoolSize(5);
+            config.setMinimumIdle(2);
+            config.setConnectionTimeout(30000);
             config.setIdleTimeout(300000);
-            config.setMaxLifetime(900000);
+            config.setMaxLifetime(600000);
             
             return new HikariDataSource(config);
         }
