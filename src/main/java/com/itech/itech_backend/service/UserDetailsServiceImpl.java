@@ -7,6 +7,7 @@ import com.itech.itech_backend.repository.AdminsRepository;
 import com.itech.itech_backend.repository.UserRepository;
 import com.itech.itech_backend.repository.VendorsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
