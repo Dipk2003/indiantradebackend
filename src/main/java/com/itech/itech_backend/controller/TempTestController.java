@@ -151,7 +151,7 @@ public class TempTestController {
     }
 
     // Test endpoint to check if backend is working
-    @GetMapping("/health")
+    @GetMapping("/test-health")
     public ResponseEntity<Map<String, Object>> healthCheck() {
         Map<String, Object> health = new HashMap<>();
         health.put("status", "Backend is running successfully!");
