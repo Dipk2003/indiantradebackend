@@ -80,12 +80,26 @@ public class ProductController {
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<Product>> getProductsByCategory(
-            @PathVariable Long categoryId,
+            @PathVariable String categoryId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size) {
         try {
+            // Validate categoryId parameter
+            if ("NaN".equals(categoryId) || categoryId == null || categoryId.trim().isEmpty()) {
+                log.warn("Invalid categoryId received: {}", categoryId);
+                return ResponseEntity.badRequest().build();
+            }
+            
+            Long categoryIdLong;
+            try {
+                categoryIdLong = Long.parseLong(categoryId);
+            } catch (NumberFormatException e) {
+                log.warn("Invalid categoryId format: {}", categoryId);
+                return ResponseEntity.badRequest().build();
+            }
+            
             Pageable pageable = PageRequest.of(page, size);
-            Page<Product> products = productService.getProductsByCategory(categoryId, pageable);
+            Page<Product> products = productService.getProductsByCategory(categoryIdLong, pageable);
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             log.error("Error getting products by category", e);
