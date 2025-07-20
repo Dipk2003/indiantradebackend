@@ -60,7 +60,7 @@ services:
         
       # CORS Configuration
       - key: ALLOWED_ORIGINS
-        value: http://localhost:3000,https://your-frontend-domain.com
+        value: http://localhost:3000,https://itm-main-fronted-c4l8.vercel.app,https://www.itm-main-fronted-c4l8.vercel.app
         
       # Email Configuration
       - key: SMTP_HOST

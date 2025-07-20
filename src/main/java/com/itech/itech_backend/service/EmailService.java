@@ -39,6 +39,12 @@ public class EmailService {
     
     private void sendRealEmail(String email, String otp) {
         try {
+            System.out.println("\n🔧 EMAIL DEBUG INFO:");
+            System.out.println("From Email: " + fromEmail);
+            System.out.println("To Email: " + email);
+            System.out.println("MailSender null? " + (mailSender == null));
+            System.out.println("Simulation Enabled: " + simulationEnabled);
+            
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
@@ -47,11 +53,22 @@ public class EmailService {
             helper.setSubject("Indian Trade Mart - OTP Verification");
             helper.setText(buildOtpEmailContentHtml(otp), true);
             
+            System.out.println("📧 Attempting to send email...");
             mailSender.send(message);
+            
             log.info("✅ Email OTP sent successfully to: {}", email);
             System.out.println("✅ Real Email sent to: " + email + " with OTP: " + otp);
+            System.out.println("🔧 EMAIL DEBUG END\n");
             
         } catch (Exception e) {
+            System.out.println("❌ EMAIL ERROR DETAILS:");
+            System.out.println("Error Type: " + e.getClass().getSimpleName());
+            System.out.println("Error Message: " + e.getMessage());
+            if (e.getCause() != null) {
+                System.out.println("Root Cause: " + e.getCause().getMessage());
+            }
+            System.out.println("🔧 EMAIL ERROR END\n");
+            
             log.error("❌ Failed to send real email: {}", e.getMessage());
             throw new RuntimeException("Email sending failed", e);
         }
