@@ -1,21 +1,37 @@
-# Configuration Setup Guide
+# iTech Backend - Configuration Setup Guide
 
-This guide explains how to set up the application configuration files for the ITech Backend project.
+This guide explains the cleaned up configuration setup for the iTech Backend project.
 
 ## ⚠️ IMPORTANT SECURITY NOTICE
 
-**NEVER commit actual configuration files containing sensitive data to Git!**
+**NEVER commit files with actual credentials to Git! Use environment variables in production.**
+
+## Configuration Files Overview
+
+The project now has a simplified configuration structure:
+
+### Local Development
+- **`.env`** - Local environment variables
+- **`application.properties`** - Main Spring configuration (uses .env variables)
+
+### Production Deployment
+- **`.env.production`** - Production environment variables template (for Render.com)
+- **`application-production.properties`** - Production Spring configuration
 
 ## Quick Setup
 
-1. **Copy template files:**
-   ```bash
-   cp src/main/resources/application.properties.template src/main/resources/application.properties
-   ```
+### For Local Development:
+1. The `.env` file is already configured for local MySQL database
+2. Update credentials in `.env` file as needed:
+   - Database credentials
+   - Email credentials
+   - API keys
+3. Run the application with default profile (uses `application.properties`)
 
-2. **Edit the configuration files** with your actual values
-
-3. **The .gitignore file** will prevent accidental commits of sensitive config files
+### For Production (Render.com):
+1. Copy values from `.env.production` to Render's Environment Variables
+2. Set `SPRING_PROFILES_ACTIVE=production` in Render
+3. Replace placeholder values with actual credentials
 
 ## Required Configuration Values
 
@@ -51,14 +67,35 @@ twilio.phone.number=your_twilio_phone_number
 ## Files in Repository
 
 ✅ **Safe to commit:**
-- `application.properties.template`
+- `application.properties` (now uses environment variables)
+- `application-production.properties` (now uses environment variables)
 - `CONFIGURATION_README.md`
 - `.gitignore`
 
 ❌ **NEVER commit:**
-- `application.properties`
-- `application-production.properties`
-- Any file with actual credentials
+- `.env` (contains actual local credentials)
+- `.env.production` (contains production credential templates)
+- Any file with actual API keys or passwords
+
+## Environment Variables Structure
+
+### Local Development (.env)
+Contains actual values for local development:
+```bash
+JWT_SECRET=your_actual_secret
+SPRING_MAIL_PASSWORD=your_actual_password
+RAZORPAY_KEY_ID=your_actual_key
+# ... etc
+```
+
+### Production (.env.production)
+Template for Render.com environment variables:
+```bash
+JWT_SECRET=your_production_secret
+SPRING_MAIL_PASSWORD=your_production_password
+RAZORPAY_KEY_ID=your_production_key
+# ... etc
+```
 
 ## Security Best Practices
 
