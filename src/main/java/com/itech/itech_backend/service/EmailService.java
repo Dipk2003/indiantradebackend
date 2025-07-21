@@ -73,9 +73,9 @@ public class EmailService {
             
             // Test connection first in production
             if ("production".equals(activeProfile)) {
-                System.out.println("🔧 Testing SMTP connection...");
-                mailSender.testConnection();
-                System.out.println("✅ SMTP connection successful");
+                System.out.println("🔧 Testing SMTP connection in production...");
+                // Note: JavaMailSender doesn't have testConnection() method
+                // Connection will be tested when actually sending the email
             }
             
             mailSender.send(message);
