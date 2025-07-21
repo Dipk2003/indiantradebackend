@@ -23,15 +23,24 @@ public class EmailService {
     @Value("${email.simulation.enabled:true}")
     private boolean simulationEnabled;
     
+    @Value("${spring.profiles.active:default}")
+    private String activeProfile;
+    
     public void sendOtp(String email, String otp) {
         try {
+            log.info("🔧 EMAIL SERVICE DEBUG - Profile: {}, Simulation: {}, MailSender: {}", 
+                    activeProfile, simulationEnabled, (mailSender != null ? "Available" : "NULL"));
+            
             if (mailSender != null && !simulationEnabled) {
+                log.info("📧 Attempting to send REAL email to: {}", email);
                 sendRealEmail(email, otp);
             } else {
+                log.warn("📧 Sending SIMULATED email - MailSender: {}, Simulation: {}", 
+                        (mailSender != null), simulationEnabled);
                 sendSimulatedEmail(email, otp);
             }
         } catch (Exception e) {
-            log.error("❌ Failed to send email to: {} - Error: {}", email, e.getMessage());
+            log.error("❌ Failed to send email to: {} - Error: {}", email, e.getMessage(), e);
             // Fallback to console for debugging
             sendSimulatedEmail(email, otp);
         }
@@ -39,11 +48,18 @@ public class EmailService {
     
     private void sendRealEmail(String email, String otp) {
         try {
-            System.out.println("\n🔧 EMAIL DEBUG INFO:");
+            System.out.println("\n🔧 PRODUCTION EMAIL DEBUG INFO:");
+            System.out.println("Profile: " + activeProfile);
             System.out.println("From Email: " + fromEmail);
             System.out.println("To Email: " + email);
             System.out.println("MailSender null? " + (mailSender == null));
             System.out.println("Simulation Enabled: " + simulationEnabled);
+            System.out.println("OTP: " + otp);
+            
+            if (mailSender == null) {
+                log.error("❌ JavaMailSender is NULL - Mail configuration failed!");
+                throw new RuntimeException("JavaMailSender not configured properly");
+            }
             
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -53,24 +69,41 @@ public class EmailService {
             helper.setSubject("Indian Trade Mart - OTP Verification");
             helper.setText(buildOtpEmailContentHtml(otp), true);
             
-            System.out.println("📧 Attempting to send email...");
+            System.out.println("📧 Attempting to send email via SMTP...");
+            
+            // Test connection first in production
+            if ("production".equals(activeProfile)) {
+                System.out.println("🔧 Testing SMTP connection...");
+                mailSender.testConnection();
+                System.out.println("✅ SMTP connection successful");
+            }
+            
             mailSender.send(message);
             
-            log.info("✅ Email OTP sent successfully to: {}", email);
-            System.out.println("✅ Real Email sent to: " + email + " with OTP: " + otp);
-            System.out.println("🔧 EMAIL DEBUG END\n");
+            log.info("✅ Production Email OTP sent successfully to: {}", email);
+            System.out.println("✅ PRODUCTION Email sent to: " + email + " with OTP: " + otp);
+            System.out.println("🔧 PRODUCTION EMAIL DEBUG END\n");
             
         } catch (Exception e) {
-            System.out.println("❌ EMAIL ERROR DETAILS:");
+            System.out.println("❌ PRODUCTION EMAIL ERROR DETAILS:");
             System.out.println("Error Type: " + e.getClass().getSimpleName());
             System.out.println("Error Message: " + e.getMessage());
             if (e.getCause() != null) {
                 System.out.println("Root Cause: " + e.getCause().getMessage());
             }
-            System.out.println("🔧 EMAIL ERROR END\n");
+            System.out.println("Stack Trace:");
+            e.printStackTrace();
+            System.out.println("🔧 PRODUCTION EMAIL ERROR END\n");
             
-            log.error("❌ Failed to send real email: {}", e.getMessage());
-            throw new RuntimeException("Email sending failed", e);
+            log.error("❌ Failed to send production email to {}: {}", email, e.getMessage(), e);
+            
+            // In production, fallback to simulation instead of throwing exception
+            if ("production".equals(activeProfile)) {
+                log.warn("🔄 Production email failed, falling back to simulation for user: {}", email);
+                sendSimulatedEmail(email, otp);
+            } else {
+                throw new RuntimeException("Email sending failed", e);
+            }
         }
     }
     

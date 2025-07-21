@@ -216,8 +216,14 @@ public class UnifiedAuthService {
         }
         
         // Send OTP
-        if (dto.getEmail() != null) emailService.sendOtp(dto.getEmail(), otp);
-        if (dto.getPhone() != null) smsService.sendOtp(dto.getPhone(), otp);
+        if (dto.getEmail() != null) {
+            System.out.println("✉️ Sending OTP to email: " + dto.getEmail());
+            emailService.sendOtp(dto.getEmail(), otp);
+        }
+        if (dto.getPhone() != null) {
+            System.out.println("📱 Sending OTP to phone: " + dto.getPhone());
+            smsService.sendOtp(dto.getPhone(), otp);
+        }
         
         return "OTP sent to your email and phone";
     }
