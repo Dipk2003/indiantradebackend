@@ -35,8 +35,21 @@ public class UnifiedAuthService {
         
         // Check if user already exists
         if (userRepository.existsByEmail(dto.getEmail()) || userRepository.existsByPhone(dto.getPhone())) {
-            System.out.println("❌ User already exists with email: " + dto.getEmail());
-            return "User already exists with this email or phone number";
+            System.out.println("⚠️ User already exists with email: " + dto.getEmail());
+            
+            // Find existing user
+            Optional<User> existingUserOpt = userRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+            if (existingUserOpt.isPresent()) {
+                User existingUser = existingUserOpt.get();
+                
+                // If user is not verified, resend OTP
+                if (!existingUser.isVerified()) {
+                    System.out.println("🔄 User exists but not verified, resending OTP...");
+                    return sendRegistrationOtp(dto, existingUser);
+                }
+            }
+            
+            return "User already exists and is verified. Please login instead.";
         }
         
         System.out.println("✅ User does not exist, proceeding with registration");
