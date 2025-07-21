@@ -31,16 +31,25 @@ public class UnifiedAuthService {
     private static final String ADMIN_ACCESS_CODE = "ADMIN2025";
 
     public String register(RegisterRequestDto dto) {
+        System.out.println("🔧 REGISTRATION DEBUG - Starting registration for: " + dto.getEmail());
+        
         // Check if user already exists
         if (userRepository.existsByEmail(dto.getEmail()) || userRepository.existsByPhone(dto.getPhone())) {
+            System.out.println("❌ User already exists with email: " + dto.getEmail());
             return "User already exists with this email or phone number";
         }
         
+        System.out.println("✅ User does not exist, proceeding with registration");
+        
         // Create user in User table
         User user = createUser(dto);
+        System.out.println("✅ User created with ID: " + user.getId());
         
         // Send OTP
-        return sendRegistrationOtp(dto, user);
+        System.out.println("📧 About to send registration OTP...");
+        String result = sendRegistrationOtp(dto, user);
+        System.out.println("🔧 Registration process completed: " + result);
+        return result;
     }
 
     public JwtResponse directLogin(LoginRequestDto loginRequest) {
