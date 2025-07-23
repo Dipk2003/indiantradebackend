@@ -58,6 +58,9 @@ public class User {
     // Vendor-specific fields (nullable for non-vendor users)
     private String businessName;
     private String businessAddress;
+    private String city;
+    private String state;
+    private String pincode;
     private String gstNumber;
     private String panNumber;
     

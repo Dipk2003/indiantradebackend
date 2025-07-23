@@ -5,10 +5,14 @@ import com.itech.itech_backend.dto.LoginRequestDto;
 import com.itech.itech_backend.dto.RegisterRequestDto;
 import com.itech.itech_backend.dto.SetPasswordDto;
 import com.itech.itech_backend.dto.VerifyOtpRequestDto;
+import com.itech.itech_backend.model.Admins;
 import com.itech.itech_backend.model.OtpVerification;
 import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.repository.OtpVerificationRepository;
 import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.repository.AdminsRepository;
+import com.itech.itech_backend.repository.VendorsRepository;
 import com.itech.itech_backend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +27,9 @@ import java.util.Random;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final OtpVerificationRepository otpRepo;
+private final OtpVerificationRepository otpRepo;
+    private final AdminsRepository adminsRepository;
+    private final VendorsRepository vendorsRepository;
     private final EmailService emailService;
     private final SmsService smsService;
     private final JwtUtil jwtUtil;
@@ -33,11 +39,52 @@ public class AuthService {
     private static final String ADMIN_ACCESS_CODE = "ADMIN2025";
 
     public String register(RegisterRequestDto dto) {
-        Optional<User> existingUser = userRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+        User existingUser = null;
+        
+        if ("ROLE_USER".equals(dto.getRole())) {
+            Optional<User> userOpt = userRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+            if (userOpt.isPresent()) {
+                existingUser = userOpt.get();
+            }
+        } else if ("ROLE_VENDOR".equals(dto.getRole())) {
+            Optional<Vendors> vendorOpt = vendorsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+            if (vendorOpt.isPresent()) {
+                Vendors vendor = vendorOpt.get();
+                // Convert Vendor to User for processing
+                existingUser = User.builder()
+                    .id(vendor.getId())
+                    .name(vendor.getName())
+                    .email(vendor.getEmail())
+                    .phone(vendor.getPhone())
+                    .password(vendor.getPassword())
+                    .role(vendor.getRole())
+                    .businessName(vendor.getBusinessName())
+                    .businessAddress(vendor.getBusinessAddress())
+                    .gstNumber(vendor.getGstNumber())
+                    .panNumber(vendor.getPanNumber())
+                    .build();
+            }
+        } else if ("ROLE_ADMIN".equals(dto.getRole())) {
+            Optional<Admins> adminOpt = adminsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+            if (adminOpt.isPresent()) {
+                Admins admin = adminOpt.get();
+                // Convert Admin to User for processing
+                existingUser = User.builder()
+                    .id(admin.getId())
+                    .name(admin.getName())
+                    .email(admin.getEmail())
+                    .phone(admin.getPhone())
+                    .password(admin.getPassword())
+                    .role(admin.getRole())
+                    .department(admin.getDepartment())
+                    .designation(admin.getDesignation())
+                    .build();
+            }
+        }
 
         User user;
-        if (existingUser.isPresent()) {
-            user = existingUser.get();
+        if (existingUser != null) {
+            user = existingUser;
             // Update password for existing user if provided
             if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
                 user.setPassword(dto.getPassword());
@@ -47,7 +94,33 @@ public class AuthService {
                             ? dto.getRole() 
                             : "ROLE_VENDOR";
             user.setRole(userRole);
-            user = userRepository.save(user);
+if ("ROLE_USER".equals(dto.getRole())) {
+ user = userRepository.save(user);
+} else if ("ROLE_VENDOR".equals(dto.getRole())) {
+ Vendors vendor = Vendors.builder()
+ .name(user.getName())
+ .email(user.getEmail())
+ .phone(user.getPhone())
+ .password(user.getPassword())
+ .role("ROLE_VENDOR")
+ .businessName(user.getBusinessName())
+ .businessAddress(user.getBusinessAddress())
+ .gstNumber(user.getGstNumber())
+ .panNumber(user.getPanNumber())
+ .build();
+ vendorsRepository.save(vendor);
+} else if ("ROLE_ADMIN".equals(dto.getRole())) {
+ Admins admin = Admins.builder()
+ .name(user.getName())
+ .email(user.getEmail())
+ .phone(user.getPhone())
+ .password(user.getPassword())
+ .role("ROLE_ADMIN")
+ .department(user.getDepartment())
+ .designation(user.getDesignation())
+ .build();
+ adminsRepository.save(admin);
+}
             System.out.println("✅ Updated existing user: " + user.getName() + " with role: " + user.getRole());
         } else {
             // Use role from DTO or default to ROLE_VENDOR

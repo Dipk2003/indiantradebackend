@@ -88,4 +88,33 @@ public class VendorsService {
                 .filter(vendor -> vendor.getPanNumber() != null && !vendor.getPanNumber().isEmpty())
                 .toList();
     }
+    
+    // City-based methods
+    public List<Vendors> getVendorsByCity(String city) {
+        return vendorsRepository.findByCityIgnoreCase(city);
+    }
+    
+    public List<Vendors> getVerifiedVendorsByCity(String city) {
+        return vendorsRepository.findByCityIgnoreCaseAndVerifiedTrue(city);
+    }
+    
+    public List<Vendors> getVendorsByState(String state) {
+        return vendorsRepository.findByStateIgnoreCase(state);
+    }
+    
+    public List<Vendors> getVerifiedVendorsByState(String state) {
+        return vendorsRepository.findByStateIgnoreCaseAndVerifiedTrue(state);
+    }
+    
+    public List<String> getAllCities() {
+        return vendorsRepository.findAllDistinctCities();
+    }
+    
+    public List<String> getAllStates() {
+        return vendorsRepository.findAllDistinctStates();
+    }
+    
+    public Long getVerifiedVendorCountByCity(String city) {
+        return vendorsRepository.countVerifiedVendorsByCity(city);
+    }
 }

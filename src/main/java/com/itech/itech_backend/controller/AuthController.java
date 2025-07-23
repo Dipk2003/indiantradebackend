@@ -5,6 +5,8 @@ import com.itech.itech_backend.dto.LoginRequestDto;
 import com.itech.itech_backend.dto.RegisterRequestDto;
 import com.itech.itech_backend.dto.SetPasswordDto;
 import com.itech.itech_backend.dto.VerifyOtpRequestDto;
+import com.itech.itech_backend.dto.ForgotPasswordRequestDto;
+import com.itech.itech_backend.dto.VerifyForgotPasswordOtpDto;
 import com.itech.itech_backend.service.AuthService;
 import com.itech.itech_backend.service.UnifiedAuthService;
 import lombok.RequiredArgsConstructor;
@@ -119,6 +121,52 @@ public class AuthController {
     public ResponseEntity<String> setPassword(@RequestBody SetPasswordDto dto) {
         String result = authService.setPassword(dto);
         return ResponseEntity.ok(result);
+    }
+    
+    // Forgot Password - Send OTP
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequestDto dto) {
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Email is required");
+        }
+        
+        try {
+            System.out.println("📧 Forgot password request for: " + dto.getEmail());
+            String result = unifiedAuthService.sendForgotPasswordOtp(dto.getEmail());
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            System.out.println("❌ Forgot password error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    // Verify Forgot Password OTP and Login
+    @PostMapping("/verify-forgot-password-otp")
+    public ResponseEntity<?> verifyForgotPasswordOtp(@RequestBody VerifyForgotPasswordOtpDto dto) {
+        if (dto.getEmail() == null || dto.getOtp() == null) {
+            return ResponseEntity.badRequest().body("Email and OTP are required");
+        }
+        
+        try {
+            System.out.println("🔐 Forgot password OTP verification request for: " + dto.getEmail());
+            
+            JwtResponse response = unifiedAuthService.verifyForgotPasswordOtp(
+                dto.getEmail(), 
+                dto.getOtp(), 
+                dto.getNewPassword()
+            );
+            
+            if (response == null) {
+                System.out.println("❌ Forgot password OTP verification failed");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired OTP");
+            }
+            
+            System.out.println("✅ Forgot password OTP verification successful, user logged in");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.out.println("❌ Forgot password OTP verification error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     
     @GetMapping("/debug/user/{email}")

@@ -4,10 +4,14 @@ import com.itech.itech_backend.dto.JwtResponse;
 import com.itech.itech_backend.dto.LoginRequestDto;
 import com.itech.itech_backend.dto.RegisterRequestDto;
 import com.itech.itech_backend.dto.VerifyOtpRequestDto;
+import com.itech.itech_backend.model.Admins;
 import com.itech.itech_backend.model.OtpVerification;
 import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
+import com.itech.itech_backend.repository.AdminsRepository;
 import com.itech.itech_backend.repository.OtpVerificationRepository;
 import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.repository.VendorsRepository;
 import com.itech.itech_backend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +26,8 @@ import java.util.Random;
 public class UnifiedAuthService {
 
     private final UserRepository userRepository;
+    private final VendorsRepository vendorsRepository;
+    private final AdminsRepository adminsRepository;
     private final OtpVerificationRepository otpRepo;
     private final EmailService emailService;
     private final SmsService smsService;
@@ -32,16 +38,61 @@ public class UnifiedAuthService {
 
     public String register(RegisterRequestDto dto) {
         System.out.println("🔧 REGISTRATION DEBUG - Starting registration for: " + dto.getEmail());
+        System.out.println("🔧 Role requested: " + dto.getRole());
         
-        // Check if user already exists
-        if (userRepository.existsByEmail(dto.getEmail()) || userRepository.existsByPhone(dto.getPhone())) {
+        // Check if user already exists in any table
+        boolean userExists = userRepository.existsByEmail(dto.getEmail()) || userRepository.existsByPhone(dto.getPhone());
+        boolean vendorExists = vendorsRepository.existsByEmail(dto.getEmail()) || vendorsRepository.existsByPhone(dto.getPhone());
+        boolean adminExists = adminsRepository.existsByEmail(dto.getEmail()) || adminsRepository.existsByPhone(dto.getPhone());
+        
+        if (userExists || vendorExists || adminExists) {
             System.out.println("⚠️ User already exists with email: " + dto.getEmail());
             
-            // Find existing user
-            Optional<User> existingUserOpt = userRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
-            if (existingUserOpt.isPresent()) {
-                User existingUser = existingUserOpt.get();
-                
+            // Find existing user from appropriate table
+            User existingUser = null;
+            
+            if (userExists) {
+                Optional<User> userOpt = userRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+                if (userOpt.isPresent()) {
+                    existingUser = userOpt.get();
+                }
+            } else if (vendorExists) {
+                Optional<Vendors> vendorOpt = vendorsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+                if (vendorOpt.isPresent()) {
+                    Vendors vendor = vendorOpt.get();
+                    existingUser = User.builder()
+                        .id(vendor.getId())
+                        .name(vendor.getName())
+                        .email(vendor.getEmail())
+                        .phone(vendor.getPhone())
+                        .password(vendor.getPassword())
+                        .role(vendor.getRole())
+                        .businessName(vendor.getBusinessName())
+                        .businessAddress(vendor.getBusinessAddress())
+                        .gstNumber(vendor.getGstNumber())
+                        .panNumber(vendor.getPanNumber())
+                        .verified(vendor.isVerified())
+                        .build();
+                }
+            } else if (adminExists) {
+                Optional<Admins> adminOpt = adminsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+                if (adminOpt.isPresent()) {
+                    Admins admin = adminOpt.get();
+                    existingUser = User.builder()
+                        .id(admin.getId())
+                        .name(admin.getName())
+                        .email(admin.getEmail())
+                        .phone(admin.getPhone())
+                        .password(admin.getPassword())
+                        .role(admin.getRole())
+                        .department(admin.getDepartment())
+                        .designation(admin.getDesignation())
+                        .verified(admin.isVerified())
+                        .build();
+                }
+            }
+            
+            if (existingUser != null) {
                 // If user is not verified, resend OTP
                 if (!existingUser.isVerified()) {
                     System.out.println("🔄 User exists but not verified, resending OTP...");
@@ -148,6 +199,7 @@ public class UnifiedAuthService {
         Optional<User> userOpt = userRepository.findByEmailOrPhone(dto.getEmailOrPhone(), dto.getEmailOrPhone());
         
         if (!userOpt.isPresent()) {
+            System.out.println("❌ User not found for: " + dto.getEmailOrPhone());
             return null;
         }
         
@@ -156,11 +208,13 @@ public class UnifiedAuthService {
         // Verify OTP
         Optional<OtpVerification> otpOpt = otpRepo.findByEmailOrPhone(dto.getEmailOrPhone());
         if (!otpOpt.isPresent()) {
+            System.out.println("❌ No OTP found for: " + dto.getEmailOrPhone());
             return null;
         }
         
         OtpVerification otp = otpOpt.get();
         if (!otp.getOtp().equals(dto.getOtp()) || !otp.getExpiryTime().isAfter(LocalDateTime.now())) {
+            System.out.println("❌ Invalid or expired OTP for: " + dto.getEmailOrPhone());
             return null;
         }
         
@@ -170,6 +224,8 @@ public class UnifiedAuthService {
         otpRepo.delete(otp);
         
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+        System.out.println("✅ OTP verification successful for: " + dto.getEmailOrPhone());
+        
         return JwtResponse.builder()
             .token(token)
             .message("Login successful!")
@@ -187,25 +243,76 @@ public class UnifiedAuthService {
     private User createUser(RegisterRequestDto dto) {
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         
-        User.UserBuilder userBuilder = User.builder()
-            .name(dto.getName())
-            .email(dto.getEmail())
-            .phone(dto.getPhone())
-            .password(encodedPassword)
-            .role(dto.getRole());
-        
-        // Set role-specific fields
         if ("ROLE_VENDOR".equals(dto.getRole())) {
-            userBuilder.businessName(dto.getBusinessName())
-                      .businessAddress(dto.getBusinessAddress())
-                      .gstNumber(dto.getGstNumber())
-                      .panNumber(dto.getPanNumber());
+            // Create vendor in Vendors table
+            Vendors vendor = Vendors.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(encodedPassword)
+                .role(dto.getRole())
+                .businessName(dto.getBusinessName())
+                .businessAddress(dto.getBusinessAddress())
+                .gstNumber(dto.getGstNumber())
+                .panNumber(dto.getPanNumber())
+                .verified(false)
+                .build();
+            
+            Vendors savedVendor = vendorsRepository.save(vendor);
+            
+            // Return a User object for consistency with the rest of the method
+            return User.builder()
+                .id(savedVendor.getId())
+                .name(savedVendor.getName())
+                .email(savedVendor.getEmail())
+                .phone(savedVendor.getPhone())
+                .password(savedVendor.getPassword())
+                .role(savedVendor.getRole())
+                .businessName(savedVendor.getBusinessName())
+                .businessAddress(savedVendor.getBusinessAddress())
+                .gstNumber(savedVendor.getGstNumber())
+                .panNumber(savedVendor.getPanNumber())
+                .verified(savedVendor.isVerified())
+                .build();
         } else if ("ROLE_ADMIN".equals(dto.getRole())) {
-            userBuilder.department(dto.getDepartment())
-                      .designation(dto.getDesignation());
+            // Create admin in Admins table
+            Admins admin = Admins.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(encodedPassword)
+                .role(dto.getRole())
+                .department(dto.getDepartment())
+                .designation(dto.getDesignation())
+                .verified(false)
+                .build();
+            
+            Admins savedAdmin = adminsRepository.save(admin);
+            
+            // Return a User object for consistency
+            return User.builder()
+                .id(savedAdmin.getId())
+                .name(savedAdmin.getName())
+                .email(savedAdmin.getEmail())
+                .phone(savedAdmin.getPhone())
+                .password(savedAdmin.getPassword())
+                .role(savedAdmin.getRole())
+                .department(savedAdmin.getDepartment())
+                .designation(savedAdmin.getDesignation())
+                .verified(savedAdmin.isVerified())
+                .build();
+        } else {
+            // Create regular user in User table
+            User.UserBuilder userBuilder = User.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(encodedPassword)
+                .role(dto.getRole())
+                .verified(false);
+            
+            return userRepository.save(userBuilder.build());
         }
-        
-        return userRepository.save(userBuilder.build());
     }
 
     private String sendRegistrationOtp(RegisterRequestDto dto, User user) {
@@ -291,5 +398,106 @@ public class UnifiedAuthService {
     private String generateOtp() {
         Random rand = new Random();
         return String.format("%06d", rand.nextInt(999999));
+    }
+    
+    /**
+     * Send forgot password OTP
+     */
+    public String sendForgotPasswordOtp(String email) {
+        System.out.println("📧 Forgot password OTP request for: " + email);
+        
+        // Find user in User table
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        
+        if (!userOpt.isPresent()) {
+            System.out.println("❌ User not found with email: " + email);
+            return "Email not found. Please check your email address.";
+        }
+        
+        User user = userOpt.get();
+        System.out.println("✅ User found: " + user.getEmail());
+        
+        // Generate and send OTP
+        String otp = generateOtp();
+        LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
+        
+        System.out.println("🔢 Generated OTP: " + otp + " for email: " + email);
+        
+        // Clean up old OTPs for this email
+        otpRepo.deleteByEmailOrPhone(email);
+        
+        // Store new OTP
+        otpRepo.save(OtpVerification.builder()
+            .emailOrPhone(email)
+            .otp(otp)
+            .expiryTime(expiry)
+            .build());
+        
+        // Send OTP via email
+        System.out.println("✉️ Sending forgot password OTP to email: " + email);
+        emailService.sendForgotPasswordOtp(email, otp);
+        
+        return "OTP sent to your email for password recovery.";
+    }
+    
+    /**
+     * Verify forgot password OTP and login user
+     */
+    public JwtResponse verifyForgotPasswordOtp(String email, String otpCode, String newPassword) {
+        System.out.println("🔐 Forgot password OTP verification for: " + email);
+        
+        // Find user in User table
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        
+        if (!userOpt.isPresent()) {
+            System.out.println("❌ User not found with email: " + email);
+            return null;
+        }
+        
+        User user = userOpt.get();
+        
+        // Verify OTP
+        Optional<OtpVerification> otpOpt = otpRepo.findByEmailOrPhone(email);
+        if (!otpOpt.isPresent()) {
+            System.out.println("❌ No OTP found for email: " + email);
+            return null;
+        }
+        
+        OtpVerification otp = otpOpt.get();
+        if (!otp.getOtp().equals(otpCode) || !otp.getExpiryTime().isAfter(LocalDateTime.now())) {
+            System.out.println("❌ Invalid or expired OTP");
+            return null;
+        }
+        
+        // If new password is provided, update the password
+        if (newPassword != null && !newPassword.trim().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(encodedPassword);
+            System.out.println("🔒 Password updated for user: " + email);
+        }
+        
+        // Mark user as verified and save
+        user.setVerified(true);
+        userRepository.save(user);
+        
+        // Clean up OTP
+        otpRepo.delete(otp);
+        
+        // Generate token and login the user
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+        
+        System.out.println("✅ Forgot password OTP verification successful, user logged in");
+        
+        return JwtResponse.builder()
+            .token(token)
+            .message("OTP verified successfully. You are now logged in.")
+            .user(JwtResponse.UserInfo.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .role(user.getRole().replace("ROLE_", ""))
+                .isVerified(user.isVerified())
+                .build())
+            .build();
     }
 }

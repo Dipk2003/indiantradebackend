@@ -143,4 +143,47 @@ public class VendorsController {
         boolean exists = vendorsService.existsByPhone(phone);
         return ResponseEntity.ok(exists);
     }
+    
+    // City-based endpoints
+    @GetMapping("/city/{city}")
+    public ResponseEntity<List<Vendors>> getVendorsByCity(@PathVariable String city) {
+        List<Vendors> vendors = vendorsService.getVendorsByCity(city);
+        return ResponseEntity.ok(vendors);
+    }
+    
+    @GetMapping("/city/{city}/verified")
+    public ResponseEntity<List<Vendors>> getVerifiedVendorsByCity(@PathVariable String city) {
+        List<Vendors> vendors = vendorsService.getVerifiedVendorsByCity(city);
+        return ResponseEntity.ok(vendors);
+    }
+    
+    @GetMapping("/state/{state}")
+    public ResponseEntity<List<Vendors>> getVendorsByState(@PathVariable String state) {
+        List<Vendors> vendors = vendorsService.getVendorsByState(state);
+        return ResponseEntity.ok(vendors);
+    }
+    
+    @GetMapping("/state/{state}/verified")
+    public ResponseEntity<List<Vendors>> getVerifiedVendorsByState(@PathVariable String state) {
+        List<Vendors> vendors = vendorsService.getVerifiedVendorsByState(state);
+        return ResponseEntity.ok(vendors);
+    }
+    
+    @GetMapping("/cities")
+    public ResponseEntity<List<String>> getAllCities() {
+        List<String> cities = vendorsService.getAllCities();
+        return ResponseEntity.ok(cities);
+    }
+    
+    @GetMapping("/states")
+    public ResponseEntity<List<String>> getAllStates() {
+        List<String> states = vendorsService.getAllStates();
+        return ResponseEntity.ok(states);
+    }
+    
+    @GetMapping("/city/{city}/count")
+    public ResponseEntity<Long> getVerifiedVendorCountByCity(@PathVariable String city) {
+        Long count = vendorsService.getVerifiedVendorCountByCity(city);
+        return ResponseEntity.ok(count);
+    }
 }

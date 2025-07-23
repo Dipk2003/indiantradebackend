@@ -33,25 +33,46 @@ public class EmailService {
             
             if (mailSender != null && !simulationEnabled) {
                 log.info("📧 Attempting to send REAL email to: {}", email);
-                sendRealEmail(email, otp);
+                sendRealEmail(email, otp, "verification");
             } else {
                 log.warn("📧 Sending SIMULATED email - MailSender: {}, Simulation: {}", 
                         (mailSender != null), simulationEnabled);
-                sendSimulatedEmail(email, otp);
+                sendSimulatedEmail(email, otp, "verification");
             }
         } catch (Exception e) {
             log.error("❌ Failed to send email to: {} - Error: {}", email, e.getMessage(), e);
             // Fallback to console for debugging
-            sendSimulatedEmail(email, otp);
+            sendSimulatedEmail(email, otp, "verification");
         }
     }
     
-    private void sendRealEmail(String email, String otp) {
+    public void sendForgotPasswordOtp(String email, String otp) {
+        try {
+            log.info("🔧 FORGOT PASSWORD EMAIL SERVICE DEBUG - Profile: {}, Simulation: {}, MailSender: {}", 
+                    activeProfile, simulationEnabled, (mailSender != null ? "Available" : "NULL"));
+            
+            if (mailSender != null && !simulationEnabled) {
+                log.info("📧 Attempting to send REAL forgot password email to: {}", email);
+                sendRealEmail(email, otp, "forgot-password");
+            } else {
+                log.warn("📧 Sending SIMULATED forgot password email - MailSender: {}, Simulation: {}", 
+                        (mailSender != null), simulationEnabled);
+                sendSimulatedEmail(email, otp, "forgot-password");
+            }
+        } catch (Exception e) {
+            log.error("❌ Failed to send forgot password email to: {} - Error: {}", email, e.getMessage(), e);
+            // Fallback to console for debugging
+            sendSimulatedEmail(email, otp, "forgot-password");
+        }
+    }
+    
+    private void sendRealEmail(String email, String otp, String emailType) {
         try {
             System.out.println("\n🔧 PRODUCTION EMAIL DEBUG INFO:");
             System.out.println("Profile: " + activeProfile);
             System.out.println("From Email: " + fromEmail);
             System.out.println("To Email: " + email);
+            System.out.println("Email Type: " + emailType);
             System.out.println("MailSender null? " + (mailSender == null));
             System.out.println("Simulation Enabled: " + simulationEnabled);
             System.out.println("OTP: " + otp);
@@ -66,8 +87,14 @@ public class EmailService {
             
             helper.setFrom(fromEmail);
             helper.setTo(email);
-            helper.setSubject("Indian Trade Mart - OTP Verification");
-            helper.setText(buildOtpEmailContentHtml(otp), true);
+            
+            if ("forgot-password".equals(emailType)) {
+                helper.setSubject("Indian Trade Mart - Password Recovery OTP");
+                helper.setText(buildForgotPasswordEmailContentHtml(otp), true);
+            } else {
+                helper.setSubject("Indian Trade Mart - OTP Verification");
+                helper.setText(buildOtpEmailContentHtml(otp), true);
+            }
             
             System.out.println("📧 Attempting to send email via SMTP...");
             
@@ -100,32 +127,44 @@ public class EmailService {
             // In production, fallback to simulation instead of throwing exception
             if ("production".equals(activeProfile)) {
                 log.warn("🔄 Production email failed, falling back to simulation for user: {}", email);
-                sendSimulatedEmail(email, otp);
+                sendSimulatedEmail(email, otp, emailType);
             } else {
                 throw new RuntimeException("Email sending failed", e);
             }
         }
     }
     
-    private void sendSimulatedEmail(String email, String otp) {
+    private void sendSimulatedEmail(String email, String otp, String emailType) {
         // Enhanced console display for development
         System.out.println("\n" + "=".repeat(80));
         System.out.println("📧 SIMULATED EMAIL SENT TO: " + email);
         System.out.println("From: " + fromEmail);
-        System.out.println("Subject: Indian Trade Mart - OTP Verification");
-        System.out.println("\n" + "-".repeat(80));
-        System.out.println("EMAIL CONTENT:");
-        System.out.println("-".repeat(80));
-        System.out.println(buildOtpEmailContent(otp));
-        System.out.println("-".repeat(80));
-        System.out.println("\n🔑 YOUR OTP IS: " + otp);
+        
+        if ("forgot-password".equals(emailType)) {
+            System.out.println("Subject: Indian Trade Mart - Password Recovery OTP");
+            System.out.println("\n" + "-".repeat(80));
+            System.out.println("EMAIL CONTENT:");
+            System.out.println("-".repeat(80));
+            System.out.println(buildForgotPasswordEmailContent(otp));
+            System.out.println("-".repeat(80));
+            System.out.println("\n🔑 YOUR PASSWORD RECOVERY OTP IS: " + otp);
+        } else {
+            System.out.println("Subject: Indian Trade Mart - OTP Verification");
+            System.out.println("\n" + "-".repeat(80));
+            System.out.println("EMAIL CONTENT:");
+            System.out.println("-".repeat(80));
+            System.out.println(buildOtpEmailContent(otp));
+            System.out.println("-".repeat(80));
+            System.out.println("\n🔑 YOUR OTP IS: " + otp);
+        }
+        
         System.out.println("⏰ Valid for 5 minutes only!");
         System.out.println("\n💡 To enable real email sending:");
         System.out.println("1. Configure Gmail SMTP in application.properties");
         System.out.println("2. Set email.simulation.enabled=false");
         System.out.println("=".repeat(80) + "\n");
         
-        log.info("📧 Simulated email sent to: {} with OTP: {}", email, otp);
+        log.info("📧 Simulated {} email sent to: {} with OTP: {}", emailType, email, otp);
     }
     
     private String buildOtpEmailContent(String otp) {
@@ -176,6 +215,80 @@ public class EmailService {
             "        " +
             "        <p style='color: #666; font-size: 14px; line-height: 1.6; margin-top: 30px;'>" +
             "            If you didn't request this OTP, please ignore this email. Your account remains secure." +
+            "        </p>" +
+            "        " +
+            "        <div style='border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px;'>" +
+            "            <p style='color: #999; font-size: 12px; margin: 0;'>" +
+            "                Best regards,<br>" +
+            "                <strong>Indian Trade Mart Team</strong><br><br>" +
+            "                Note: This is an auto-generated email. Please do not reply." +
+            "            </p>" +
+            "        </div>" +
+            "    </div>" +
+            "</body>" +
+            "</html>",
+            otp
+        );
+    }
+    
+    private String buildForgotPasswordEmailContent(String otp) {
+        return String.format(
+            "Dear User,\n\n" +
+            "We received a request to recover your password for your Indian Trade Mart account.\n\n" +
+            "Your One-Time Password (OTP) for password recovery is: %s\n\n" +
+            "This OTP is valid for 5 minutes only.\n\n" +
+            "Once verified, you'll be logged in automatically without needing to reset your password.\n\n" +
+            "If you didn't request this password recovery, please ignore this email and your account will remain secure.\n\n" +
+            "Best regards,\n" +
+            "Indian Trade Mart Team\n" +
+            "\n" +
+            "Note: Please do not reply to this email as it is auto-generated.",
+            otp
+        );
+    }
+    
+    private String buildForgotPasswordEmailContentHtml(String otp) {
+        return String.format(
+            "<!DOCTYPE html>" +
+            "<html>" +
+            "<head>" +
+            "    <meta charset='UTF-8'>" +
+            "    <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+            "    <title>Indian Trade Mart - Password Recovery</title>" +
+            "</head>" +
+            "<body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;'>" +
+            "    <div style='background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>" +
+            "        <div style='text-align: center; margin-bottom: 30px;'>" +
+            "            <h1 style='color: #1890ff; margin-bottom: 10px;'>Indian Trade Mart</h1>" +
+            "            <p style='color: #666; margin: 0;'>India's Premier B2B Marketplace</p>" +
+            "        </div>" +
+            "        " +
+            "        <h2 style='color: #333; margin-bottom: 20px;'>Password Recovery Request</h2>" +
+            "        " +
+            "        <p style='color: #666; font-size: 16px; line-height: 1.6;'>" +
+            "            Dear User,<br><br>" +
+            "            We received a request to recover your password for your Indian Trade Mart account. " +
+            "            To proceed with the recovery and login, please use the following One-Time Password (OTP):" +
+            "        </p>" +
+            "        " +
+            "        <div style='background-color: #fff3cd; border: 2px dashed #856404; padding: 20px; text-align: center; margin: 30px 0; border-radius: 8px;'>" +
+            "            <h1 style='color: #856404; font-size: 36px; margin: 0; letter-spacing: 8px;'>%s</h1>" +
+            "        </div>" +
+            "        " +
+            "        <p style='color: #666; font-size: 14px; text-align: center;'>" +
+            "            <strong>⏰ This OTP is valid for 5 minutes only</strong>" +
+            "        </p>" +
+            "        " +
+            "        <div style='background-color: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0;'>" +
+            "            <p style='color: #155724; margin: 0; font-size: 14px;'>" +
+            "                <strong>🔐 Security Notice:</strong> Once verified, you'll be logged in automatically " +
+            "                without needing to reset your password." +
+            "            </p>" +
+            "        </div>" +
+            "        " +
+            "        <p style='color: #666; font-size: 14px; line-height: 1.6; margin-top: 30px;'>" +
+            "            If you didn't request this password recovery, please ignore this email. " +
+            "            Your account will remain secure and no changes will be made." +
             "        </p>" +
             "        " +
             "        <div style='border-top: 1px solid #eee; padding-top: 20px; margin-top: 30px;'>" +
