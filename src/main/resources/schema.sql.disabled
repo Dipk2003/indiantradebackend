@@ -118,7 +118,7 @@ CREATE TABLE product (
     price DECIMAL(10,2) NOT NULL,
     quantity_available INTEGER DEFAULT 0,
     category_id BIGINT REFERENCES category(id),
-    vendor_id BIGINT REFERENCES "user"(id),
+    vendor_id BIGINT REFERENCES vendors(id),
     sku VARCHAR(255),
     brand VARCHAR(255),
     model VARCHAR(255),
@@ -162,7 +162,7 @@ CREATE TABLE cart_item (
 CREATE TABLE "order" (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT REFERENCES "user"(id),
-    vendor_id BIGINT REFERENCES "user"(id),
+    vendor_id BIGINT REFERENCES vendors(id),
     order_number VARCHAR(255) UNIQUE NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
     status VARCHAR(50) DEFAULT 'PENDING',
@@ -190,7 +190,7 @@ CREATE TABLE order_item (
 CREATE TABLE lead (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT REFERENCES "user"(id),
-    vendor_id BIGINT REFERENCES "user"(id),
+    vendor_id BIGINT REFERENCES vendors(id),
     product_name VARCHAR(255) NOT NULL,
     quantity INTEGER NOT NULL,
     budget_min DECIMAL(10,2),

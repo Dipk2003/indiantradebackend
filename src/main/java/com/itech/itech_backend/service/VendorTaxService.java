@@ -24,7 +24,7 @@ public class VendorTaxService {
     private final VendorTaxProfileRepository taxRepo;
     private final VendorGstSelectionRepository gstSelectionRepo;
     private final VendorTdsSelectionRepository tdsSelectionRepo;
-    private final UserService userService;
+    private final VendorsService vendorsService;
     
     @Autowired
     private GstVerificationService gstVerificationService;
@@ -38,7 +38,7 @@ public class VendorTaxService {
     @Value("${gst.validation.enabled:true}")
     private boolean gstValidationEnabled;
 
-    public VendorTaxProfile saveTaxData(User vendor, String pan, String gst, String name) {
+    public VendorTaxProfile saveTaxData(Vendors vendor, String pan, String gst, String name) {
         VendorTaxProfile profile = VendorTaxProfile.builder()
                 .vendor(vendor)
                 .panNumber(pan)
@@ -109,7 +109,7 @@ public class VendorTaxService {
      */
     @Transactional
     public void saveVendorTaxSelections(VendorGstSelectionDto selectionDto) {
-        User vendor = userService.getUserById(selectionDto.getVendorId()).orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendors vendor = vendorsService.getVendorById(selectionDto.getVendorId()).orElseThrow(() -> new RuntimeException("Vendor not found"));
         
         // Clear existing selections for this GST number
         gstSelectionRepo.deleteByVendorAndGstNumber(vendor, selectionDto.getGstNumber());
@@ -164,7 +164,7 @@ public class VendorTaxService {
      * Get vendor's saved GST selections
      */
     public List<VendorGstSelection> getVendorGstSelections(Long vendorId, String gstNumber) {
-        User vendor = userService.getUserById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendors vendor = vendorsService.getVendorById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
         return gstSelectionRepo.findByVendorAndGstNumber(vendor, gstNumber);
     }
 
@@ -172,7 +172,7 @@ public class VendorTaxService {
      * Get vendor's saved TDS selections
      */
     public List<VendorTdsSelection> getVendorTdsSelections(Long vendorId, String panNumber) {
-        User vendor = userService.getUserById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendors vendor = vendorsService.getVendorById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
         return tdsSelectionRepo.findByVendorAndPanNumber(vendor, panNumber);
     }
 
@@ -180,7 +180,7 @@ public class VendorTaxService {
      * Get only selected GST rates for a vendor
      */
     public List<VendorGstSelection> getSelectedGstRates(Long vendorId, String gstNumber) {
-        User vendor = userService.getUserById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendors vendor = vendorsService.getVendorById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
         return gstSelectionRepo.findSelectedGstRatesByVendorAndGstNumber(vendor, gstNumber);
     }
 
@@ -188,7 +188,7 @@ public class VendorTaxService {
      * Get only selected TDS rates for a vendor
      */
     public List<VendorTdsSelection> getSelectedTdsRates(Long vendorId, String panNumber) {
-        User vendor = userService.getUserById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendors vendor = vendorsService.getVendorById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
         return tdsSelectionRepo.findSelectedTdsRatesByVendorAndPanNumber(vendor, panNumber);
     }
 }

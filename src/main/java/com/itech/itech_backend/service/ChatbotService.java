@@ -80,7 +80,7 @@ public class ChatbotService {
                 .collect(Collectors.toList());
         
         // Get vendors from matching products
-        Set<User> vendors = matchingProducts.stream()
+        Set<Vendors> vendors = matchingProducts.stream()
                 .map(Product::getVendor)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
@@ -108,7 +108,7 @@ public class ChatbotService {
                 .collect(Collectors.toList());
         
         // Get vendors from category products
-        Set<User> serviceProviders = categoryProducts.stream()
+        Set<Vendors> serviceProviders = categoryProducts.stream()
                 .map(Product::getVendor)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
@@ -120,7 +120,7 @@ public class ChatbotService {
                 .collect(Collectors.toList());
     }
 
-    private ChatbotResponseDto.VendorRecommendationDto buildVendorRecommendation(User vendor, List<Product> products) {
+    private ChatbotResponseDto.VendorRecommendationDto buildVendorRecommendation(Vendors vendor, List<Product> products) {
         // Get vendor's products
         List<Product> vendorProducts = products.stream()
                 .filter(product -> product.getVendor().getId().equals(vendor.getId()))
@@ -159,7 +159,7 @@ public class ChatbotService {
                 .build();
     }
 
-    private String generateRecommendationReason(User vendor, int productCount, int categoryCount) {
+    private String generateRecommendationReason(Vendors vendor, int productCount, int categoryCount) {
         StringBuilder reason = new StringBuilder();
         
         // Premium vendor type
@@ -182,7 +182,7 @@ public class ChatbotService {
         return reason.toString();
     }
 
-    private int compareVendorsByPriority(User v1, User v2) {
+    private int compareVendorsByPriority(Vendors v1, Vendors v2) {
         // First priority: Vendor type (premium vendors first)
         VendorType type1 = v1.getVendorType() != null ? v1.getVendorType() : VendorType.BASIC;
         VendorType type2 = v2.getVendorType() != null ? v2.getVendorType() : VendorType.BASIC;

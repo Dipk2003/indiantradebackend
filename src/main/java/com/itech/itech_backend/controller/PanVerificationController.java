@@ -1,8 +1,8 @@
 package com.itech.itech_backend.controller;
 
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.model.VendorTaxProfile;
-import com.itech.itech_backend.service.UserService;
+import com.itech.itech_backend.service.VendorsService;
 import com.itech.itech_backend.service.VendorTaxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class PanVerificationController {
 
     private final VendorTaxService vendorTaxService;
-    private final UserService userService;
+    private final VendorsService vendorsService;
 
     // PAN format validation regex
     private static final Pattern PAN_PATTERN = Pattern.compile("^[A-Z]{5}[0-9]{4}[A-Z]{1}$");
@@ -140,7 +140,7 @@ public class PanVerificationController {
             if (gstNumber != null) gstNumber = gstNumber.toUpperCase().trim();
             
             // Validate vendor exists
-            User vendor = userService.getUserById(vendorId).orElse(null);
+            Vendors vendor = vendorsService.getVendorById(vendorId).orElse(null);
             if (vendor == null) {
                 response.put("success", false);
                 response.put("message", "Vendor not found");
@@ -194,7 +194,7 @@ public class PanVerificationController {
     @GetMapping("/vendor/{vendorId}/profile")
     public ResponseEntity<VendorTaxProfile> getVendorTaxProfile(@PathVariable Long vendorId) {
         try {
-            User vendor = userService.getUserById(vendorId).orElse(null);
+            Vendors vendor = vendorsService.getVendorById(vendorId).orElse(null);
             if (vendor == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -220,7 +220,7 @@ public class PanVerificationController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            User vendor = userService.getUserById(vendorId).orElse(null);
+            Vendors vendor = vendorsService.getVendorById(vendorId).orElse(null);
             if (vendor == null) {
                 response.put("success", false);
                 response.put("message", "Vendor not found");

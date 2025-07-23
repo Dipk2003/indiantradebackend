@@ -20,7 +20,8 @@ public class ProductService {
 
     private final ProductRepository productRepo;
     private final CategoryRepository categoryRepo;
-    private final UserRepository userRepo;
+    private final VendorsRepository vendorsRepo;
+    private final UserRepository userRepository;
 
     public Product addProduct(ProductDto dto) {
         // Validate required fields
@@ -33,7 +34,7 @@ public class ProductService {
 
         Category category = categoryRepo.findById(dto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found with ID: " + dto.getCategoryId()));
-        User vendor = userRepo.findById(dto.getVendorId())
+        Vendors vendor = vendorsRepo.findById(dto.getVendorId())
                 .orElseThrow(() -> new IllegalArgumentException("Vendor not found with ID: " + dto.getVendorId()));
 
         Product product = Product.builder()
@@ -66,7 +67,7 @@ public class ProductService {
     }
 
     public List<Product> getProductsByVendor(Long vendorId) {
-        User vendor = userRepo.findById(vendorId).orElseThrow();
+        Vendors vendor = vendorsRepo.findById(vendorId).orElseThrow();
         return productRepo.findByVendor(vendor);
     }
 

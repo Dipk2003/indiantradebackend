@@ -31,7 +31,7 @@ public class Lead {
     private Product product; // Product the customer is interested in
     
     @ManyToOne
-    private User vendor; // Vendor who owns this lead
+    private Vendors vendor; // Vendor who owns this lead
     
     @Enumerated(EnumType.STRING)
     @Builder.Default

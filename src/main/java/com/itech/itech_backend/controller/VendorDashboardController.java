@@ -4,7 +4,6 @@ import com.itech.itech_backend.dto.*;
 import com.itech.itech_backend.model.*;
 import com.itech.itech_backend.repository.ProductImageRepository;
 import com.itech.itech_backend.service.*;
-import com.itech.itech_backend.util.CsvImportUtil;
 import com.itech.itech_backend.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,18 +30,17 @@ import java.util.HashMap;
 public class VendorDashboardController {
 
     private final VendorRankingService rankingService;
-    private final UserService userService;
+    private final VendorsService vendorsService;
     private final VendorTaxService vendorTaxService;
     private final ExcelImportService excelImportService;
     private final FileUploadService fileUploadService;
     private final ProductImageRepository productImageRepository;
     private final ProductService productService;
-    private final CsvImportUtil csvImportUtil;
     private final JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("/{vendorId}/ranking")
     public VendorRanking getVendorRank(@PathVariable Long vendorId) {
-        User vendor = userService.getUserById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendors vendor = vendorsService.getVendorById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
         return rankingService.getOrCreateRanking(vendor);
     }
 
@@ -492,7 +490,7 @@ public class VendorDashboardController {
             Map<String, Object> dashboardData = new HashMap<>();
             
             // Get vendor info
-            User vendor = userService.getUserById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
+            Vendors vendor = vendorsService.getVendorById(vendorId).orElseThrow(() -> new RuntimeException("Vendor not found"));
             dashboardData.put("vendor", vendor);
             
             // Get ranking
@@ -523,28 +521,44 @@ public class VendorDashboardController {
     }
 
     /**
-     * Direct CSV import endpoint for importing products from CSV data
+     * Direct CSV import endpoint for importing products from CSV file upload
      */
-    @PostMapping("/{vendorId}/products/direct-csv-import")
-    public ResponseEntity<?> directCsvImport(
+    @PostMapping(value = "/{vendorId}/products/csv-import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<?> csvImport(
             @PathVariable Long vendorId,
-            @RequestBody String csvData) {
+            @RequestParam("file") MultipartFile csvFile,
+            HttpServletRequest request) {
         try {
-            log.info("Starting direct CSV import for vendor: {}", vendorId);
+            // Verify vendor ID from JWT matches path variable
+            Long currentVendorId = jwtTokenUtil.extractUserIdFromRequest(request);
+            if (currentVendorId == null || !currentVendorId.equals(vendorId)) {
+                return ResponseEntity.badRequest().body("Invalid vendor session or mismatched vendor ID");
+            }
+
+            // Validate file
+            if (csvFile.isEmpty()) {
+                return ResponseEntity.badRequest().body("Please select a CSV file to upload");
+            }
+
+            String fileName = csvFile.getOriginalFilename();
+            if (fileName == null || !fileName.toLowerCase().endsWith(".csv")) {
+                return ResponseEntity.badRequest().body("Please upload a valid CSV file (.csv)");
+            }
+
+            log.info("Starting CSV import for vendor: {} with file: {}", vendorId, fileName);
             
-            List<Product> createdProducts = csvImportUtil.importProductsFromCsvData(csvData, vendorId);
+            // Use existing ExcelImportService which already supports CSV
+            ExcelImportResponseDto response = excelImportService.importProductsFromExcel(csvFile, vendorId);
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Products imported successfully");
-            response.put("totalImported", createdProducts.size());
-            response.put("vendorId", vendorId);
-            response.put("productIds", createdProducts.stream().map(Product::getId).toList());
-            
-            return ResponseEntity.ok(response);
+            if (response.getSuccess()) {
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.badRequest().body(response);
+            }
             
         } catch (Exception e) {
-            log.error("Error during direct CSV import for vendor: {}", vendorId, e);
+            log.error("Error during CSV import for vendor: {}", vendorId, e);
             
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);

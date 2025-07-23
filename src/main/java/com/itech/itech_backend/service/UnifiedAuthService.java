@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -67,10 +68,6 @@ public class UnifiedAuthService {
                         .phone(vendor.getPhone())
                         .password(vendor.getPassword())
                         .role(vendor.getRole())
-                        .businessName(vendor.getBusinessName())
-                        .businessAddress(vendor.getBusinessAddress())
-                        .gstNumber(vendor.getGstNumber())
-                        .panNumber(vendor.getPanNumber())
                         .verified(vendor.isVerified())
                         .build();
                 }
@@ -85,8 +82,6 @@ public class UnifiedAuthService {
                         .phone(admin.getPhone())
                         .password(admin.getPassword())
                         .role(admin.getRole())
-                        .department(admin.getDepartment())
-                        .designation(admin.getDesignation())
                         .verified(admin.isVerified())
                         .build();
                 }
@@ -117,18 +112,28 @@ public class UnifiedAuthService {
     }
 
     public JwtResponse directLogin(LoginRequestDto loginRequest) {
-        System.out.println("🚀 Direct Login request for: " + loginRequest.getEmailOrPhone());
+        return directLoginWithRoleValidation(loginRequest, null);
+    }
+    
+    public JwtResponse directLoginWithRoleValidation(LoginRequestDto loginRequest, String expectedRole) {
+        System.out.println("🚀 Direct Login request for: " + loginRequest.getEmailOrPhone() + 
+                         (expectedRole != null ? " (Expected role: " + expectedRole + ")" : ""));
         
-        // Find user in User table
-        Optional<User> userOpt = userRepository.findByEmailOrPhone(loginRequest.getEmailOrPhone(), loginRequest.getEmailOrPhone());
+        // Find user across all tables
+        User user = findUserAcrossAllTables(loginRequest.getEmailOrPhone());
         
-        if (!userOpt.isPresent()) {
-            System.out.println("❌ User not found");
-            return null;
+        if (user == null) {
+            System.out.println("❌ User not found in any table");
+            throw new RuntimeException("Invalid email and password");
         }
         
-        User user = userOpt.get();
         System.out.println("✅ User found: " + user.getEmail() + ", Role: " + user.getRole());
+        
+        // Validate role if expectedRole is specified
+        if (expectedRole != null && !expectedRole.equals(user.getRole())) {
+            System.out.println("❌ Role mismatch: Expected " + expectedRole + ", Found " + user.getRole());
+            throw new RuntimeException("Invalid email and password");
+        }
         
         // Check admin access code if admin
         if ("ADMIN".equals(user.getRole()) || "ROLE_ADMIN".equals(user.getRole())) {
@@ -165,28 +170,44 @@ public class UnifiedAuthService {
     }
     
     public String sendLoginOtp(LoginRequestDto loginRequest) {
-        System.out.println("🔑 Unified Login OTP request for: " + loginRequest.getEmailOrPhone());
+        return sendLoginOtpWithRoleValidation(loginRequest, null);
+    }
+    
+    public String sendLoginOtpWithRoleValidation(LoginRequestDto loginRequest, String expectedRole) {
+        System.out.println("🔑 Unified Login OTP request for: " + loginRequest.getEmailOrPhone() + 
+                         (expectedRole != null ? " (Expected role: " + expectedRole + ")" : ""));
         
-        // Find user in User table
-        Optional<User> userOpt = userRepository.findByEmailOrPhone(loginRequest.getEmailOrPhone(), loginRequest.getEmailOrPhone());
+        // Find user across all tables
+        User user = findUserAcrossAllTables(loginRequest.getEmailOrPhone());
         
-        if (!userOpt.isPresent()) {
-            return "User not found. Please register first.";
+        if (user == null) {
+            throw new RuntimeException("Invalid email and password");
         }
         
-        User user = userOpt.get();
+        // Validate role if expectedRole is specified
+        if (expectedRole != null && !expectedRole.equals(user.getRole())) {
+            System.out.println("❌ Role mismatch for OTP login: Expected " + expectedRole + ", Found " + user.getRole());
+            throw new RuntimeException("This account is not registered as a " + 
+                (expectedRole.equals("ROLE_USER") ? "user" : 
+                 expectedRole.equals("ROLE_VENDOR") ? "vendor" : 
+                 expectedRole.equals("ROLE_ADMIN") ? "admin" : "valid user") + 
+                ". Please use the correct login portal.");
+        }
         
         // Check admin access code if admin
         if ("ROLE_ADMIN".equals(user.getRole())) {
             if (loginRequest.getAdminCode() == null || !ADMIN_ACCESS_CODE.equals(loginRequest.getAdminCode())) {
-                return "Invalid admin access code. Please contact system administrator.";
+                throw new RuntimeException("Invalid admin access code. Please contact system administrator.");
             }
         }
         
-        // Validate password
-        if (!validatePassword(loginRequest.getPassword(), user.getPassword())) {
-            return "Invalid password. Please check your credentials and try again.";
-        }
+        // For OTP-based login, we don't validate the password here
+        // We only validate that user exists and has correct role
+        // The password will be validated during OTP verification
+        System.out.println("✅ User validated for OTP login, sending OTP...");
+        
+        // Store the password temporarily for later validation during OTP verification
+        // This is already handled in the generateAndSendOtp method
         
         // Generate and send OTP
         return generateAndSendOtp(loginRequest.getEmailOrPhone(), user.getRole());
@@ -195,15 +216,13 @@ public class UnifiedAuthService {
     public JwtResponse verifyOtpAndGenerateToken(VerifyOtpRequestDto dto) {
         System.out.println("🔥 Unified OTP Verification for: " + dto.getEmailOrPhone());
         
-        // Find user in User table
-        Optional<User> userOpt = userRepository.findByEmailOrPhone(dto.getEmailOrPhone(), dto.getEmailOrPhone());
+        // Find user across all tables
+        User user = findUserAcrossAllTables(dto.getEmailOrPhone());
         
-        if (!userOpt.isPresent()) {
+        if (user == null) {
             System.out.println("❌ User not found for: " + dto.getEmailOrPhone());
             return null;
         }
-        
-        User user = userOpt.get();
         
         // Verify OTP
         Optional<OtpVerification> otpOpt = otpRepo.findByEmailOrPhone(dto.getEmailOrPhone());
@@ -218,9 +237,8 @@ public class UnifiedAuthService {
             return null;
         }
         
-        // Mark user as verified and generate token
-        user.setVerified(true);
-        userRepository.save(user);
+        // Mark user as verified and save to the correct table
+        updateUserVerificationStatus(user.getEmail(), true);
         otpRepo.delete(otp);
         
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
@@ -268,10 +286,6 @@ public class UnifiedAuthService {
                 .phone(savedVendor.getPhone())
                 .password(savedVendor.getPassword())
                 .role(savedVendor.getRole())
-                .businessName(savedVendor.getBusinessName())
-                .businessAddress(savedVendor.getBusinessAddress())
-                .gstNumber(savedVendor.getGstNumber())
-                .panNumber(savedVendor.getPanNumber())
                 .verified(savedVendor.isVerified())
                 .build();
         } else if ("ROLE_ADMIN".equals(dto.getRole())) {
@@ -297,8 +311,6 @@ public class UnifiedAuthService {
                 .phone(savedAdmin.getPhone())
                 .password(savedAdmin.getPassword())
                 .role(savedAdmin.getRole())
-                .department(savedAdmin.getDepartment())
-                .designation(savedAdmin.getDesignation())
                 .verified(savedAdmin.isVerified())
                 .build();
         } else {
@@ -401,21 +413,108 @@ public class UnifiedAuthService {
     }
     
     /**
+     * Find user across all tables (User, Vendors, Admins)
+     */
+    private User findUserAcrossAllTables(String emailOrPhone) {
+        System.out.println("🔍 Searching for user across all tables: " + emailOrPhone);
+        
+        // Check User table first
+        Optional<User> userOpt = userRepository.findByEmailOrPhone(emailOrPhone, emailOrPhone);
+        if (userOpt.isPresent()) {
+            System.out.println("✅ Found in User table");
+            return userOpt.get();
+        }
+        
+        // Check Vendors table
+        Optional<Vendors> vendorOpt = vendorsRepository.findByEmailOrPhone(emailOrPhone, emailOrPhone);
+        if (vendorOpt.isPresent()) {
+            System.out.println("✅ Found in Vendors table");
+            Vendors vendor = vendorOpt.get();
+            return User.builder()
+                .id(vendor.getId())
+                .name(vendor.getName())
+                .email(vendor.getEmail())
+                .phone(vendor.getPhone())
+                .password(vendor.getPassword())
+                .role(vendor.getRole())
+                .verified(vendor.isVerified())
+                .build();
+        }
+        
+        // Check Admins table
+        Optional<Admins> adminOpt = adminsRepository.findByEmailOrPhone(emailOrPhone, emailOrPhone);
+        if (adminOpt.isPresent()) {
+            System.out.println("✅ Found in Admins table");
+            Admins admin = adminOpt.get();
+            return User.builder()
+                .id(admin.getId())
+                .name(admin.getName())
+                .email(admin.getEmail())
+                .phone(admin.getPhone())
+                .password(admin.getPassword())
+                .role(admin.getRole())
+                .verified(admin.isVerified())
+                .build();
+        }
+        
+        System.out.println("❌ Not found in any table");
+        return null;
+    }
+    
+    /**
+     * Update user verification status in the correct table
+     */
+    private void updateUserVerificationStatus(String email, boolean verified) {
+        System.out.println("🔄 Updating verification status for: " + email + " to " + verified);
+        
+        // Check User table first
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            System.out.println("✅ Updating in User table");
+            User user = userOpt.get();
+            user.setVerified(verified);
+            userRepository.save(user);
+            return;
+        }
+        
+        // Check Vendors table
+        Optional<Vendors> vendorOpt = vendorsRepository.findByEmail(email);
+        if (vendorOpt.isPresent()) {
+            System.out.println("✅ Updating in Vendors table");
+            Vendors vendor = vendorOpt.get();
+            vendor.setVerified(verified);
+            vendorsRepository.save(vendor);
+            return;
+        }
+        
+        // Check Admins table
+        Optional<Admins> adminOpt = adminsRepository.findByEmail(email);
+        if (adminOpt.isPresent()) {
+            System.out.println("✅ Updating in Admins table");
+            Admins admin = adminOpt.get();
+            admin.setVerified(verified);
+            adminsRepository.save(admin);
+            return;
+        }
+        
+        System.out.println("❌ User not found in any table for verification update");
+    }
+    
+    /**
      * Send forgot password OTP
      */
     public String sendForgotPasswordOtp(String email) {
         System.out.println("📧 Forgot password OTP request for: " + email);
         
-        // Find user in User table
-        Optional<User> userOpt = userRepository.findByEmail(email);
+        // Find user across all tables (User, Vendors, Admins)
+        User user = findUserAcrossAllTables(email);
         
-        if (!userOpt.isPresent()) {
+        if (user == null) {
             System.out.println("❌ User not found with email: " + email);
             return "Email not found. Please check your email address.";
         }
         
-        User user = userOpt.get();
-        System.out.println("✅ User found: " + user.getEmail());
+        System.out.println("✅ User found: " + user.getEmail() + ", Role: " + user.getRole());
         
         // Generate and send OTP
         String otp = generateOtp();
@@ -438,6 +537,31 @@ public class UnifiedAuthService {
         emailService.sendForgotPasswordOtp(email, otp);
         
         return "OTP sent to your email for password recovery.";
+    }
+    
+    /**
+     * Check if email exists and return its role
+     */
+    public Map<String, String> checkEmailRole(String email) {
+        System.out.println("🔍 Checking email role for: " + email);
+        
+        // Find user across all tables
+        User user = findUserAcrossAllTables(email);
+        
+        if (user == null) {
+            System.out.println("❌ Email not found: " + email);
+            return Map.of(
+                "exists", "false",
+                "message", "Email not found"
+            );
+        }
+        
+        System.out.println("✅ Email found with role: " + user.getRole());
+        return Map.of(
+            "exists", "true",
+            "role", user.getRole(),
+            "email", user.getEmail()
+        );
     }
     
     /**

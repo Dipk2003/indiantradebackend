@@ -2,6 +2,7 @@ package com.itech.itech_backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
-    private User vendor; // The vendor who listed the product
+    private Vendors vendor; // The vendor who listed the product
 
     @Column(nullable = false)
     private int stock;
@@ -58,6 +59,7 @@ public class Product {
     
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
+    @JsonIgnore // Prevent Hibernate lazy loading issues during JSON serialization
     private List<ProductImage> images = new ArrayList<>();
     
     // Product specifications as JSON string

@@ -46,7 +46,7 @@ public class Subscription {
     // Vendor subscription details
     @ManyToOne
     @JoinColumn(name = "vendor_id")
-    private User vendor;
+    private Vendors vendor;
     
     private LocalDateTime startDate;
     

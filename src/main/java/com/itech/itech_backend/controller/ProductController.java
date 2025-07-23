@@ -294,6 +294,22 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/vendor1/products")
+    public ResponseEntity<Page<Product>> getVendor1Products(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        try {
+            log.info("Getting products for vendor ID 1 - page: {} size: {}", page, size);
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Product> products = productService.getProductsByVendor(1L, pageable);
+            log.info("Found {} products for vendor 1", products.getTotalElements());
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            log.error("Error getting vendor 1 products", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PatchMapping("/{productId}/status")
     @PreAuthorize("hasRole('VENDOR')")
     public ResponseEntity<?> updateProductStatus(

@@ -1,7 +1,7 @@
 package com.itech.itech_backend.service;
 
-import com.itech.itech_backend.model.User;
-import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.model.Vendors;
+import com.itech.itech_backend.repository.VendorsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +11,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final UserRepository userRepo;
+    private final VendorsRepository vendorsRepository;
 
-    public List<User> getAllVendors() {
-        return userRepo.findAll();
+    public List<Vendors> getAllVendors() {
+        return vendorsRepository.findAll();
     }
 
-    public User updateVendorType(Long userId, String vendorType) {
-        User user = userRepo.findById(userId).orElseThrow();
-        user.setVendorType(Enum.valueOf(com.itech.itech_backend.enums.VendorType.class, vendorType));
-        return userRepo.save(user);
+    public Vendors updateVendorType(Long vendorId, String vendorType) {
+        Vendors vendor = vendorsRepository.findById(vendorId).orElseThrow();
+        vendor.setVendorType(Enum.valueOf(com.itech.itech_backend.enums.VendorType.class, vendorType));
+        return vendorsRepository.save(vendor);
     }
 }

@@ -6,7 +6,9 @@ import com.itech.itech_backend.dto.ProductDto;
 import com.itech.itech_backend.model.Category;
 import com.itech.itech_backend.model.Product;
 import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.repository.CategoryRepository;
+import com.itech.itech_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
@@ -31,16 +33,43 @@ public class ExcelImportService {
     private final ProductService productService;
     private final CategoryRepository categoryRepository;
     private final UserService userService;
+    private final VendorsService vendorsService;
 
     @Transactional
     public ExcelImportResponseDto importProductsFromExcel(MultipartFile file, Long vendorId) {
         try {
-            // Validate vendor exists
-            User vendor = userService.getUserById(vendorId)
-                    .orElseThrow(() -> new RuntimeException("Vendor not found"));
+            log.info("🔍 Looking for vendor with ID: {} in Vendors table", vendorId);
+            
+            // Find vendor in Vendors table
+            Vendors vendor = null;
+            try {
+                Optional<Vendors> vendorOpt = vendorsService.getVendorById(vendorId);
+                if (vendorOpt.isPresent()) {
+                    vendor = vendorOpt.get();
+                    log.info("✅ Found vendor in Vendors table: {} (ID: {})", vendor.getName(), vendor.getId());
+                } else {
+                    log.error("❌ Vendor not found in Vendors table with ID: {}", vendorId);
+                    // Let's list available vendors for debugging
+                    try {
+                        log.info("🔍 Attempting to get all vendors for debugging...");
+                        List<Vendors> allVendors = vendorsService.getAllVendors();
+                        log.info("📋 Available vendors: {}", allVendors.stream()
+                            .map(v -> "ID: " + v.getId() + ", Name: " + v.getName())
+                            .toList());
+                    } catch (Exception listEx) {
+                        log.error("Could not list vendors: {}", listEx.getMessage());
+                    }
+                    throw new RuntimeException("Vendor not found with ID: " + vendorId + ". Please check if the vendor exists in the Vendors table.");
+                }
+            } catch (Exception e) {
+                log.error("⚠️ Error querying Vendors table: {}", e.getMessage());
+                throw new RuntimeException("Error accessing Vendors table: " + e.getMessage());
+            }
 
             List<ExcelImportDto> excelData = parseFile(file);
-            return processImportData(excelData, vendor);
+            
+            // Process import for vendor
+            return processImportDataForVendor(excelData, vendor);
 
         } catch (Exception e) {
             log.error("Error importing file", e);
@@ -296,6 +325,54 @@ public class ExcelImportService {
         }
     }
 
+    private ExcelImportResponseDto processImportDataForVendor(List<ExcelImportDto> excelData, Vendors vendor) {
+        List<String> errors = new ArrayList<>();
+        List<ExcelImportDto> failedRecords = new ArrayList<>();
+        List<Long> createdProductIds = new ArrayList<>();
+        
+        int successfulImports = 0;
+        int failedImports = 0;
+        int skippedRows = 0;
+
+        for (ExcelImportDto dto : excelData) {
+            if (!dto.getIsValid()) {
+                failedRecords.add(dto);
+                errors.add("Row " + dto.getRowNumber() + ": " + dto.getErrorMessage());
+                failedImports++;
+                continue;
+            }
+
+            try {
+                // Process each product in its own transaction to avoid rollback of entire batch
+                Long productId = processProductImport(dto, vendor);
+                createdProductIds.add(productId);
+                successfulImports++;
+
+                log.info("Successfully imported product: {} (Row {}) for vendor: {}", dto.getProductName(), dto.getRowNumber(), vendor.getName());
+
+            } catch (Exception e) {
+                dto.setErrorMessage("Failed to create product: " + e.getMessage());
+                failedRecords.add(dto);
+                errors.add("Row " + dto.getRowNumber() + ": " + e.getMessage());
+                failedImports++;
+                log.error("Failed to import product at row {}: {}", dto.getRowNumber(), e.getMessage());
+            }
+        }
+
+        return ExcelImportResponseDto.builder()
+                .success(failedImports == 0)
+                .totalRows(excelData.size())
+                .successfulImports(successfulImports)
+                .failedImports(failedImports)
+                .skippedRows(skippedRows)
+                .errors(errors)
+                .failedRecords(failedRecords)
+                .createdProductIds(createdProductIds)
+                .message(String.format("Import completed: %d successful, %d failed out of %d total rows", 
+                        successfulImports, failedImports, excelData.size()))
+                .build();
+    }
+
     private ExcelImportResponseDto processImportData(List<ExcelImportDto> excelData, User vendor) {
         List<String> errors = new ArrayList<>();
         List<ExcelImportDto> failedRecords = new ArrayList<>();
@@ -360,11 +437,34 @@ public class ExcelImportService {
         }
 
         // Create new category
-        Category category = new Category();
-        category.setName(categoryName);
-        // You can add subcategory logic here if needed
+        Category category = Category.builder()
+                .name(categoryName)
+                .description("Auto-created category during product import")
+                .displayOrder(0)
+                .isActive(true)
+                .slug(categoryName.toLowerCase().replaceAll("[^a-zA-Z0-9]", "-"))
+                .build();
         
         return categoryRepository.save(category);
+    }
+
+    /**
+     * Process individual product import in its own transaction
+     * This ensures that failure of one product doesn't rollback others
+     */
+    @Transactional
+    private Long processProductImport(ExcelImportDto dto, Vendors vendor) {
+        // Find or create category
+        Category category = findOrCreateCategory(dto.getCategory(), dto.getSubcategory());
+
+        // Create ProductDto
+        ProductDto productDto = convertToProductDto(dto, category.getId());
+
+        // Use vendor ID directly - now database schema references vendors table correctly
+        productDto.setVendorId(vendor.getId());
+        Product product = productService.addProduct(productDto);
+        
+        return product.getId();
     }
 
     private ProductDto convertToProductDto(ExcelImportDto dto, Long categoryId) {
@@ -374,6 +474,7 @@ public class ExcelImportService {
                 .price(dto.getPrice() != null ? dto.getPrice().doubleValue() : null)
                 .originalPrice(dto.getOriginalPrice() != null ? dto.getOriginalPrice().doubleValue() : null)
                 .categoryId(categoryId)
+                .stock(100) // Default stock value since it's not in the import template
                 .brand(dto.getBrand())
                 .model(dto.getModel())
                 .sku(dto.getSku())
@@ -391,4 +492,5 @@ public class ExcelImportService {
                 .isActive(true)
                 .build();
     }
+
 }

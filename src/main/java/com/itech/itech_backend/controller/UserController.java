@@ -163,17 +163,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    // Get all vendors (ROLE_VENDOR)
-    @GetMapping("/vendors")
-    public ResponseEntity<List<User>> getVendors() {
-        List<User> users = userService.getUsersByRole("ROLE_VENDOR");
-        return ResponseEntity.ok(users);
-    }
-
-    // Get all admins (ROLE_ADMIN)
-    @GetMapping("/admins")
-    public ResponseEntity<List<User>> getAdmins() {
-        List<User> users = userService.getUsersByRole("ROLE_ADMIN");
-        return ResponseEntity.ok(users);
-    }
+    // Note: Vendors are now in separate Vendors table
+    // Note: Admins are now in separate Admins table
 }

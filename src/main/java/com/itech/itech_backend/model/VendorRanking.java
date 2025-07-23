@@ -16,7 +16,7 @@ public class VendorRanking {
     private Long id;
 
     @OneToOne
-    private User vendor;
+    private Vendors vendor;
 
     private int totalLeadsGenerated;
     private double performanceScore;

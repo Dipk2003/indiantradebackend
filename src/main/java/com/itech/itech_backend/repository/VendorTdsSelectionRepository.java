@@ -1,6 +1,6 @@
 package com.itech.itech_backend.repository;
 
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.model.VendorTdsSelection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,14 +12,14 @@ import java.util.List;
 @Repository
 public interface VendorTdsSelectionRepository extends JpaRepository<VendorTdsSelection, Long> {
     
-    List<VendorTdsSelection> findByVendorAndPanNumber(User vendor, String panNumber);
+    List<VendorTdsSelection> findByVendorAndPanNumber(Vendors vendor, String panNumber);
     
-    List<VendorTdsSelection> findByVendorAndIsSelected(User vendor, boolean isSelected);
+    List<VendorTdsSelection> findByVendorAndIsSelected(Vendors vendor, boolean isSelected);
     
-    List<VendorTdsSelection> findByVendor(User vendor);
+    List<VendorTdsSelection> findByVendor(Vendors vendor);
     
     @Query("SELECT v FROM VendorTdsSelection v WHERE v.vendor = :vendor AND v.panNumber = :panNumber AND v.isSelected = true")
-    List<VendorTdsSelection> findSelectedTdsRatesByVendorAndPanNumber(@Param("vendor") User vendor, @Param("panNumber") String panNumber);
+    List<VendorTdsSelection> findSelectedTdsRatesByVendorAndPanNumber(@Param("vendor") Vendors vendor, @Param("panNumber") String panNumber);
     
-    void deleteByVendorAndPanNumber(User vendor, String panNumber);
+    void deleteByVendorAndPanNumber(Vendors vendor, String panNumber);
 }

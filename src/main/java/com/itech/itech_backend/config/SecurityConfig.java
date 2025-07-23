@@ -38,9 +38,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/**",
+                                "/health/**",
+                                "/health",
                                 "/api/products/search",
                                 "/api/products/category/**",
                                 "/api/products/vendor/{vendorId}",
+                                "/api/products/vendor1/products",
                                 "/api/products/featured",
                                 "/api/products/{productId}",
                                 "/api/products/test/**",
@@ -56,7 +59,8 @@ public class SecurityConfig {
                                 "/api/leads/**",
                                 "/api/orders/**",
                                 "/api/cart/**",
-                                "/api/upload/**"
+                                "/api/upload/**",
+                                "/api/excel/**"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/products").hasRole("VENDOR")

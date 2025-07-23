@@ -1,6 +1,5 @@
 package com.itech.itech_backend.model;
 
-import com.itech.itech_backend.enums.VendorType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,23 +53,6 @@ public class User {
 
     @Builder.Default
     private String role = "ROLE_USER";
-    
-    // Vendor-specific fields (nullable for non-vendor users)
-    private String businessName;
-    private String businessAddress;
-    private String city;
-    private String state;
-    private String pincode;
-    private String gstNumber;
-    private String panNumber;
-    
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private VendorType vendorType = VendorType.BASIC;
-    
-    // Admin-specific fields (nullable for non-admin users)
-    private String department;
-    private String designation;
     
     @Builder.Default
     private boolean isActive = true;

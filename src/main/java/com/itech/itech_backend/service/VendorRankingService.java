@@ -1,6 +1,6 @@
 package com.itech.itech_backend.service;
 
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.model.VendorRanking;
 import com.itech.itech_backend.repository.VendorRankingRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public class VendorRankingService {
 
     private final VendorRankingRepository rankingRepo;
 
-    public VendorRanking getOrCreateRanking(User vendor) {
+    public VendorRanking getOrCreateRanking(Vendors vendor) {
         return rankingRepo.findByVendor(vendor)
                 .orElseGet(() -> rankingRepo.save(
                         VendorRanking.builder().vendor(vendor).totalLeadsGenerated(0).performanceScore(0).build()));

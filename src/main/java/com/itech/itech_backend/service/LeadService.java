@@ -1,11 +1,11 @@
 package com.itech.itech_backend.service;
 
 import com.itech.itech_backend.model.Lead;
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.enums.LeadStatus;
 import com.itech.itech_backend.enums.LeadPriority;
 import com.itech.itech_backend.repository.LeadRepository;
-import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.service.VendorsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class LeadService {
     private LeadRepository leadRepository;
     
     @Autowired
-    private UserRepository userRepository;
+    private VendorsService vendorsService;
 
     public Lead createLead(Lead lead) {
         lead.setInquiryDate(LocalDateTime.now());
@@ -31,19 +31,19 @@ public class LeadService {
     }
 
     public List<Lead> getLeadsByVendor(Long vendorId) {
-        User vendor = userRepository.findById(vendorId)
+        Vendors vendor = vendorsService.getVendorById(vendorId)
             .orElseThrow(() -> new RuntimeException("Vendor not found"));
         return leadRepository.findByVendor(vendor);
     }
 
     public List<Lead> getLeadsByVendorAndStatus(Long vendorId, LeadStatus status) {
-        User vendor = userRepository.findById(vendorId)
+        Vendors vendor = vendorsService.getVendorById(vendorId)
             .orElseThrow(() -> new RuntimeException("Vendor not found"));
         return leadRepository.findByVendorAndStatus(vendor, status);
     }
 
     public List<Lead> getLeadsByVendorAndPriority(Long vendorId, LeadPriority priority) {
-        User vendor = userRepository.findById(vendorId)
+        Vendors vendor = vendorsService.getVendorById(vendorId)
             .orElseThrow(() -> new RuntimeException("Vendor not found"));
         return leadRepository.findByVendorAndPriority(vendor, priority);
     }
@@ -108,20 +108,20 @@ public class LeadService {
     }
 
     public List<Lead> getOverdueFollowUps(Long vendorId) {
-        User vendor = userRepository.findById(vendorId)
+        Vendors vendor = vendorsService.getVendorById(vendorId)
             .orElseThrow(() -> new RuntimeException("Vendor not found"));
         return leadRepository.findByVendorAndNextFollowUpDateBefore(vendor, LocalDateTime.now());
     }
 
     public List<Lead> getRecentLeads(Long vendorId) {
-        User vendor = userRepository.findById(vendorId)
+        Vendors vendor = vendorsService.getVendorById(vendorId)
             .orElseThrow(() -> new RuntimeException("Vendor not found"));
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         return leadRepository.findRecentLeadsByVendor(vendor, thirtyDaysAgo);
     }
 
     public Map<String, Long> getLeadStats(Long vendorId) {
-        User vendor = userRepository.findById(vendorId)
+        Vendors vendor = vendorsService.getVendorById(vendorId)
             .orElseThrow(() -> new RuntimeException("Vendor not found"));
         
         List<Object[]> stats = leadRepository.getLeadStatsByVendor(vendor);
@@ -147,7 +147,7 @@ public class LeadService {
     }
 
     public List<Lead> searchLeadsByCustomerName(Long vendorId, String customerName) {
-        User vendor = userRepository.findById(vendorId)
+        Vendors vendor = vendorsService.getVendorById(vendorId)
             .orElseThrow(() -> new RuntimeException("Vendor not found"));
         return leadRepository.findByVendorAndCustomerNameContainingIgnoreCase(vendor, customerName);
     }

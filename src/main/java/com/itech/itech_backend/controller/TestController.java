@@ -82,8 +82,6 @@ public class TestController {
                 .password(passwordEncoder.encode("password123"))
                 .role("ROLE_VENDOR")
                 .verified(true)
-                .businessName("ABC Company")
-                .businessAddress("123 Main Street, Mumbai, Maharashtra, 400001")
                 .build();
                 
         userRepository.save(vendorUser);

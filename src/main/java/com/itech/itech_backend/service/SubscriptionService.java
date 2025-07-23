@@ -2,9 +2,8 @@ package com.itech.itech_backend.service;
 
 import com.itech.itech_backend.dto.SubscriptionDto;
 import com.itech.itech_backend.model.Subscription;
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.repository.SubscriptionRepository;
-import com.itech.itech_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import java.util.Map;
 public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
-    private final UserRepository userRepository;
+    private final VendorsService vendorsService;
 
     /**
      * Get all subscription plans
@@ -34,10 +33,10 @@ public class SubscriptionService {
      */
     @Transactional
     public void subscribeToPlan(SubscriptionDto subscriptionDto) {
-        // Get current user from security context
+        // Get current vendor from security context
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User vendor = userRepository.findByEmailOrPhone(userEmail, userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Vendors vendor = vendorsService.getVendorByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
 
         // Cancel any existing active subscription
         subscriptionRepository.findByVendorAndStatus(vendor, Subscription.SubscriptionStatus.ACTIVE)
@@ -74,8 +73,8 @@ public class SubscriptionService {
      */
     public Subscription getCurrentVendorSubscription() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User vendor = userRepository.findByEmailOrPhone(userEmail, userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Vendors vendor = vendorsService.getVendorByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
 
         return subscriptionRepository.findByVendorAndStatus(vendor, Subscription.SubscriptionStatus.ACTIVE)
                 .orElseThrow(() -> new RuntimeException("No active subscription found"));
@@ -144,8 +143,8 @@ public class SubscriptionService {
      */
     public List<Subscription> getVendorSubscriptionHistory() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User vendor = userRepository.findByEmailOrPhone(userEmail, userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Vendors vendor = vendorsService.getVendorByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
 
         return subscriptionRepository.findByVendorOrderByCreatedAtDesc(vendor);
     }

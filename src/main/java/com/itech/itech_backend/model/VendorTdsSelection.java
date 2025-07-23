@@ -18,7 +18,7 @@ public class VendorTdsSelection {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id", nullable = false)
-    private User vendor;
+    private Vendors vendor;
     
     @Column(name = "pan_number", nullable = false)
     private String panNumber;

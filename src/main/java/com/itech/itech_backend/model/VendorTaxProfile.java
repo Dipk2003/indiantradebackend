@@ -17,7 +17,7 @@ public class VendorTaxProfile {
 
     @OneToOne
     @JoinColumn(name = "vendor_id", referencedColumnName = "id", nullable = false, unique = true)
-    private User vendor;
+    private Vendors vendor;
 
     private String panNumber;
     private String gstNumber;

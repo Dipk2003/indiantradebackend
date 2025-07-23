@@ -18,7 +18,7 @@ public class VendorGstSelection {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id", nullable = false)
-    private User vendor;
+    private Vendors vendor;
     
     @Column(name = "gst_number", nullable = false)
     private String gstNumber;

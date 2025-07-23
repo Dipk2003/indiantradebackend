@@ -1,7 +1,7 @@
 package com.itech.itech_backend.repository;
 
 import com.itech.itech_backend.model.Subscription;
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,10 +14,10 @@ import java.util.Optional;
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     
     // Find active subscription for a vendor
-    Optional<Subscription> findByVendorAndStatus(User vendor, Subscription.SubscriptionStatus status);
+    Optional<Subscription> findByVendorAndStatus(Vendors vendor, Subscription.SubscriptionStatus status);
     
     // Find all subscriptions for a vendor
-    List<Subscription> findByVendorOrderByCreatedAtDesc(User vendor);
+    List<Subscription> findByVendorOrderByCreatedAtDesc(Vendors vendor);
     
     // Find all subscription plans (where vendor is null)
     List<Subscription> findByVendorIsNull();

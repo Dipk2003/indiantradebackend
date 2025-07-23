@@ -23,7 +23,6 @@ public class ExcelImportController {
      * Import products from Excel/CSV file
      */
     @PostMapping("/import/{vendorId}")
-    @PreAuthorize("hasRole('VENDOR') or hasRole('ADMIN')")
     public ResponseEntity<ExcelImportResponseDto> importProducts(
             @PathVariable Long vendorId,
             @RequestParam("file") MultipartFile file) {

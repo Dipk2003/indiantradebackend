@@ -14,6 +14,9 @@ public class RegisterRequestDto {
     // Vendor-specific fields
     private String businessName;
     private String businessAddress;
+    private String city;
+    private String state;
+    private String pincode;
     private String gstNumber;
     private String panNumber;
     

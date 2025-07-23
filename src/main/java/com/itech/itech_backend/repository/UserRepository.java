@@ -27,13 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByIsActiveTrue();
     List<User> findByIsActiveFalse();
     
-    // GST and PAN queries for vendors
-    Optional<User> findByGstNumber(String gstNumber);
-    Optional<User> findByPanNumber(String panNumber);
-    
-    // Department queries for admins
-    List<User> findByDepartment(String department);
-    
     // Combined queries
     List<User> findByRoleAndVerifiedTrue(String role);
     List<User> findByRoleAndIsActiveTrue(String role);

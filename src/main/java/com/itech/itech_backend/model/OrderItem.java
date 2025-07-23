@@ -26,7 +26,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
-    private User vendor;
+    private Vendors vendor;
 
     @Column(nullable = false)
     private int quantity;

@@ -4,7 +4,7 @@ import com.itech.itech_backend.dto.ExcelImportResponseDto;
 import com.itech.itech_backend.service.ExcelImportService;
 
 import com.itech.itech_backend.enums.VendorType;
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import com.itech.itech_backend.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +27,13 @@ public class AdminController {
     private final ExcelImportService excelImportService;
 
     @GetMapping("/vendors")
-    public List<User> getAllVendors() {
+    public List<Vendors> getAllVendors() {
         return adminService.getAllVendors();
     }
 
-    @PutMapping("/vendor/{userId}/type")
-    public User updateVendorType(@PathVariable Long userId, @RequestParam VendorType vendorType) {
-        return adminService.updateVendorType(userId, vendorType.name());
+    @PutMapping("/vendor/{vendorId}/type")
+    public Vendors updateVendorType(@PathVariable Long vendorId, @RequestParam VendorType vendorType) {
+        return adminService.updateVendorType(vendorId, vendorType.name());
     }
     /**
     * Bulk import products from Excel file

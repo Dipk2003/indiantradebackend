@@ -78,17 +78,10 @@ public class UserService {
             user.setName(userDetails.getName());
             user.setEmail(userDetails.getEmail());
             user.setPhone(userDetails.getPhone());
+            user.setRole(userDetails.getRole());
             
-            // Update role-specific fields
-            if ("ROLE_VENDOR".equals(userDetails.getRole())) {
-                user.setBusinessName(userDetails.getBusinessName());
-                user.setBusinessAddress(userDetails.getBusinessAddress());
-                user.setGstNumber(userDetails.getGstNumber());
-                user.setPanNumber(userDetails.getPanNumber());
-            } else if ("ROLE_ADMIN".equals(userDetails.getRole())) {
-                user.setDepartment(userDetails.getDepartment());
-                user.setDesignation(userDetails.getDesignation());
-            }
+            // Note: Vendor-specific fields are now handled by the Vendors entity
+            // Admin-specific fields would need to be added to User entity if needed
             
             return userRepository.save(user);
         }

@@ -39,104 +39,71 @@ private final OtpVerificationRepository otpRepo;
     private static final String ADMIN_ACCESS_CODE = "ADMIN2025";
 
     public String register(RegisterRequestDto dto) {
-        User existingUser = null;
+        System.out.println("🔧 Registration request for: " + dto.getEmail() + " with role: " + dto.getRole());
         
-        if ("ROLE_USER".equals(dto.getRole())) {
-            Optional<User> userOpt = userRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
-            if (userOpt.isPresent()) {
-                existingUser = userOpt.get();
+        // Determine the role, default to ROLE_USER if not specified
+        String role = (dto.getRole() != null && !dto.getRole().isEmpty()) ? dto.getRole() : "ROLE_USER";
+        
+        // Check if user already exists based on role
+        if ("ROLE_USER".equals(role)) {
+            if (userRepository.existsByEmail(dto.getEmail()) || userRepository.existsByPhone(dto.getPhone())) {
+                return "User already exists. Please login instead.";
             }
-        } else if ("ROLE_VENDOR".equals(dto.getRole())) {
-            Optional<Vendors> vendorOpt = vendorsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
-            if (vendorOpt.isPresent()) {
-                Vendors vendor = vendorOpt.get();
-                // Convert Vendor to User for processing
-                existingUser = User.builder()
-                    .id(vendor.getId())
-                    .name(vendor.getName())
-                    .email(vendor.getEmail())
-                    .phone(vendor.getPhone())
-                    .password(vendor.getPassword())
-                    .role(vendor.getRole())
-                    .businessName(vendor.getBusinessName())
-                    .businessAddress(vendor.getBusinessAddress())
-                    .gstNumber(vendor.getGstNumber())
-                    .panNumber(vendor.getPanNumber())
-                    .build();
-            }
-        } else if ("ROLE_ADMIN".equals(dto.getRole())) {
-            Optional<Admins> adminOpt = adminsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
-            if (adminOpt.isPresent()) {
-                Admins admin = adminOpt.get();
-                // Convert Admin to User for processing
-                existingUser = User.builder()
-                    .id(admin.getId())
-                    .name(admin.getName())
-                    .email(admin.getEmail())
-                    .phone(admin.getPhone())
-                    .password(admin.getPassword())
-                    .role(admin.getRole())
-                    .department(admin.getDepartment())
-                    .designation(admin.getDesignation())
-                    .build();
-            }
-        }
-
-        User user;
-        if (existingUser != null) {
-            user = existingUser;
-            // Update password for existing user if provided
-            if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-                user.setPassword(dto.getPassword());
-            }
-            // Ensure role is set correctly for existing user
-            String userRole = (dto.getRole() != null && !dto.getRole().isEmpty()) 
-                            ? dto.getRole() 
-                            : "ROLE_VENDOR";
-            user.setRole(userRole);
-if ("ROLE_USER".equals(dto.getRole())) {
- user = userRepository.save(user);
-} else if ("ROLE_VENDOR".equals(dto.getRole())) {
- Vendors vendor = Vendors.builder()
- .name(user.getName())
- .email(user.getEmail())
- .phone(user.getPhone())
- .password(user.getPassword())
- .role("ROLE_VENDOR")
- .businessName(user.getBusinessName())
- .businessAddress(user.getBusinessAddress())
- .gstNumber(user.getGstNumber())
- .panNumber(user.getPanNumber())
- .build();
- vendorsRepository.save(vendor);
-} else if ("ROLE_ADMIN".equals(dto.getRole())) {
- Admins admin = Admins.builder()
- .name(user.getName())
- .email(user.getEmail())
- .phone(user.getPhone())
- .password(user.getPassword())
- .role("ROLE_ADMIN")
- .department(user.getDepartment())
- .designation(user.getDesignation())
- .build();
- adminsRepository.save(admin);
-}
-            System.out.println("✅ Updated existing user: " + user.getName() + " with role: " + user.getRole());
-        } else {
-            // Use role from DTO or default to ROLE_VENDOR
-            String userRole = (dto.getRole() != null && !dto.getRole().isEmpty()) 
-                            ? dto.getRole() 
-                            : "ROLE_VENDOR";
             
-            user = User.builder()
-                    .name(dto.getName())
-                    .email(dto.getEmail())
-                    .phone(dto.getPhone())
-                    .password(dto.getPassword())
-                    .role(userRole)  // Use role from DTO or default
-                    .build();
+            // Create new user
+            User user = User.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(dto.getPassword())
+                .role(role)
+                .verified(false)
+                .build();
             user = userRepository.save(user);
-            System.out.println("✅ Created new user: " + user.getName() + " with role: " + user.getRole());
+            System.out.println("✅ Created new user: " + user.getName());
+            
+        } else if ("ROLE_VENDOR".equals(role)) {
+            if (vendorsRepository.existsByEmail(dto.getEmail()) || vendorsRepository.existsByPhone(dto.getPhone())) {
+                return "Vendor already exists. Please login instead.";
+            }
+            
+            // Create new vendor
+            Vendors vendor = Vendors.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(dto.getPassword())
+                .role(role)
+                .businessName(dto.getBusinessName())
+                .businessAddress(dto.getBusinessAddress())
+                .city(dto.getCity())
+                .state(dto.getState())
+                .pincode(dto.getPincode())
+                .gstNumber(dto.getGstNumber())
+                .panNumber(dto.getPanNumber())
+                .verified(false)
+                .build();
+            vendor = vendorsRepository.save(vendor);
+            System.out.println("✅ Created new vendor: " + vendor.getName());
+            
+        } else if ("ROLE_ADMIN".equals(role)) {
+            if (adminsRepository.existsByEmail(dto.getEmail()) || adminsRepository.existsByPhone(dto.getPhone())) {
+                return "Admin already exists. Please login instead.";
+            }
+            
+            // Create new admin
+            Admins admin = Admins.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(dto.getPassword())
+                .role(role)
+                .department(dto.getDepartment())
+                .designation(dto.getDesignation())
+                .verified(false)
+                .build();
+            admin = adminsRepository.save(admin);
+            System.out.println("✅ Created new admin: " + admin.getName());
         }
 
         String otp = generateOtp();
@@ -424,8 +391,7 @@ user.setPassword(dto.getNewPassword());
             return "Debug User: " + user.getName() + 
                    " | Email: " + user.getEmail() + 
                    " | Role: " + user.getRole() + 
-                   " | Verified: " + user.isVerified() + 
-                   " | VendorType: " + user.getVendorType();
+                   " | Verified: " + user.isVerified();
         }
         return "User not found: " + email;
     }

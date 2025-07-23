@@ -51,29 +51,54 @@ public class AuthController {
     
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, null); // Generic login (backward compatibility)
+    }
+    
+    // User-specific login endpoint
+    @PostMapping("/user/login")
+    public ResponseEntity<?> userLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "ROLE_USER");
+    }
+    
+    // Vendor-specific login endpoint
+    @PostMapping("/vendor/login")
+    public ResponseEntity<?> vendorLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "ROLE_VENDOR");
+    }
+    
+    // Admin-specific login endpoint
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> adminLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "ROLE_ADMIN");
+    }
+    
+    private ResponseEntity<?> handleRoleSpecificLogin(LoginRequestDto loginRequest, String expectedRole) {
         if (loginRequest.getEmailOrPhone() == null || loginRequest.getPassword() == null) {
             return ResponseEntity.badRequest().body("Email/Phone and Password are required");
         }
         
         try {
-            System.out.println("🔐 Login attempt for: " + loginRequest.getEmailOrPhone());
+            System.out.println("🔐 Login attempt for: " + loginRequest.getEmailOrPhone() + 
+                             (expectedRole != null ? " (Expected role: " + expectedRole + ")" : ""));
             
-            // Try direct login first
-            JwtResponse directLogin = unifiedAuthService.directLogin(loginRequest);
+            // Try direct login first with role validation
+            JwtResponse directLogin = unifiedAuthService.directLoginWithRoleValidation(loginRequest, expectedRole);
             if (directLogin != null) {
                 System.out.println("✅ Direct login successful for: " + loginRequest.getEmailOrPhone());
                 return ResponseEntity.ok(directLogin);
             }
             
             System.out.println("ℹ️ Direct login failed, trying OTP-based login");
-            // If direct login fails, fall back to OTP-based login
-            String result = unifiedAuthService.sendLoginOtp(loginRequest);
+            // If direct login fails, fall back to OTP-based login with role validation
+            String result = unifiedAuthService.sendLoginOtpWithRoleValidation(loginRequest, expectedRole);
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
             System.out.println("❌ Login error: " + e.getMessage());
             // Handle specific login errors
-            if (e.getMessage().contains("Invalid email/password")) {
-                return ResponseEntity.badRequest().body("Invalid email/password");
+            if (e.getMessage().contains("Invalid email/password") || 
+                e.getMessage().contains("Invalid credentials") ||
+                e.getMessage().contains("User not found")) {
+                return ResponseEntity.badRequest().body("Invalid email and password");
             }
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -166,6 +191,22 @@ public class AuthController {
         } catch (Exception e) {
             System.out.println("❌ Forgot password OTP verification error: " + e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @PostMapping("/check-email-role")
+    public ResponseEntity<?> checkEmailRole(@RequestBody Map<String, String> request) {
+        try {
+            String email = request.get("email");
+            if (email == null || email.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Email is required"));
+            }
+            
+            Map<String, String> result = unifiedAuthService.checkEmailRole(email);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            System.out.println("Error in check email role: " + e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
     

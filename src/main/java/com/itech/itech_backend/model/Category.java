@@ -16,4 +16,18 @@ public class Category {
     private Long id;
 
     private String name;
+    
+    private String description;
+    
+    @Builder.Default
+    private int displayOrder = 0;
+    
+    @Builder.Default
+    private boolean isActive = true;
+    
+    private String metaTitle;
+    
+    private String metaDescription;
+    
+    private String slug;
 }
