@@ -22,6 +22,7 @@ public class ChatbotService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final VendorRankingRepository vendorRankingRepository;
+    private final OpenAiService openAiService;
 
     public ChatbotResponseDto processMessage(ChatbotRequestDto request) {
         log.info("Processing chatbot message: {}", request.getMessage());
@@ -59,7 +60,7 @@ public class ChatbotService {
         } else if (isHelpQuery(userMessage)) {
             responseText = generateHelpResponse();
         } else {
-            responseText = generateDefaultResponse();
+            responseText = openAiService.generateResponse(userMessage);
         }
         
         return ChatbotResponseDto.builder()
@@ -166,7 +167,7 @@ public class ChatbotService {
         if (vendor.getVendorType() != null && vendor.getVendorType() != VendorType.BASIC) {
             reason.append("Premium ").append(vendor.getVendorType().name()).append(" vendor");
         } else {
-            reason.append("Verified vendor");
+              reason.append("Verified vendor");
         }
         
         // Product diversity
@@ -352,5 +353,22 @@ public class ChatbotService {
 
     public List<ChatbotMessage> getChatHistory(String sessionId) {
         return chatbotMessageRepository.findBySessionIdOrderByCreatedAtAsc(sessionId);
+    }
+    
+    public ChatbotResponseDto startSession(ChatbotRequestDto requestDto) {
+        String sessionId = requestDto.getSessionId();
+
+        if (sessionId == null || sessionId.isEmpty()) {
+            sessionId = UUID.randomUUID().toString();
+        }
+
+        String greeting = generateGreetingResponse(); // reuse your own method
+
+        return ChatbotResponseDto.builder()
+                .sessionId(sessionId)
+                .response(greeting)
+                .hasRecommendations(false)
+                .recommendations(Collections.emptyList())
+                .build();
     }
 }
