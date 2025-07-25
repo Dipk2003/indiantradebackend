@@ -213,8 +213,7 @@ public class ChatbotService {
             case GOLD: return 3;
             case BASIC: return 4;
             default: return 5;
-        }
-    }
+        }    }
 
     private List<String> extractKeywords(String query) {
         return Arrays.stream(query.toLowerCase().split("\\s+"))

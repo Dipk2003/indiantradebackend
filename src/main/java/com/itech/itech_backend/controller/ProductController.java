@@ -29,6 +29,31 @@ public class ProductController {
     private final ProductService productService;
     private final JwtTokenUtil jwtTokenUtil;
 
+    // Add Category, Subcategory, Microcategory, Product
+    @PostMapping("/data-entry")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<?> addDataEntry(@RequestBody ProductDto dto) {
+        try {
+            Product product = productService.addDataEntry(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(product);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // Fetch Products with Filters
+    @GetMapping("/categories")
+    public ResponseEntity<List<Product>> getFilteredProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String subCategory,
+            @RequestParam(required = false) String microCategory,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String location) {
+        List<Product> products = productService.getFilteredProducts(category, subCategory, microCategory, minPrice, maxPrice, location);
+        return ResponseEntity.ok(products);
+    }
+
     // Public endpoints
     @GetMapping
     public ResponseEntity<Page<Product>> getAllProducts(

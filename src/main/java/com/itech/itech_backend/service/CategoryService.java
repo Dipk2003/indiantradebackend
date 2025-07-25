@@ -3,7 +3,9 @@ package com.itech.itech_backend.service;
 import com.itech.itech_backend.model.Category;
 import com.itech.itech_backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepo;
 
+@Transactional
     public Category addCategory(String name) {
         if (!categoryRepo.existsByName(name)) {
             return categoryRepo.save(Category.builder().name(name).build());
@@ -20,6 +23,7 @@ public class CategoryService {
         return null; // Already exists
     }
 
+@Cacheable("categories")
     public List<Category> getAllCategories() {
         return categoryRepo.findAll();
     }

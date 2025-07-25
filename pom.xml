@@ -190,6 +190,12 @@
 			<version>2.20.162</version>
 		</dependency>
 
+		<!-- Spring Cache -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

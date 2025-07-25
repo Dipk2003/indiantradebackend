@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Category {
+public class MicroCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,8 +47,12 @@ public class Category {
     @Column(name = "updated_at", nullable = true)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "sub_category_id", nullable = false)
+    private SubCategory subCategory;
+
+    @OneToMany(mappedBy = "microCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     @JsonIgnore
-    private List<SubCategory> subCategories = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 }

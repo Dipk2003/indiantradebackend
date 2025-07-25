@@ -47,11 +47,20 @@ public class OpenAiService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
         try {
+            @SuppressWarnings("rawtypes")
             ResponseEntity<Map> response = restTemplate.postForEntity(apiUrl, request, Map.class);
-            List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
-            if (!choices.isEmpty()) {
-                Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
-                return (String) message.get("content");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+            if (responseBody != null) {
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> choices = (List<Map<String, Object>>) responseBody.get("choices");
+                if (choices != null && !choices.isEmpty()) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+                    if (message != null) {
+                        return (String) message.get("content");
+                    }
+                }
             }
         } catch (Exception e) {
             log.error("OpenAI error: {}", e.getMessage());

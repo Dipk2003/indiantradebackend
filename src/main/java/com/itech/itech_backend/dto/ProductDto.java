@@ -15,6 +15,8 @@ public class ProductDto {
     private int stock;
     private Long categoryId;
     private Long vendorId;
+    private Long subCategoryId;
+    private Long microCategoryId;
     
     // Additional fields for Excel import and extended functionality
     private String brand;

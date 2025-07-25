@@ -60,7 +60,8 @@ public class SecurityConfig {
                                 "/api/orders/**",
                                 "/api/cart/**",
                                 "/api/upload/**",
-                                "/api/excel/**"
+                                "/api/excel/**",
+                                "/api/dataentry/**"
                         ).permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/products").hasRole("VENDOR")

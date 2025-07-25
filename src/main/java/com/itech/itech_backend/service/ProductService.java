@@ -1,9 +1,11 @@
 package com.itech.itech_backend.service;
 
 import com.itech.itech_backend.dto.ProductDto;
+import com.itech.itech_backend.dto.ProductCategoryDto;
 import com.itech.itech_backend.model.*;
 import com.itech.itech_backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +23,9 @@ public class ProductService {
     private final ProductRepository productRepo;
     private final CategoryRepository categoryRepo;
     private final VendorsRepository vendorsRepo;
-    private final UserRepository userRepository;
+private final UserRepository userRepository;
+private final SubCategoryRepository subCategoryRepo;
+private final MicroCategoryRepository microCategoryRepo;
 
     public Product addProduct(ProductDto dto) {
         // Validate required fields
@@ -71,8 +75,40 @@ public class ProductService {
         return productRepo.findByVendor(vendor);
     }
 
-    public List<Product> getAllProducts() {
+public List<Product> getAllProducts() {
         return productRepo.findAll();
+    }
+
+    // Add Data Entry for Categories, Subcategories, Microcategories, Products
+    public Product addDataEntry(ProductDto dto) {
+        // Validate and find Category
+        Category category = categoryRepo.findById(dto.getCategoryId())
+            .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+    ProductCategoryDto categoryDto = new ProductCategoryDto();
+    categoryDto.setCategoryId(dto.getCategoryId());
+    categoryDto.setSubCategoryId(dto.getSubCategoryId());
+    categoryDto.setMicroCategoryId(dto.getMicroCategoryId());
+
+    SubCategory subCategory = subCategoryRepo.findById(categoryDto.getSubCategoryId())
+        .orElseThrow(() -> new IllegalArgumentException("SubCategory not found"));
+
+    MicroCategory microCategory = microCategoryRepo.findById(categoryDto.getMicroCategoryId())
+        .orElseThrow(() -> new IllegalArgumentException("MicroCategory not found"));
+
+        Product product = new Product();
+        product.setName(dto.getName());
+        product.setCategory(category);
+product.setDescription(dto.getDescription());
+
+        return productRepo.save(product);
+    }
+
+    // Get Filtered Products
+@Cacheable("filteredProducts")
+    public List<Product> getFilteredProducts(String category, String subCategory, String microCategory, Double minPrice, Double maxPrice, String location) {
+        // Optimize filter logic
+        return productRepo.findByVariousFilters(category, subCategory, microCategory, minPrice, maxPrice, location);
     }
 
     // New methods to fix compilation errors

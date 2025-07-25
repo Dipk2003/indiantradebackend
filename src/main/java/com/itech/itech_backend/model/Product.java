@@ -42,6 +42,10 @@ public class Product {
     private Category category;
 
     @ManyToOne
+    @JoinColumn(name = "micro_category_id")
+    private MicroCategory microCategory;
+
+    @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
     private Vendors vendor; // The vendor who listed the product
 
@@ -130,5 +134,20 @@ public class Product {
     
     public boolean canOrder(int quantity) {
         return isActive && isApproved && stock >= quantity && quantity >= minOrderQuantity;
+    }
+public Long getSubCategoryId() {
+        return this.microCategory != null && this.microCategory.getSubCategory() != null
+                ? this.microCategory.getSubCategory().getId()
+                : null;
+    }
+
+    public Long getMicroCategoryId() {
+        return this.microCategory != null ? this.microCategory.getId() : null;
+    }
+
+    public void setSubCategory(SubCategory subCategory) {
+        if (this.microCategory != null) {
+            this.microCategory.setSubCategory(subCategory);
+        }
     }
 }
