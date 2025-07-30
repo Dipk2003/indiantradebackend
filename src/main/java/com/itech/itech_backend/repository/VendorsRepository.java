@@ -33,4 +33,17 @@ public interface VendorsRepository extends JpaRepository<Vendors, Long> {
     
     @Query("SELECT COUNT(v) FROM Vendors v WHERE v.city = :city AND v.verified = true")
     Long countVerifiedVendorsByCity(@Param("city") String city);
+    
+    // Analytics methods
+    long countByVerifiedTrue();
+    long countByKycApprovedTrue();
+    long countByKycSubmittedTrueAndKycApprovedFalse();
+    long countByCreatedAtAfter(java.time.LocalDateTime date);
+    
+    // Additional methods for search filters
+    @Query("SELECT DISTINCT v.city FROM Vendors v WHERE v.city IS NOT NULL AND v.verified = true ORDER BY v.city")
+    List<String> findDistinctCities();
+    
+    @Query("SELECT DISTINCT v.state FROM Vendors v WHERE v.state IS NOT NULL AND v.verified = true ORDER BY v.state")
+    List<String> findDistinctStates();
 }

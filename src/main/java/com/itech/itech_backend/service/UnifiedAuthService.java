@@ -501,6 +501,275 @@ public class UnifiedAuthService {
     }
     
     /**
+     * Change user password
+     */
+    public String changePassword(String currentPassword, String newPassword) {
+        System.out.println("🔒 Change password request received");
+        
+        // Get current user from JWT token (you'll need to implement this)
+        // For now, we'll use a placeholder - you'll need to get the user from security context
+        String currentUserEmail = getCurrentUserEmail();
+        
+        if (currentUserEmail == null) {
+            throw new RuntimeException("User not authenticated");
+        }
+        
+        // Find user across all tables
+        User user = findUserAcrossAllTables(currentUserEmail);
+        
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        
+        // Validate current password
+        if (!validatePassword(currentPassword, user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+        
+        // Encode new password
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        
+        // Update password in the correct table
+        updateUserPassword(user.getEmail(), encodedNewPassword);
+        
+        System.out.println("✅ Password changed successfully for user: " + currentUserEmail);
+        return "Password changed successfully";
+    }
+    
+    /**
+     * Update user profile
+     */
+    public Object updateProfile(Map<String, Object> profileData) {
+        System.out.println("📝 Update profile request for data: " + profileData);
+        
+        String currentUserEmail = getCurrentUserEmail();
+        
+        if (currentUserEmail == null) {
+            throw new RuntimeException("User not authenticated");
+        }
+        
+        // Find user across all tables
+        User user = findUserAcrossAllTables(currentUserEmail);
+        
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        
+        // Update profile in the correct table based on role
+        return updateUserProfile(user, profileData);
+    }
+    
+    /**
+     * Get current user profile
+     */
+    public Object getCurrentUserProfile() {
+        System.out.println("📋 Get current user profile request");
+        
+        String currentUserEmail = getCurrentUserEmail();
+        
+        if (currentUserEmail == null) {
+            throw new RuntimeException("User not authenticated");
+        }
+        
+        // Find user across all tables
+        User user = findUserAcrossAllTables(currentUserEmail);
+        
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        
+        // Return user profile based on role
+        return getUserProfileByRole(user);
+    }
+    
+    /**
+     * Helper method to get current user email from JWT token
+     * You'll need to implement this based on your security configuration
+     */
+    private String getCurrentUserEmail() {
+        // This is a placeholder - you'll need to implement getting the user from security context
+        // For Spring Security with JWT, this would typically be:
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // return auth.getName();
+        
+        // For now, returning null - you'll need to implement this
+        try {
+            org.springframework.security.core.Authentication auth = 
+                org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.getName() != null) {
+                return auth.getName();
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Error getting current user: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    /**
+     * Update password in the correct table
+     */
+    private void updateUserPassword(String email, String newPassword) {
+        System.out.println("🔄 Updating password for: " + email);
+        
+        // Check User table first
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            System.out.println("✅ Updating password in User table");
+            User user = userOpt.get();
+            user.setPassword(newPassword);
+            userRepository.save(user);
+            return;
+        }
+        
+        // Check Vendors table
+        Optional<Vendors> vendorOpt = vendorsRepository.findByEmail(email);
+        if (vendorOpt.isPresent()) {
+            System.out.println("✅ Updating password in Vendors table");
+            Vendors vendor = vendorOpt.get();
+            vendor.setPassword(newPassword);
+            vendorsRepository.save(vendor);
+            return;
+        }
+        
+        // Check Admins table
+        Optional<Admins> adminOpt = adminsRepository.findByEmail(email);
+        if (adminOpt.isPresent()) {
+            System.out.println("✅ Updating password in Admins table");
+            Admins admin = adminOpt.get();
+            admin.setPassword(newPassword);
+            adminsRepository.save(admin);
+            return;
+        }
+        
+        System.out.println("❌ User not found in any table for password update");
+    }
+    
+    /**
+     * Update user profile in the correct table
+     */
+    private Object updateUserProfile(User user, Map<String, Object> profileData) {
+        System.out.println("🔄 Updating profile for: " + user.getEmail() + ", Role: " + user.getRole());
+        
+        String name = (String) profileData.get("name");
+        String phone = (String) profileData.get("phone");
+        String address = (String) profileData.get("address");
+        String companyName = (String) profileData.get("companyName");
+        
+        // Update based on role
+        if ("ROLE_USER".equals(user.getRole())) {
+            Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+            if (userOpt.isPresent()) {
+                User existingUser = userOpt.get();
+                if (name != null) existingUser.setName(name);
+                if (phone != null) existingUser.setPhone(phone);
+                if (address != null) existingUser.setAddress(address);
+                
+                User savedUser = userRepository.save(existingUser);
+                return createUserResponse(savedUser);
+            }
+        } else if ("ROLE_VENDOR".equals(user.getRole())) {
+            Optional<Vendors> vendorOpt = vendorsRepository.findByEmail(user.getEmail());
+            if (vendorOpt.isPresent()) {
+                Vendors vendor = vendorOpt.get();
+                if (name != null) vendor.setName(name);
+                if (phone != null) vendor.setPhone(phone);
+                if (address != null) vendor.setBusinessAddress(address);
+                if (companyName != null) vendor.setBusinessName(companyName);
+                
+                Vendors savedVendor = vendorsRepository.save(vendor);
+                return createVendorResponse(savedVendor);
+            }
+        } else if ("ROLE_ADMIN".equals(user.getRole())) {
+            Optional<Admins> adminOpt = adminsRepository.findByEmail(user.getEmail());
+            if (adminOpt.isPresent()) {
+                Admins admin = adminOpt.get();
+                if (name != null) admin.setName(name);
+                if (phone != null) admin.setPhone(phone);
+                
+                Admins savedAdmin = adminsRepository.save(admin);
+                return createAdminResponse(savedAdmin);
+            }
+        }
+        
+        throw new RuntimeException("Failed to update profile");
+    }
+    
+    /**
+     * Get user profile by role
+     */
+    private Object getUserProfileByRole(User user) {
+        if ("ROLE_USER".equals(user.getRole())) {
+            Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+            if (userOpt.isPresent()) {
+                return createUserResponse(userOpt.get());
+            }
+        } else if ("ROLE_VENDOR".equals(user.getRole())) {
+            Optional<Vendors> vendorOpt = vendorsRepository.findByEmail(user.getEmail());
+            if (vendorOpt.isPresent()) {
+                return createVendorResponse(vendorOpt.get());
+            }
+        } else if ("ROLE_ADMIN".equals(user.getRole())) {
+            Optional<Admins> adminOpt = adminsRepository.findByEmail(user.getEmail());
+            if (adminOpt.isPresent()) {
+                return createAdminResponse(adminOpt.get());
+            }
+        }
+        
+        throw new RuntimeException("User profile not found");
+    }
+    
+    /**
+     * Create user response object
+     */
+    private Object createUserResponse(User user) {
+        return Map.of(
+            "id", user.getId(),
+            "name", user.getName(),
+            "email", user.getEmail(),
+            "phone", user.getPhone() != null ? user.getPhone() : "",
+            "address", user.getAddress() != null ? user.getAddress() : "",
+            "role", user.getRole().replace("ROLE_", "").toLowerCase(),
+            "userType", user.getRole().replace("ROLE_", "").toLowerCase(),
+            "isVerified", user.isVerified(),
+            "createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : ""
+        );
+    }
+    
+    /**
+     * Create vendor response object
+     */
+    private Object createVendorResponse(Vendors vendor) {
+        return Map.of(
+            "id", vendor.getId(),
+            "name", vendor.getName(),
+            "email", vendor.getEmail(),
+            "phone", vendor.getPhone() != null ? vendor.getPhone() : "",
+            "address", vendor.getBusinessAddress() != null ? vendor.getBusinessAddress() : "",
+            "companyName", vendor.getBusinessName() != null ? vendor.getBusinessName() : "",
+            "role", vendor.getRole().replace("ROLE_", "").toLowerCase(),
+            "userType", vendor.getRole().replace("ROLE_", "").toLowerCase(),
+            "isVerified", vendor.isVerified(),
+            "createdAt", vendor.getCreatedAt() != null ? vendor.getCreatedAt().toString() : ""
+        );
+    }
+    
+    /**
+     * Create admin response object
+     */
+    private Object createAdminResponse(Admins admin) {
+        return Map.of(
+            "id", admin.getId(),
+            "name", admin.getName(),
+            "email", admin.getEmail(),
+            "phone", admin.getPhone() != null ? admin.getPhone() : "",
+            "role", admin.getRole().replace("ROLE_", "").toLowerCase(),
+            "userType", admin.getRole().replace("ROLE_", "").toLowerCase(),
+            "isVerified", admin.isVerified(),
+            "createdAt", admin.getCreatedAt() != null ? admin.getCreatedAt().toString() : ""
+        );
+    }
+    
+    /**
      * Send forgot password OTP
      */
     public String sendForgotPasswordOtp(String email) {

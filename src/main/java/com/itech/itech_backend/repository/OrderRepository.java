@@ -1,7 +1,9 @@
 package com.itech.itech_backend.repository;
 
 import com.itech.itech_backend.model.Order;
+import com.itech.itech_backend.model.Review;
 import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.model.Vendors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +17,8 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
+    @Query("SELECT COUNT(DISTINCT o) FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId")
+    long countByVendorId(@Param("vendorId") Long vendorId);
     
     Optional<Order> findByOrderNumber(String orderNumber);
     
@@ -50,4 +54,29 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     @Query("SELECT DISTINCT o FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId ORDER BY o.createdAt DESC")
     Page<Order> findOrdersByVendorId(@Param("vendorId") Long vendorId, Pageable pageable);
+    
+    // Additional vendor analytics methods
+    @Query("SELECT COUNT(DISTINCT o) FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId AND o.status = :status")
+    long countByVendorIdAndStatus(@Param("vendorId") Long vendorId, @Param("status") Order.OrderStatus status);
+    
+    @Query("SELECT SUM(oi.price * oi.quantity) FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId AND o.createdAt BETWEEN :startDate AND :endDate")
+    Double sumRevenueByVendorIdAndDateRange(@Param("vendorId") Long vendorId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    
+    @Query("SELECT COUNT(DISTINCT o) FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId AND o.createdAt BETWEEN :startDate AND :endDate")
+    Long countByVendorIdAndDateRange(@Param("vendorId") Long vendorId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.vendor.id = :vendorId AND r.isApproved = true")
+    Double getAverageRatingByVendorId(@Param("vendorId") Long vendorId);
+    
+    @Query("SELECT COUNT(DISTINCT o.user.id) FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId")
+    long countDistinctCustomersByVendorId(@Param("vendorId") Long vendorId);
+    
+    @Query("SELECT COUNT(DISTINCT o.user.id) FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId AND o.createdAt BETWEEN :startDate AND :endDate")
+    long countNewCustomersByVendorIdAndDateRange(@Param("vendorId") Long vendorId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    
+    @Query("SELECT DISTINCT o FROM Order o JOIN o.items oi WHERE oi.vendor.id = :vendorId ORDER BY o.createdAt DESC")
+    List<Order> findTop10ByVendorIdOrderByCreatedAtDesc(@Param("vendorId") Long vendorId);
+    
+    @Query("SELECT SUM(oi.price * oi.quantity) FROM Order o JOIN o.items oi WHERE o.paymentStatus = 'PAID'")
+    Double sumTotalRevenue();
 }

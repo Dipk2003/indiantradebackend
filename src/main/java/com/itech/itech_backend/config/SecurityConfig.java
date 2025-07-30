@@ -61,8 +61,20 @@ public class SecurityConfig {
                                 "/api/cart/**",
                                 "/api/upload/**",
                                 "/api/excel/**",
-                                "/api/dataentry/**"
+                                "/api/dataentry/**",
+                                "/api/reviews/product/**",
+                                "/api/reviews/vendor/**",
+                                "/api/payments/subscription-plans",
+                                "/api/content/banners",
+                                "/api/content/coupons/validate/**",
+                                "/api/analytics/dashboard"
                         ).permitAll()
+                        .requestMatchers("/api/inquiries").hasAnyRole("USER", "VENDOR", "ADMIN")
+                        .requestMatchers("/api/quotes").hasAnyRole("VENDOR", "ADMIN")
+                        .requestMatchers("/api/reviews/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/support-tickets").hasAnyRole("USER", "VENDOR", "ADMIN")
+                        .requestMatchers("/api/wishlist/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/payments/**").hasAnyRole("VENDOR", "ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/products").hasRole("VENDOR")
                         .requestMatchers("/api/products/vendor/my-products").hasRole("VENDOR")

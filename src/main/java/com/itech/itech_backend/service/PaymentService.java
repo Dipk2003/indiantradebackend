@@ -1,21 +1,37 @@
 package com.itech.itech_backend.service;
 
+import com.itech.itech_backend.model.Payment;
+import com.itech.itech_backend.model.SubscriptionPlan;
+import com.itech.itech_backend.repository.PaymentRepository;
+import com.itech.itech_backend.repository.SubscriptionPlanRepository;
+import com.itech.marketplace.dto.PaymentSummaryDto;
+import com.itech.marketplace.dto.VendorPaymentDto;
+import com.itech.marketplace.model.VendorPayment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class PaymentService {
 
+    private final PaymentRepository paymentRepository;
+    private final SubscriptionPlanRepository subscriptionPlanRepository;
+    
     @Value("${razorpay.key.id:}")
     private String razorpayKeyId;
 
@@ -27,6 +43,18 @@ public class PaymentService {
 
     private RazorpayClient razorpayClient;
 
+    public Payment createPayment(Payment payment) {
+        return paymentRepository.save(payment);
+    }
+
+    public List<SubscriptionPlan> getAllSubscriptionPlans() {
+        return subscriptionPlanRepository.findAll();
+    }
+
+    public List<Payment> getVendorPayments(Long vendorId) {
+        return paymentRepository.findByVendorId(vendorId);
+    }
+    
     private RazorpayClient getRazorpayClient() throws RazorpayException {
         if (razorpayClient == null) {
             razorpayClient = new RazorpayClient(razorpayKeyId, razorpayKeySecret);
@@ -81,45 +109,6 @@ public class PaymentService {
         }
     }
 
-    public Map<String, Object> getPaymentDetails(String paymentId) {
-        try {
-            RazorpayClient client = getRazorpayClient();
-            com.razorpay.Payment payment = client.payments.fetch(paymentId);
-            
-            Map<String, Object> details = new HashMap<>();
-            details.put("id", payment.get("id"));
-            details.put("amount", payment.get("amount"));
-            details.put("currency", payment.get("currency"));
-            details.put("status", payment.get("status"));
-            details.put("method", payment.get("method"));
-            details.put("created_at", payment.get("created_at"));
-            
-            return details;
-        } catch (RazorpayException e) {
-            log.error("Error fetching payment details", e);
-            throw new RuntimeException("Failed to fetch payment details: " + e.getMessage());
-        }
-    }
-
-    public boolean refundPayment(String paymentId, BigDecimal amount) {
-        try {
-            RazorpayClient client = getRazorpayClient();
-            
-            JSONObject refundRequest = new JSONObject();
-            if (amount != null) {
-                refundRequest.put("amount", amount.multiply(BigDecimal.valueOf(100)).intValue());
-            }
-            
-            com.razorpay.Refund refund = client.payments.refund(paymentId, refundRequest);
-            
-            log.info("Refund created successfully: {}", refund.get("id").toString());
-            return true;
-        } catch (RazorpayException e) {
-            log.error("Error creating refund", e);
-            return false;
-        }
-    }
-
     private String hmacSha256(String data, String key) {
         try {
             javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
@@ -139,5 +128,21 @@ public class PaymentService {
         } catch (Exception e) {
             throw new RuntimeException("Error generating HMAC SHA256", e);
         }
+    }
+
+    // Additional methods required by FinanceController
+    public PaymentSummaryDto getPaymentSummary(LocalDateTime startDate, LocalDateTime endDate) {
+        // Generate payment summary
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    public Page<VendorPayment> getVendorPayments(Long vendorId, String status, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        // Get vendor payments with filtering
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    public VendorPayment processVendorPayment(VendorPaymentDto request) {
+        // Process vendor payment
+        throw new RuntimeException("Not implemented yet");
     }
 }

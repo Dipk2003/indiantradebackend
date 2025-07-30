@@ -26,6 +26,19 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    
+    // Additional fields for compatibility
+    @ManyToOne
+    @JoinColumn(name = "buyer_id")
+    private User buyer; // Same as user, for backward compatibility
+    
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product; // Main product for simple orders
+    
+    private Integer quantity; // Quantity for simple orders
+    
+    private LocalDateTime deliveryDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default

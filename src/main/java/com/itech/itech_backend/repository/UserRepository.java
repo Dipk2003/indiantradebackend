@@ -2,6 +2,8 @@ package com.itech.itech_backend.repository;
 
 import com.itech.itech_backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,4 +32,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Combined queries
     List<User> findByRoleAndVerifiedTrue(String role);
     List<User> findByRoleAndIsActiveTrue(String role);
+    
+    // Count methods for analytics
+    long countByIsActiveTrue();
+    long countByIsVerifiedTrue();
+    long countByCreatedAtAfter(java.time.LocalDateTime date);
+    
+    // Additional methods for user management
+    @Query("SELECT u FROM User u WHERE u.isActive = true ORDER BY u.createdAt DESC LIMIT :limit")
+    List<User> findRecentActiveUsers(@Param("limit") int limit);
 }

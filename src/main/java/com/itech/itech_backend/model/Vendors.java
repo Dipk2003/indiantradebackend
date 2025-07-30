@@ -57,6 +57,23 @@ public class Vendors {
     private String gstNumber;
     private String panNumber;
     
+    // KYC Status
+    @Builder.Default
+    private boolean kycSubmitted = false;
+    
+    @Builder.Default
+    private boolean kycApproved = false;
+    
+    private LocalDateTime kycSubmittedAt;
+    
+    private LocalDateTime kycApprovedAt;
+    
+    @ManyToOne
+    @JoinColumn(name = "approved_by")
+    private User approvedBy;
+    
+    private String rejectionReason;
+    
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 

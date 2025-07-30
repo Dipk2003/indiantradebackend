@@ -214,4 +214,55 @@ public class AuthController {
     public ResponseEntity<String> debugUser(@PathVariable String email) {
         return ResponseEntity.ok(authService.debugUser(email));
     }
+    
+    // Change Password
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> request) {
+        try {
+            String currentPassword = request.get("currentPassword");
+            String newPassword = request.get("newPassword");
+            
+            if (currentPassword == null || newPassword == null) {
+                return ResponseEntity.badRequest().body("Current password and new password are required");
+            }
+            
+            if (newPassword.length() < 6) {
+                return ResponseEntity.badRequest().body("New password must be at least 6 characters long");
+            }
+            
+            String result = unifiedAuthService.changePassword(currentPassword, newPassword);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            System.out.println("❌ Change password error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    // Update Profile
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody Map<String, Object> profileData) {
+        try {
+            System.out.println("📝 Update profile request received: " + profileData);
+            
+            Object updatedUser = unifiedAuthService.updateProfile(profileData);
+            System.out.println("✅ Profile updated successfully");
+            
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            System.out.println("❌ Update profile error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    // Get Profile
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile() {
+        try {
+            Object userProfile = unifiedAuthService.getCurrentUserProfile();
+            return ResponseEntity.ok(userProfile);
+        } catch (Exception e) {
+            System.out.println("❌ Get profile error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
 }

@@ -27,6 +27,17 @@ public class User {
     @Column(unique = true)
     private String phone;
     
+    @Column(length = 500)
+    private String address;
+    
+    private String city;
+    
+    private String state;
+    
+    private String pincode;
+    
+    private String country;
+    
     @Column(nullable = false)
     private String password;
 

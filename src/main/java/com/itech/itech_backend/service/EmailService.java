@@ -304,4 +304,72 @@ public class EmailService {
             otp
         );
     }
+    
+    // Generic method for sending emails with custom subject and body
+    public void sendEmail(String to, String subject, String body) {
+        try {
+            log.info("🔧 GENERIC EMAIL SERVICE DEBUG - Profile: {}, Simulation: {}, MailSender: {}", 
+                    activeProfile, simulationEnabled, (mailSender != null ? "Available" : "NULL"));
+            
+            if (mailSender != null && !simulationEnabled) {
+                log.info("📧 Attempting to send REAL email to: {} with subject: {}", to, subject);
+                sendRealGenericEmail(to, subject, body);
+            } else {
+                log.warn("📧 Sending SIMULATED email - MailSender: {}, Simulation: {}", 
+                        (mailSender != null), simulationEnabled);
+                sendSimulatedGenericEmail(to, subject, body);
+            }
+        } catch (Exception e) {
+            log.error("❌ Failed to send email to: {} - Error: {}", to, e.getMessage(), e);
+            // Fallback to console for debugging
+            sendSimulatedGenericEmail(to, subject, body);
+        }
+    }
+    
+    private void sendRealGenericEmail(String to, String subject, String body) {
+        try {
+            if (mailSender == null) {
+                log.error("❌ JavaMailSender is NULL - Mail configuration failed!");
+                throw new RuntimeException("JavaMailSender not configured properly");
+            }
+            
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            
+            helper.setFrom(fromEmail);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true);
+            
+            mailSender.send(message);
+            
+            log.info("✅ Generic Email sent successfully to: {}", to);
+            
+        } catch (Exception e) {
+            log.error("❌ Failed to send generic email to {}: {}", to, e.getMessage(), e);
+            
+            // In production, fallback to simulation instead of throwing exception
+            if ("production".equals(activeProfile)) {
+                log.warn("🔄 Production email failed, falling back to simulation for user: {}", to);
+                sendSimulatedGenericEmail(to, subject, body);
+            } else {
+                throw new RuntimeException("Email sending failed", e);
+            }
+        }
+    }
+    
+    private void sendSimulatedGenericEmail(String to, String subject, String body) {
+        System.out.println("\n" + "=".repeat(80));
+        System.out.println("📧 SIMULATED EMAIL SENT TO: " + to);
+        System.out.println("From: " + fromEmail);
+        System.out.println("Subject: " + subject);
+        System.out.println("\n" + "-".repeat(80));
+        System.out.println("EMAIL CONTENT:");
+        System.out.println("-".repeat(80));
+        System.out.println(body);
+        System.out.println("-".repeat(80));
+        System.out.println("=".repeat(80) + "\n");
+        
+        log.info("📧 Simulated generic email sent to: {} with subject: {}", to, subject);
+    }
 }
