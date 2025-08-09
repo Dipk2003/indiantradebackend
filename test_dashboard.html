@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Analytics Dashboard Test</h1>
+        
+        <!-- Status Section -->
+        <div class="bg-white rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Connection Status</h2>
+            <div id="status" class="p-4 rounded-md bg-yellow-100 text-yellow-800">
+                🔄 Testing connection...
+            </div>
+        </div>
+
+        <!-- Dashboard Data -->
+        <div id="dashboard" class="hidden">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Vendor Dashboard</h1>
+                <p class="text-gray-600">Track your business performance and insights</p>
+                
+                <!-- Time Selector -->
+                <div class="mt-4 flex items-center space-x-4">
+                    <select class="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option>This Month</option>
+                        <option>Last 3 Months</option>
+                        <option>Last 6 Months</option>
+                        <option>This Year</option>
+                    </select>
+                    
+                    <button class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                        </svg>
+                        Export Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Key Metrics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Revenue -->
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-500">Total Revenue</h3>
+                        <div class="p-2 bg-orange-100 rounded-full">
+                            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-900 mb-1" id="totalRevenue">₹0</p>
+                    <p class="text-sm text-green-600" id="revenueGrowth">+0% from last month</p>
+                </div>
+
+                <!-- Total Orders -->
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-500">Total Orders</h3>
+                        <div class="p-2 bg-red-100 rounded-full">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-blue-600 mb-1" id="totalOrders">0</p>
+                    <p class="text-sm text-green-600" id="orderGrowth">+0% from last month</p>
+                </div>
+
+                <!-- Avg Order Value -->
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-500">Avg Order Value</h3>
+                        <div class="p-2 bg-blue-100 rounded-full">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-purple-600 mb-1" id="avgOrderValue">₹0</p>
+                    <p class="text-sm text-green-600" id="avgOrderValueGrowth">+0% from last month</p>
+                </div>
+
+                <!-- Conversion Rate -->
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-500">Conversion Rate</h3>
+                        <div class="p-2 bg-pink-100 rounded-full">
+                            <svg class="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-orange-600 mb-1" id="conversionRate">0%</p>
+                    <p class="text-sm text-red-600" id="conversionRateGrowth">0% from last month</p>
+                </div>
+            </div>
+
+            <!-- Sales Overview Chart -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900">Sales Overview</h2>
+                    <div class="flex space-x-4">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium">Revenue</button>
+                        <button class="px-4 py-2 text-gray-500 hover:text-gray-700 rounded-md text-sm font-medium">Orders</button>
+                    </div>
+                </div>
+                
+                <div id="salesOverview" class="space-y-4">
+                    <!-- Sales data will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Raw Data Display -->
+        <div class="bg-white rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Raw API Response</h2>
+            <pre id="rawData" class="bg-gray-100 p-4 rounded text-sm overflow-auto max-h-96">No data loaded yet...</pre>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api/analytics';
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function formatPercentage(value) {
+            const sign = value > 0 ? '+' : '';
+            return `${sign}${value}%`;
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            const colors = {
+                success: 'bg-green-100 text-green-800',
+                error: 'bg-red-100 text-red-800',
+                info: 'bg-yellow-100 text-yellow-800'
+            };
+            
+            statusDiv.className = `p-4 rounded-md ${colors[type]}`;
+            statusDiv.innerHTML = message;
+        }
+
+        function updateDashboard(data) {
+            // Update metrics
+            document.getElementById('totalRevenue').textContent = formatCurrency(data.totalRevenue);
+            document.getElementById('totalOrders').textContent = data.totalOrders.toLocaleString();
+            document.getElementById('avgOrderValue').textContent = formatCurrency(data.avgOrderValue);
+            document.getElementById('conversionRate').textContent = `${data.conversionRate}%`;
+            
+            // Update growth percentages
+            document.getElementById('revenueGrowth').textContent = `${formatPercentage(data.revenueGrowth)} from last month`;
+            document.getElementById('orderGrowth').textContent = `${formatPercentage(data.orderGrowth)} from last month`;
+            document.getElementById('avgOrderValueGrowth').textContent = `${formatPercentage(data.avgOrderValueGrowth)} from last month`;
+            document.getElementById('conversionRateGrowth').textContent = `${formatPercentage(data.conversionRateGrowth)} from last month`;
+            
+            // Update sales overview
+            const salesOverview = document.getElementById('salesOverview');
+            salesOverview.innerHTML = '';
+            
+            if (data.salesOverview && data.salesOverview.length > 0) {
+                const maxRevenue = Math.max(...data.salesOverview.map(d => d.revenue));
+                
+                data.salesOverview.forEach(monthData => {
+                    const width = (monthData.revenue / maxRevenue) * 100;
+                    const monthDiv = document.createElement('div');
+                    monthDiv.className = 'flex items-center';
+                    monthDiv.innerHTML = `
+                        <div class="w-12 text-sm font-medium text-gray-600">${monthData.month}</div>
+                        <div class="flex-1 mx-4">
+                            <div class="bg-gray-200 rounded-full h-6 relative">
+                                <div class="bg-blue-600 h-6 rounded-full flex items-center justify-end pr-2" style="width: ${width}%">
+                                    <span class="text-white text-xs font-medium">${formatCurrency(monthData.revenue)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-20 text-right text-sm text-gray-600">${monthData.orders} orders</div>
+                    `;
+                    salesOverview.appendChild(monthDiv);
+                });
+            }
+            
+            // Show dashboard
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        async function testAPI() {
+            try {
+                updateStatus('🔄 Testing backend connection...', 'info');
+                
+                // Test simple endpoint first
+                console.log('Testing simple endpoint...');
+                const testResponse = await axios.get(`${API_BASE_URL}/test`);
+                console.log('✅ Simple endpoint works:', testResponse.data);
+                
+                // Test dashboard endpoint
+                console.log('Testing dashboard endpoint...');
+                const dashboardResponse = await axios.get(`${API_BASE_URL}/test-dashboard`);
+                console.log('✅ Dashboard endpoint works:', dashboardResponse.data);
+                
+                // Update UI
+                updateStatus('✅ Backend API is working! Loading dashboard data...', 'success');
+                updateDashboard(dashboardResponse.data);
+                
+                // Show raw data
+                document.getElementById('rawData').textContent = JSON.stringify(dashboardResponse.data, null, 2);
+                
+            } catch (error) {
+                console.error('❌ API test failed:', error);
+                updateStatus('❌ Failed to connect to backend API. Make sure server is running on port 8080.', 'error');
+                document.getElementById('rawData').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Test API when page loads
+        window.addEventListener('load', testAPI);
+    </script>
+</body>
+</html>

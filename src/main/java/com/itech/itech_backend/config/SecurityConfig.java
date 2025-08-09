@@ -53,6 +53,7 @@ public class SecurityConfig {
                                 "/api/chatbot/**",
                                 "/test/**",
                                 "/api/files/**",
+                                "/uploads/**",
                                 "/api/gst/**",
                                 "/api/pan/**",
                                 "/api/vendors/**",
@@ -67,7 +68,9 @@ public class SecurityConfig {
                                 "/api/payments/subscription-plans",
                                 "/api/content/banners",
                                 "/api/content/coupons/validate/**",
-                                "/api/analytics/dashboard"
+                                "/api/analytics/dashboard",
+                                "/api/analytics/test",
+                                "/api/analytics/test-dashboard"
                         ).permitAll()
                         .requestMatchers("/api/inquiries").hasAnyRole("USER", "VENDOR", "ADMIN")
                         .requestMatchers("/api/quotes").hasAnyRole("VENDOR", "ADMIN")

@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/products")
@@ -229,14 +230,61 @@ public class ProductController {
             @RequestParam("images") MultipartFile[] images,
             HttpServletRequest request) {
         try {
+            log.info("=== UPLOADING PRODUCT IMAGES ===");
+            log.info("Product ID: {}", productId);
+            log.info("Number of images: {}", images.length);
+            
             Long vendorId = jwtTokenUtil.extractUserIdFromRequest(request);
             if (vendorId == null) {
+                log.error("No vendor ID found in JWT token");
                 return ResponseEntity.badRequest().body("Invalid vendor session");
             }
+            
+            log.info("Vendor ID: {}", vendorId);
+            
             List<String> imageUrls = productService.uploadProductImages(productId, vendorId, images);
-            return ResponseEntity.ok(imageUrls);
+            log.info("Successfully uploaded {} images", imageUrls.size());
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Images uploaded successfully",
+                "imageUrls", imageUrls,
+                "productId", productId
+            ));
         } catch (Exception e) {
             log.error("Error uploading product images", e);
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+    
+    @PutMapping(value = "/{productId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('VENDOR')")
+    public ResponseEntity<?> updateProductImages(
+            @PathVariable Long productId,
+            @RequestParam("images") MultipartFile[] images,
+            HttpServletRequest request) {
+        try {
+            log.info("=== UPDATING PRODUCT IMAGES ===");
+            log.info("Product ID: {}", productId);
+            log.info("Number of images: {}", images.length);
+            
+            Long vendorId = jwtTokenUtil.extractUserIdFromRequest(request);
+            if (vendorId == null) {
+                log.error("No vendor ID found in JWT token");
+                return ResponseEntity.badRequest().body("Invalid vendor session");
+            }
+            
+            log.info("Vendor ID: {}", vendorId);
+            
+            List<String> imageUrls = productService.updateProductImages(productId, vendorId, images);
+            log.info("Successfully updated {} images", imageUrls.size());
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Images updated successfully",
+                "imageUrls", imageUrls,
+                "productId", productId
+            ));
+        } catch (Exception e) {
+            log.error("Error updating product images", e);
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }

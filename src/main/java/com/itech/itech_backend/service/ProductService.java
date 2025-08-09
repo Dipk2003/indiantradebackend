@@ -5,6 +5,7 @@ import com.itech.itech_backend.dto.ProductCategoryDto;
 import com.itech.itech_backend.model.*;
 import com.itech.itech_backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,20 +13,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository productRepo;
     private final CategoryRepository categoryRepo;
     private final VendorsRepository vendorsRepo;
-private final UserRepository userRepository;
-private final SubCategoryRepository subCategoryRepo;
-private final MicroCategoryRepository microCategoryRepo;
+    private final UserRepository userRepository;
+    private final SubCategoryRepository subCategoryRepo;
+    private final MicroCategoryRepository microCategoryRepo;
+    private final FileUploadService fileUploadService;
 
     public Product addProduct(ProductDto dto) {
         // Validate required fields
@@ -218,14 +222,90 @@ product.setDescription(dto.getDescription());
     }
 
     public List<String> uploadProductImages(Long productId, Long vendorId, MultipartFile[] images) {
+        log.info("Uploading images for product ID: {} by vendor: {}", productId, vendorId);
+        
         // Validate product ownership
         Product product = getProductById(productId);
         if (!product.getVendor().getId().equals(vendorId)) {
             throw new IllegalArgumentException("You can only upload images for your own products");
         }
         
-        // For now, return empty list - implement actual file upload logic
-        return List.of();
+        List<String> uploadedImageUrls = new ArrayList<>();
+        
+        // Process each image
+        for (int i = 0; i < images.length; i++) {
+            MultipartFile image = images[i];
+            log.info("Processing image {}: {} (size: {} bytes)", i + 1, image.getOriginalFilename(), image.getSize());
+            
+            // Validate image
+            if (image.isEmpty()) {
+                log.warn("Skipping empty image at index {}", i);
+                continue;
+            }
+            
+            // For now, create mock URLs - replace with actual file upload service later
+            String imageUrl = String.format("/uploads/products/%d/image_%d_%s", 
+                productId, System.currentTimeMillis(), image.getOriginalFilename());
+            uploadedImageUrls.add(imageUrl);
+            
+            log.info("Mock uploaded image {}: {}", i + 1, imageUrl);
+        }
+        
+        // Update product with image URLs (concatenate with existing ones)
+        String existingUrls = product.getImageUrls();
+        String allUrls = existingUrls != null ? existingUrls + "," + String.join(",", uploadedImageUrls) 
+                                             : String.join(",", uploadedImageUrls);
+        product.setImageUrls(allUrls);
+        productRepo.save(product);
+        
+        log.info("Successfully processed {} images for product {}", uploadedImageUrls.size(), productId);
+        return uploadedImageUrls;
+    }
+    
+    public List<String> updateProductImages(Long productId, Long vendorId, MultipartFile[] images) {
+        log.info("Updating images for product ID: {} by vendor: {}", productId, vendorId);
+        
+        // Validate product ownership
+        Product product = getProductById(productId);
+        if (!product.getVendor().getId().equals(vendorId)) {
+            throw new IllegalArgumentException("You can only update images for your own products");
+        }
+        
+        try {
+            // Delete existing images first
+            String existingUrls = product.getImageUrls();
+            if (existingUrls != null && !existingUrls.trim().isEmpty()) {
+                String[] existingImageUrls = existingUrls.split(",");
+                for (String imageUrl : existingImageUrls) {
+                    if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                        // Remove /uploads/ prefix for deletion
+                        String imagePath = imageUrl.trim().replaceFirst("^/uploads/", "");
+                        fileUploadService.deleteImageAndThumbnail(imagePath);
+                        log.info("Deleted existing image: {}", imagePath);
+                    }
+                }
+            }
+            
+            // Upload new images
+            String subDirectory = "products/" + productId;
+            List<String> newImageUrls = fileUploadService.uploadProductImages(images, subDirectory);
+            
+            // Convert to full URLs with /uploads/ prefix
+            List<String> fullImageUrls = newImageUrls.stream()
+                .map(url -> "/uploads/" + url)
+                .toList();
+            
+            // Replace all existing images with new ones
+            product.setImageUrls(String.join(",", fullImageUrls));
+            productRepo.save(product);
+            
+            log.info("Successfully updated {} images for product {}", fullImageUrls.size(), productId);
+            return fullImageUrls;
+            
+        } catch (Exception e) {
+            log.error("Failed to update images for product {}: {}", productId, e.getMessage(), e);
+            throw new RuntimeException("Failed to update images: " + e.getMessage(), e);
+        }
     }
 
     public Product updateProduct(Long productId, Long vendorId, ProductDto dto) {
