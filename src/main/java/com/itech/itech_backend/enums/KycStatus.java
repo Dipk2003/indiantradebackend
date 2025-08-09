@@ -1,6 +1,7 @@
 package com.itech.itech_backend.enums;
 
 public enum KycStatus {
+    NOT_SUBMITTED("Not Submitted"),
     PENDING("Pending Review"),
     APPROVED("Approved"),
     REJECTED("Rejected"),

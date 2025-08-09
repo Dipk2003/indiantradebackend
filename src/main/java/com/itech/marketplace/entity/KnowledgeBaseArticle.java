@@ -1,6 +1,6 @@
 package com.itech.marketplace.entity;
 
-import com.itech.itech_backend.model.User;
+import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 

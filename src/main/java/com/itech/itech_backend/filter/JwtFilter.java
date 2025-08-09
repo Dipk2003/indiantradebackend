@@ -1,6 +1,6 @@
 package com.itech.itech_backend.filter;
 
-import com.itech.itech_backend.service.UserDetailsServiceImpl;
+import com.itech.itech_backend.modules.shared.service.UserDetailsServiceImpl;
 import com.itech.itech_backend.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
