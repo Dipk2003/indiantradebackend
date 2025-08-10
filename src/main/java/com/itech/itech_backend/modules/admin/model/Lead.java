@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.admin.model;
 
 import com.itech.itech_backend.enums.LeadStatus;
 import com.itech.itech_backend.modules.buyer.model.Product;
@@ -65,3 +65,4 @@ public class Lead {
     
     private String productInterest;
 }
+

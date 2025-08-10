@@ -44,3 +44,4 @@ public class SubscriptionPlan {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

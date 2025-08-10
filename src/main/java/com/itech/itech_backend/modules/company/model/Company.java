@@ -222,3 +222,4 @@ public class Company {
         FREE, BASIC, PREMIUM, ENTERPRISE
     }
 }
+

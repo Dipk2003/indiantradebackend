@@ -1,5 +1,6 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.support.model;
 
+import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,3 +35,4 @@ public class ChatbotMessage {
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 }
+

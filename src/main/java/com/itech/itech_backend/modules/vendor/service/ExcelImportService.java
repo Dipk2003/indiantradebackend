@@ -1,11 +1,11 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.vendor.service;
 
-import com.itech.itech_backend.dto.ExcelImportDto;
-import com.itech.itech_backend.dto.ExcelImportResponseDto;
-import com.itech.itech_backend.dto.ProductDto;
+import com.itech.itech_backend.modules.shared.dto.ExcelImportDto;
+import com.itech.itech_backend.modules.shared.dto.ExcelImportResponseDto;
+import com.itech.itech_backend.modules.shared.dto.ProductDto;
 import com.itech.itech_backend.modules.buyer.model.Category;
 import com.itech.itech_backend.modules.buyer.model.Product;
-import com.itech.itech_backend.dto.ProductDto;
+import com.itech.itech_backend.modules.shared.dto.ProductDto;
 import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.buyer.service.ProductService;
@@ -498,3 +498,4 @@ public class ExcelImportService {
     }
 
 }
+

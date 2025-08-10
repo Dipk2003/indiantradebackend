@@ -1,6 +1,7 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.shared.model;
 
-import com.itech.itech_backend.enums.NotificationType;
+import com.itech.itech_backend.modules.shared.model.enums.NotificationType;
+import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,3 +55,4 @@ public class Notification {
         }
     }
 }
+

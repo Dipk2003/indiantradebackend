@@ -76,6 +76,7 @@ public class Vendors {
     private String rejectionReason;
     
     @Builder.Default
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime updatedAt;
@@ -85,3 +86,4 @@ public class Vendors {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.Data;
 
@@ -24,3 +24,4 @@ public class RegisterRequestDto {
     private String department;
     private String designation;
 }
+

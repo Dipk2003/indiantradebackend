@@ -49,3 +49,4 @@ public interface RefundRepository extends JpaRepository<Refund, Long> {
     @Query("SELECT COUNT(r) FROM Refund r WHERE r.status = 'REQUESTED'")
     Long getPendingRefundCount();
 }
+

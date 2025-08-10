@@ -90,3 +90,4 @@ public class ProductAttribute {
         return type == AttributeType.NUMBER || type == AttributeType.DECIMAL;
     }
 }
+

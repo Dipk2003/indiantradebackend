@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.support.repository;
 
-import com.itech.itech_backend.model.SupportTicket;
+import com.itech.itech_backend.modules.support.model.SupportTicket;
 import com.itech.itech_backend.enums.TicketStatus;
 import com.itech.itech_backend.enums.TicketPriority;
 import org.springframework.data.domain.Page;
@@ -31,3 +31,4 @@ public interface SupportTicketRepository extends JpaRepository<SupportTicket, Lo
     List<SupportTicket> findByAssignedToIsNullAndStatusIn(List<TicketStatus> statuses);
     List<SupportTicket> findByAssignedToIdAndStatusIn(Long assignedToId, List<TicketStatus> statuses);
 }
+

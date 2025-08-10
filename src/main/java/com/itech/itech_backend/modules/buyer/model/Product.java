@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "BuyerProduct")
+@Table(name = "buyer_products")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -152,3 +153,4 @@ public Long getSubCategoryId() {
         }
     }
 }
+

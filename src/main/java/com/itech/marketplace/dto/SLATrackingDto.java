@@ -24,3 +24,4 @@ public class SLATrackingDto {
     private Double responseComplianceScore;
     private Double resolutionComplianceScore;
 }
+

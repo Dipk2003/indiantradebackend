@@ -1,4 +1,4 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.analytics.controller;
 
 import com.itech.itech_backend.modules.vendor.service.VendorAnalyticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class AnalyticsDashboardController {
     private VendorAnalyticsService vendorAnalyticsService;
 
     // Public dashboard endpoint for frontend (matches the API call from VendorAnalytics.tsx)
-    @GetMapping("/dashboard")
+    @GetMapping("/public-dashboard")
     public ResponseEntity<Map<String, Object>> getDashboard() {
         Map<String, Object> dashboardData = new HashMap<>();
         
@@ -337,3 +337,4 @@ public class AnalyticsDashboardController {
         return globalData;
     }
 }
+

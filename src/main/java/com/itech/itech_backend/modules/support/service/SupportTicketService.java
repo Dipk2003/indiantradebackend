@@ -1,11 +1,12 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
 import com.itech.itech_backend.enums.TicketPriority;
 import com.itech.itech_backend.enums.TicketStatus;
-import com.itech.itech_backend.model.SupportTicket;
+import com.itech.itech_backend.modules.support.model.SupportTicket;
 import com.itech.itech_backend.modules.core.model.User;
-import com.itech.itech_backend.repository.SupportTicketRepository;
-import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.modules.support.repository.SupportTicketRepository;
+import com.itech.itech_backend.modules.core.repository.UserRepository;
+import com.itech.itech_backend.modules.shared.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -303,3 +304,4 @@ public class SupportTicketService {
         }
     }
 }
+

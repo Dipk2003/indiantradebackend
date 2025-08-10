@@ -1,9 +1,9 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.buyer.service;
 
-import com.itech.itech_backend.dto.ProductSearchDto;
-import com.itech.itech_backend.dto.ProductSearchResponseDto;
+import com.itech.itech_backend.modules.shared.dto.ProductSearchDto;
+import com.itech.itech_backend.modules.shared.dto.ProductSearchResponseDto;
 import com.itech.itech_backend.modules.buyer.model.Product;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ProductSearchService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private BuyerProductRepository productRepository;
     
     @Autowired
     private CategoryRepository categoryRepository;
@@ -210,3 +210,4 @@ public class ProductSearchService {
         }
     }
 }
+

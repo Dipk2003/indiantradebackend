@@ -18,3 +18,4 @@ public class SLAConfigurationDto {
     private Integer resolutionTimeMinutes;
     private Integer escalationTimeMinutes;
 }
+

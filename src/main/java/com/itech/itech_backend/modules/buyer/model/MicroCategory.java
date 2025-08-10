@@ -56,3 +56,4 @@ public class MicroCategory {
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
 }
+

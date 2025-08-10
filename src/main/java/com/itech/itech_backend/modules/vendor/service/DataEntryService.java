@@ -1,6 +1,6 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.vendor.service;
 
-import com.itech.itech_backend.dto.*;
+import com.itech.itech_backend.modules.shared.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -54,3 +54,4 @@ public interface DataEntryService {
     // Search & Suggestions
     SearchSuggestionsDto getSearchSuggestions(String query);
 }
+

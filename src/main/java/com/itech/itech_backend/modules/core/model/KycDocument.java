@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.core.model;
 
 import com.itech.itech_backend.enums.KycDocumentType;
 import com.itech.itech_backend.enums.KycStatus;
@@ -64,3 +64,4 @@ public class KycDocument {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

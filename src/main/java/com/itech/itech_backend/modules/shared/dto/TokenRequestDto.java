@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.Data;
 
@@ -6,3 +6,4 @@ import lombok.Data;
 public class TokenRequestDto {
     private String emailOrPhone;
 }
+

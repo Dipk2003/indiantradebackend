@@ -1,7 +1,8 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.support.model;
 
 import com.itech.itech_backend.enums.MessageType;
 import com.itech.itech_backend.modules.core.model.User;
+import com.itech.itech_backend.modules.buyer.model.Inquiry;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -80,3 +81,4 @@ public class Chat {
         }
     }
 }
+

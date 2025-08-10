@@ -48,3 +48,4 @@ public class RefundAnalyticsDto {
         private BigDecimal rate;
     }
 }
+

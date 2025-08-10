@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.core.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,3 +21,4 @@ public class OtpVerification {
     private String otp;
     private LocalDateTime expiryTime;
 }
+

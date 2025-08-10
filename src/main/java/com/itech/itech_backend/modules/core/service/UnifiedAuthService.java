@@ -1,17 +1,19 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.core.service;
 
-import com.itech.itech_backend.dto.JwtResponse;
-import com.itech.itech_backend.dto.LoginRequestDto;
-import com.itech.itech_backend.dto.RegisterRequestDto;
-import com.itech.itech_backend.dto.VerifyOtpRequestDto;
-import com.itech.itech_backend.model.OtpVerification;
+import com.itech.itech_backend.modules.shared.dto.JwtResponse;
+import com.itech.itech_backend.modules.shared.dto.LoginRequestDto;
+import com.itech.itech_backend.modules.shared.dto.RegisterRequestDto;
+import com.itech.itech_backend.modules.shared.dto.VerifyOtpRequestDto;
+import com.itech.itech_backend.modules.core.model.OtpVerification;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.admin.model.Admins;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.repository.OtpVerificationRepository;
+import com.itech.itech_backend.modules.core.repository.OtpVerificationRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
-import com.itech.itech_backend.repository.AdminsRepository;
+import com.itech.itech_backend.modules.admin.repository.AdminsRepository;
+import com.itech.itech_backend.modules.shared.service.EmailService;
+import com.itech.itech_backend.modules.shared.service.SmsService;
 import com.itech.itech_backend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -894,3 +896,4 @@ public class UnifiedAuthService {
             .build();
     }
 }
+

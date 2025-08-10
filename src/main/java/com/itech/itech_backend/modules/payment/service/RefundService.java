@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.payment.service;
 
 import com.itech.itech_backend.modules.payment.model.Refund;
 import com.itech.itech_backend.modules.payment.model.Payment;
@@ -7,7 +7,7 @@ import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import com.itech.itech_backend.modules.payment.repository.RefundRepository;
 import com.itech.itech_backend.modules.payment.repository.PaymentRepository;
-import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.shared.service.TransactionServiceImpl;
 import com.itech.marketplace.dto.*;
 import com.razorpay.RazorpayClient;
@@ -73,7 +73,7 @@ public class RefundService implements com.itech.marketplace.service.RefundServic
         Refund refund = Refund.builder()
                 .refundId(refundId)
                 .payment(payment)
-                .vendor(payment.getVendor())
+                .vendor(null) // TODO: Fix vendor relationship in Payment model
                 .refundAmount(refundAmount)
                 .originalAmount(payment.getAmount())
                 .status(Refund.RefundStatus.REQUESTED)
@@ -173,7 +173,7 @@ public class RefundService implements com.itech.marketplace.service.RefundServic
             refundRequest.put("notes", notes);
 
             // Create refund using the Razorpay client
-            com.razorpay.Refund razorpayRefund = client.payments.refund(refund.getPayment().getRazorpayPaymentId(), refundRequest);
+            com.razorpay.Refund razorpayRefund = client.payments.refund(refund.getPayment().getGatewayPaymentId(), refundRequest);
 
             // Update refund with Razorpay refund ID
             refund.setRazorpayRefundId(razorpayRefund.get("id"));
@@ -375,3 +375,5 @@ public class RefundService implements com.itech.marketplace.service.RefundServic
 
     // Webhook-related methods moved to WebhookService
 }
+
+

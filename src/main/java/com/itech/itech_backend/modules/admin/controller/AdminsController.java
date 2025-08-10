@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.admin.controller;
 
 import com.itech.itech_backend.modules.admin.model.Admins;
-import com.itech.itech_backend.service.AdminsService;
+import com.itech.itech_backend.modules.admin.service.AdminsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -147,3 +147,4 @@ public class AdminsController {
         return ResponseEntity.ok(exists);
     }
 }
+

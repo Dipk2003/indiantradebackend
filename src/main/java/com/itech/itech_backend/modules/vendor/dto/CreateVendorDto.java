@@ -114,3 +114,4 @@ public class CreateVendorDto {
     private Boolean allowMarketingEmails = true;
     private Boolean allowPromotionalSms = false;
 }
+

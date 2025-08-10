@@ -14,3 +14,4 @@ public class AutoResponseSuggestionDto {
     private String suggestion;
     private Double confidenceScore;
 }
+

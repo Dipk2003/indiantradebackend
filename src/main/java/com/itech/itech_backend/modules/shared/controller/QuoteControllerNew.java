@@ -1,8 +1,8 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.shared.controller;
 
-import com.itech.itech_backend.dto.CreateQuoteDto;
-import com.itech.itech_backend.model.Quote;
-import com.itech.itech_backend.service.QuoteService;
+import com.itech.itech_backend.modules.shared.dto.CreateQuoteDto;
+import com.itech.itech_backend.modules.buyer.model.Quote;
+import com.itech.itech_backend.modules.buyer.service.QuoteService;
 import com.itech.itech_backend.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -105,3 +105,4 @@ public class QuoteControllerNew {
         }
     }
 }
+

@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.core.repository;
 
-import com.itech.itech_backend.model.OtpVerification;
+import com.itech.itech_backend.modules.core.model.OtpVerification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,3 +19,4 @@ public interface OtpVerificationRepository extends JpaRepository<OtpVerification
     @Query("DELETE FROM OtpVerification o WHERE o.emailOrPhone = :emailOrPhone")
     void deleteByEmailOrPhone(@Param("emailOrPhone") String emailOrPhone);
 }
+

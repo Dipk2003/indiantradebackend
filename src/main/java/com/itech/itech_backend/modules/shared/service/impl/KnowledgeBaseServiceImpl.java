@@ -1,6 +1,6 @@
-package com.itech.itech_backend.service.impl;
+package com.itech.itech_backend.modules.shared.service;
 
-import com.itech.itech_backend.service.KnowledgeBaseService;
+import com.itech.itech_backend.modules.support.service.KnowledgeBaseService;
 import com.itech.marketplace.dto.*;
 import com.itech.marketplace.entity.KnowledgeBaseArticle;
 import lombok.RequiredArgsConstructor;
@@ -90,3 +90,4 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
         return new ArrayList<>();
     }
 }
+

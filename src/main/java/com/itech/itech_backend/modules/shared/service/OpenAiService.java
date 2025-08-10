@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.shared.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.core.model.User;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.buyer.repository.OrderRepository;
 import com.itech.itech_backend.modules.buyer.repository.ReviewRepository;
 
@@ -37,7 +37,7 @@ public class OpenAiService {
     private String apiUrl;
     
     @Autowired
-    private ProductRepository productRepository;
+    private BuyerProductRepository productRepository;
     
     @Autowired
     private OrderRepository orderRepository;
@@ -262,3 +262,4 @@ public class OpenAiService {
             .collect(Collectors.toList());
     }
 }
+

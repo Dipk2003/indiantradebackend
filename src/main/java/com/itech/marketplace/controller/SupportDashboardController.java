@@ -1,8 +1,12 @@
 package com.itech.itech_backend.controller;
 
-import com.itech.itech_backend.dto.*;
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.service.*;
+import com.itech.itech_backend.modules.shared.dto.*;
+import com.itech.itech_backend.modules.payment.model.*;
+import com.itech.itech_backend.modules.shared.service.*;
+import com.itech.itech_backend.modules.support.service.SLATrackingService;
+import com.itech.itech_backend.modules.support.service.KnowledgeBaseService;
+import com.itech.itech_backend.modules.support.service.SupportAnalyticsService;
+import com.itech.itech_backend.modules.support.service.SLAConfigurationService;
 import jakarta.validation.Valid;
 
 import com.itech.marketplace.dto.*;
@@ -215,3 +219,4 @@ public class SupportDashboardController {
         return ResponseEntity.ok(suggestions);
     }
 }
+

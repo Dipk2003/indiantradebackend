@@ -1,4 +1,4 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.payment.repository;
 
 import com.itech.itech_backend.modules.payment.model.Subscription;
 import com.itech.itech_backend.modules.core.model.User;
@@ -30,3 +30,4 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     @Query("SELECT s.planType, COUNT(s) FROM Subscription s WHERE s.vendor IS NOT NULL GROUP BY s.planType")
     List<Object[]> getSubscriptionPlanTypeCounts();
 }
+

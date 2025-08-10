@@ -175,7 +175,7 @@ public class Product {
     private BigDecimal height; // in cm
     
     @ElementCollection
-    @CollectionTable(name = "product_attributes", joinColumns = @JoinColumn(name = "product_id"))
+    @CollectionTable(name = "product_custom_attributes", joinColumns = @JoinColumn(name = "product_id"))
     @MapKeyColumn(name = "attribute_name")
     @Column(name = "attribute_value")
     private Map<String, String> attributes; // Custom attributes like color, size, material, etc.
@@ -560,3 +560,4 @@ public class Product {
                    .trim();
     }
 }
+

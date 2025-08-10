@@ -79,6 +79,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buy
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\model\SubCategory.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\model\Wishlist.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\BuyerLeadRepository.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\BuyerProductRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\BuyerRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\CartItemRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\CartRepository.java
@@ -88,7 +89,6 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buy
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\OrderRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\ProductAttributeRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\ProductImageRepository.java
-D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\ProductRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\ProductVariantRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\QuoteRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\ReviewRepository.java
@@ -172,6 +172,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\pro
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\product\model\Product.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\product\repository\ProductRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\product\service\ProductService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\product\service\ProductServiceImpl.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\controller\FileUploadController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\controller\HealthController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\controller\QuoteControllerNew.java
@@ -228,6 +229,8 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\sha
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\BuyerLead.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\Campaign.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\Coupon.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\enums\MessageType.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\enums\NotificationType.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\ErrorLog.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\Notification.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\model\SeoKeyword.java
@@ -257,6 +260,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\sha
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\service\SmsService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\service\TransactionServiceImpl.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\service\UserDetailsServiceImpl.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\service\WebhookService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\shared\service\WebhookServiceImpl.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\controller\ChatbotAdminController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\controller\ChatbotController.java

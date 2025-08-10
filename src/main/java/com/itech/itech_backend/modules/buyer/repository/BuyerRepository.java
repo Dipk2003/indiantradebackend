@@ -27,20 +27,20 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     boolean existsByEmail(String email);
     boolean existsByPhone(String phone);
     
-    Optional<Buyer> findByEmailAndStatus(String email, Buyer.BuyerStatus status);
-    Optional<Buyer> findByPhoneAndStatus(String phone, Buyer.BuyerStatus status);
+    Optional<Buyer> findByEmailAndBuyerStatus(String email, Buyer.BuyerStatus status);
+    Optional<Buyer> findByPhoneAndBuyerStatus(String phone, Buyer.BuyerStatus status);
 
     // ===============================
     // STATUS AND TYPE BASED QUERIES
     // ===============================
     
-    List<Buyer> findByStatus(Buyer.BuyerStatus status);
-    Page<Buyer> findByStatus(Buyer.BuyerStatus status, Pageable pageable);
+    List<Buyer> findByBuyerStatus(Buyer.BuyerStatus status);
+    Page<Buyer> findByBuyerStatus(Buyer.BuyerStatus status, Pageable pageable);
     
     List<Buyer> findByBuyerType(Buyer.BuyerType buyerType);
     Page<Buyer> findByBuyerType(Buyer.BuyerType buyerType, Pageable pageable);
     
-    Page<Buyer> findByStatusAndBuyerType(Buyer.BuyerStatus status, Buyer.BuyerType buyerType, Pageable pageable);
+    Page<Buyer> findByBuyerStatusAndBuyerType(Buyer.BuyerStatus status, Buyer.BuyerType buyerType, Pageable pageable);
     
     // ===============================
     // VERIFICATION STATUS QUERIES
@@ -63,10 +63,10 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     // COMPANY ASSOCIATION QUERIES
     // ===============================
     
-    List<Buyer> findByCompanyId(Long companyId);
-    Page<Buyer> findByCompanyId(Long companyId, Pageable pageable);
+    List<Buyer> findByCompany_Id(Long companyId);
+    Page<Buyer> findByCompany_Id(Long companyId, Pageable pageable);
     
-    @Query("SELECT b FROM Buyer b WHERE b.company.id = :companyId AND b.status = :status")
+    @Query("SELECT b FROM Buyer b WHERE b.company.id = :companyId AND b.buyerStatus = :status")
     List<Buyer> findByCompanyIdAndStatus(@Param("companyId") Long companyId, @Param("status") Buyer.BuyerStatus status);
 
     // ===============================
@@ -128,7 +128,7 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     
     @Query("SELECT b FROM Buyer b WHERE " +
            "(:buyerType IS NULL OR b.buyerType = :buyerType) AND " +
-           "(:status IS NULL OR b.status = :status) AND " +
+           "(:status IS NULL OR b.buyerStatus = :status) AND " +
            "(:businessType IS NULL OR b.businessType = :businessType) AND " +
            "(:companySize IS NULL OR b.companySize = :companySize) AND " +
            "(:city IS NULL OR LOWER(b.billingCity) = LOWER(:city)) AND " +
@@ -149,7 +149,7 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     // ANALYTICS AND STATISTICS QUERIES
     // ===============================
     
-    @Query("SELECT COUNT(b) FROM Buyer b WHERE b.status = :status")
+    @Query("SELECT COUNT(b) FROM Buyer b WHERE b.buyerStatus = :status")
     long countByStatus(@Param("status") Buyer.BuyerStatus status);
     
     @Query("SELECT COUNT(b) FROM Buyer b WHERE b.buyerType = :buyerType")
@@ -197,13 +197,13 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     // COMMUNICATION AND PREFERENCES
     // ===============================
     
-    @Query("SELECT b FROM Buyer b WHERE b.emailNotifications = true AND b.status = 'ACTIVE'")
+    @Query("SELECT b FROM Buyer b WHERE b.emailNotifications = true AND b.buyerStatus = 'ACTIVE'")
     List<Buyer> findBuyersForEmailNotifications();
     
-    @Query("SELECT b FROM Buyer b WHERE b.smsNotifications = true AND b.status = 'ACTIVE'")
+    @Query("SELECT b FROM Buyer b WHERE b.smsNotifications = true AND b.buyerStatus = 'ACTIVE'")
     List<Buyer> findBuyersForSmsNotifications();
     
-    @Query("SELECT b FROM Buyer b WHERE b.marketingEmails = true AND b.status = 'ACTIVE'")
+    @Query("SELECT b FROM Buyer b WHERE b.marketingEmails = true AND b.buyerStatus = 'ACTIVE'")
     List<Buyer> findBuyersForMarketingEmails();
     
     @Query("SELECT b FROM Buyer b WHERE :category MEMBER OF b.preferredCategories")
@@ -240,14 +240,14 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     // ===============================
     
     @Query("SELECT b FROM Buyer b WHERE " +
-           "b.status = 'ACTIVE' AND " +
+           "b.buyerStatus = 'ACTIVE' AND " +
            "b.isEmailVerified = true AND " +
            "b.isPhoneVerified = true AND " +
            "(b.isPremium = true OR b.totalOrderValue >= :minOrderValue)")
     List<Buyer> findEligibleForPremiumOffers(@Param("minOrderValue") BigDecimal minOrderValue);
     
     @Query("SELECT b FROM Buyer b WHERE " +
-           "b.status = 'ACTIVE' AND " +
+           "b.buyerStatus = 'ACTIVE' AND " +
            "b.lastLoginDate < :cutoffDate AND " +
            "b.totalOrders > 0")
     List<Buyer> findBuyersForReEngagement(@Param("cutoffDate") LocalDateTime cutoffDate);
@@ -278,7 +278,7 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     
     @Query("SELECT " +
            "COUNT(b), " +
-           "COUNT(CASE WHEN b.status = 'ACTIVE' THEN 1 END), " +
+           "COUNT(CASE WHEN b.buyerStatus = 'ACTIVE' THEN 1 END), " +
            "COUNT(CASE WHEN b.isPremium = true THEN 1 END), " +
            "COUNT(CASE WHEN b.isEmailVerified = true AND b.isPhoneVerified = true THEN 1 END) " +
            "FROM Buyer b")
@@ -289,6 +289,7 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
            "AVG(b.totalOrderValue), " +
            "SUM(b.totalOrders), " +
            "AVG(b.totalOrders) " +
-           "FROM Buyer b WHERE b.status = 'ACTIVE'")
+           "FROM Buyer b WHERE b.buyerStatus = 'ACTIVE'")
     Object[] getBuyerBusinessStats();
 }
+

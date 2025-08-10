@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.admin.repository;
 
-import com.itech.itech_backend.model.Lead;
+import com.itech.itech_backend.modules.admin.model.Lead;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import com.itech.itech_backend.enums.LeadStatus;
@@ -45,3 +45,4 @@ public interface LeadRepository extends JpaRepository<Lead, Long> {
     // Search leads by customer name containing
     List<Lead> findByVendorAndCustomerNameContainingIgnoreCase(Vendors vendor, String customerName);
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.shared.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -373,3 +373,4 @@ public class EmailService {
         log.info("📧 Simulated generic email sent to: {} with subject: {}", to, subject);
     }
 }
+

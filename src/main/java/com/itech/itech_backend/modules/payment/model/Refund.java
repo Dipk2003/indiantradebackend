@@ -77,3 +77,4 @@ public class Refund {
         FULL, PARTIAL
     }
 }
+

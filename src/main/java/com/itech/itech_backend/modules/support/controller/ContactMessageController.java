@@ -1,8 +1,8 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.support.controller;
 
-import com.itech.itech_backend.dto.ContactMessageDto;
-import com.itech.itech_backend.model.ContactMessage;
-import com.itech.itech_backend.service.ContactMessageService;
+import com.itech.itech_backend.modules.shared.dto.ContactMessageDto;
+import com.itech.itech_backend.modules.support.model.ContactMessage;
+import com.itech.itech_backend.modules.support.service.ContactMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,3 +19,4 @@ public class ContactMessageController {
         return contactService.saveMessage(dto);
     }
 }
+

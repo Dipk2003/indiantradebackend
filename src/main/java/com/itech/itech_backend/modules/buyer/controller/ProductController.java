@@ -1,6 +1,6 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.buyer.controller;
 
-import com.itech.itech_backend.dto.ProductDto;
+import com.itech.itech_backend.modules.shared.dto.ProductDto;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.buyer.service.ProductService;
 import com.itech.itech_backend.util.JwtTokenUtil;
@@ -443,3 +443,4 @@ public class ProductController {
     }
 
 }
+

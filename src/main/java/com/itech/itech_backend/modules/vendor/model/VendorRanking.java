@@ -1,5 +1,6 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.vendor.model;
 
+import com.itech.itech_backend.modules.vendor.model.Vendors;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,3 +22,4 @@ public class VendorRanking {
     private int totalLeadsGenerated;
     private double performanceScore;
 }
+

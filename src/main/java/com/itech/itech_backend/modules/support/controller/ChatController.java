@@ -1,11 +1,11 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.support.controller;
 
-import com.itech.itech_backend.dto.ChatMessageDto;
-import com.itech.itech_backend.model.Chat;
-import com.itech.itech_backend.model.ChatAttachment;
+import com.itech.itech_backend.modules.shared.dto.ChatMessageDto;
+import com.itech.itech_backend.modules.support.model.Chat;
+import com.itech.itech_backend.modules.support.model.ChatAttachment;
 import com.itech.itech_backend.modules.core.model.User;
-import com.itech.itech_backend.service.ChatService;
-import com.itech.itech_backend.service.FileUploadService;
+import com.itech.itech_backend.modules.support.service.ChatService;
+import com.itech.itech_backend.modules.shared.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -413,3 +413,4 @@ public class ChatController {
         }
     }
 }
+

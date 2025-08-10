@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.shared.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,3 +33,4 @@ public class SystemMetrics {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }
+

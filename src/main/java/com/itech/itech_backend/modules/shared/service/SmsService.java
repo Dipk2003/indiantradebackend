@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.shared.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -226,3 +226,4 @@ public class SmsService {
         return !"your_textlocal_api_key".equals(textlocalApiKey);
     }
 }
+

@@ -1,8 +1,8 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.payment.controller;
 
-import com.itech.itech_backend.dto.SubscriptionDto;
+import com.itech.itech_backend.modules.shared.dto.SubscriptionDto;
 import com.itech.itech_backend.modules.payment.model.Subscription;
-import com.itech.itech_backend.service.SubscriptionService;
+import com.itech.itech_backend.modules.payment.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,3 +64,4 @@ public class SubscriptionController {
         return ResponseEntity.ok(history);
     }
 }
+

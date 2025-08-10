@@ -15,3 +15,4 @@ public class BulkAssignmentDto {
     private List<Long> ticketIds;
     private Long assignToId;
 }
+

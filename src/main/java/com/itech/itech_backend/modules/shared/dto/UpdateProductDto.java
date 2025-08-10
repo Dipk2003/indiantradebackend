@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -75,3 +75,4 @@ public class UpdateProductDto {
     
     private List<String> imageUrls;
 }
+

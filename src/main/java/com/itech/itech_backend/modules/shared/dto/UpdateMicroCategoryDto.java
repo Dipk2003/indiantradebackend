@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,3 +37,4 @@ public class UpdateMicroCategoryDto {
     @NotNull(message = "SubCategory ID is required")
     private Long subCategoryId;
 }
+

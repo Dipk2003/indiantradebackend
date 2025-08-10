@@ -55,3 +55,4 @@ public class LeadResponseDto {
     private String priorityLevel;
     private Boolean needsFollowUp;
 }
+

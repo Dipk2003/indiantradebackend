@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.buyer.controller;
 
 import com.itech.itech_backend.modules.buyer.model.Category;
-import com.itech.itech_backend.service.CategoryService;
+import com.itech.itech_backend.modules.buyer.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,3 +38,4 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 }
+

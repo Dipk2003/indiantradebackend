@@ -1,8 +1,10 @@
 package com.itech.itech_backend.controller;
 
-import com.itech.itech_backend.dto.*;
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.service.*;
+import com.itech.itech_backend.modules.shared.dto.*;
+import com.itech.itech_backend.modules.payment.model.*;
+import com.itech.itech_backend.modules.shared.service.*;
+import com.itech.itech_backend.modules.payment.service.InvoiceService;
+import com.itech.itech_backend.modules.payment.service.PaymentService;
 import com.itech.marketplace.model.VendorPayment;
 import jakarta.validation.Valid;
 
@@ -57,7 +59,7 @@ private final com.itech.marketplace.service.TransactionService transactionServic
 
     @PostMapping("/invoices/generate")
     @PreAuthorize("hasRole('ADMIN') or hasRole('FINANCE')")
-    public ResponseEntity<Invoice> generateInvoice(@Valid @RequestBody InvoiceGenerationDto request) {
+    public ResponseEntity<Invoice> generateInvoice(@Valid @RequestBody com.itech.itech_backend.modules.payment.dto.InvoiceGenerationDto request) {
         Invoice invoice = invoiceService.generateInvoice(request);
         return ResponseEntity.ok(invoice);
     }
@@ -162,22 +164,22 @@ private final com.itech.marketplace.service.TransactionService transactionServic
     // Financial Reports
     @GetMapping("/reports/revenue")
     @PreAuthorize("hasRole('ADMIN') or hasRole('FINANCE')")
-    public ResponseEntity<FinancialReportDto> getRevenueReport(
+    public ResponseEntity<com.itech.itech_backend.modules.payment.dto.FinancialReportDto> getRevenueReport(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false, defaultValue = "DAILY") String groupBy) {
         
-        FinancialReportDto report = invoiceService.generateRevenueReport(startDate, endDate, groupBy);
+        com.itech.itech_backend.modules.payment.dto.FinancialReportDto report = invoiceService.generateRevenueReport(startDate, endDate, groupBy);
         return ResponseEntity.ok(report);
     }
 
     @GetMapping("/reports/subscription")
     @PreAuthorize("hasRole('ADMIN') or hasRole('FINANCE')")
-    public ResponseEntity<SubscriptionReportDto> getSubscriptionReport(
+    public ResponseEntity<com.itech.itech_backend.modules.payment.dto.SubscriptionReportDto> getSubscriptionReport(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         
-        SubscriptionReportDto report = invoiceService.generateSubscriptionReport(startDate, endDate);
+        com.itech.itech_backend.modules.payment.dto.SubscriptionReportDto report = invoiceService.generateSubscriptionReport(startDate, endDate);
         return ResponseEntity.ok(report);
     }
 
@@ -204,25 +206,25 @@ private final com.itech.marketplace.service.TransactionService transactionServic
     // Dashboard Overview
     @GetMapping("/dashboard/overview")
     @PreAuthorize("hasRole('ADMIN') or hasRole('FINANCE')")
-    public ResponseEntity<FinanceDashboardDto> getDashboardOverview() {
-        FinanceDashboardDto overview = invoiceService.getDashboardOverview();
+    public ResponseEntity<com.itech.itech_backend.modules.payment.dto.FinanceDashboardDto> getDashboardOverview() {
+        com.itech.itech_backend.modules.payment.dto.FinanceDashboardDto overview = invoiceService.getDashboardOverview();
         return ResponseEntity.ok(overview);
     }
 
     // GST and Tax Reports
     @GetMapping("/reports/gst")
     @PreAuthorize("hasRole('ADMIN') or hasRole('FINANCE')")
-    public ResponseEntity<GSTReportDto> getGSTReport(
+    public ResponseEntity<com.itech.itech_backend.modules.payment.dto.GSTReportDto> getGSTReport(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         
-        GSTReportDto gstReport = invoiceService.generateGSTReport(startDate, endDate);
+        com.itech.itech_backend.modules.payment.dto.GSTReportDto gstReport = invoiceService.generateGSTReport(startDate, endDate);
         return ResponseEntity.ok(gstReport);
     }
 
     @PostMapping("/invoices/bulk-generate")
     @PreAuthorize("hasRole('ADMIN') or hasRole('FINANCE')")
-    public ResponseEntity<List<Invoice>> bulkGenerateInvoices(@Valid @RequestBody BulkInvoiceGenerationDto request) {
+    public ResponseEntity<List<Invoice>> bulkGenerateInvoices(@Valid @RequestBody com.itech.itech_backend.modules.payment.dto.BulkInvoiceGenerationDto request) {
         List<Invoice> invoices = invoiceService.bulkGenerateInvoices(request);
         return ResponseEntity.ok(invoices);
     }
@@ -249,3 +251,4 @@ private final com.itech.marketplace.service.TransactionService transactionServic
         return ResponseEntity.ok(payment);
     }
 }
+

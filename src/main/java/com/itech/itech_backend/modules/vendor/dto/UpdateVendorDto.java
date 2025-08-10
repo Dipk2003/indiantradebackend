@@ -118,3 +118,4 @@ public class UpdateVendorDto {
     private Boolean featuredVendor;
     private Boolean priorityListing;
 }
+

@@ -96,3 +96,4 @@ public class Invoice {
         SUBSCRIPTION, ORDER, SERVICE, REFUND
     }
 }
+

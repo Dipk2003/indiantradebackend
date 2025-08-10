@@ -2,7 +2,10 @@ package com.itech.itech_backend.modules.analytics.service;
 
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
-import com.itech.itech_backend.modules.buyer.repository.*;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.OrderRepository;
+import com.itech.itech_backend.modules.buyer.repository.InquiryRepository;
+import com.itech.itech_backend.modules.buyer.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,7 @@ public class AnalyticsService {
 
     private final UserRepository userRepository;
     private final VendorsRepository vendorsRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final InquiryRepository inquiryRepository;
     private final ReviewRepository reviewRepository;
@@ -72,3 +75,4 @@ public class AnalyticsService {
         return metrics;
     }
 }
+

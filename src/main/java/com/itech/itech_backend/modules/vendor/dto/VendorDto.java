@@ -124,3 +124,4 @@ public class VendorDto {
     private String vendorBadge; // DIAMOND, PLATINUM, GOLD, BASIC
     private Boolean isEligibleForPremium;
 }
+

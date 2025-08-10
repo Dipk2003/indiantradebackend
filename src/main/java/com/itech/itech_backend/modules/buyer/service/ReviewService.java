@@ -1,13 +1,13 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.buyer.service;
 
-import com.itech.itech_backend.model.Review;
-import com.itech.itech_backend.model.VendorReview;
+import com.itech.itech_backend.modules.buyer.model.Review;
+import com.itech.itech_backend.modules.vendor.model.VendorReview;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import com.itech.itech_backend.modules.buyer.repository.ReviewRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorReviewRepository;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final VendorReviewRepository vendorReviewRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final UserRepository userRepository;
     private final VendorsRepository vendorsRepository;
 
@@ -135,3 +135,4 @@ public class ReviewService {
         return reviewRepository.existsByUserIdAndProductId(userId, productId);
     }
 }
+

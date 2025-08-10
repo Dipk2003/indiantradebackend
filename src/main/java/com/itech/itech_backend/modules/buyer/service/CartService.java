@@ -1,10 +1,12 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.buyer.service;
 
-import com.itech.itech_backend.dto.AddToCartDto;
-import com.itech.itech_backend.dto.CartDto;
+import com.itech.itech_backend.modules.shared.dto.AddToCartDto;
+import com.itech.itech_backend.modules.shared.dto.CartDto;
 import com.itech.itech_backend.modules.buyer.model.*;
 import com.itech.itech_backend.modules.core.model.User;
-import com.itech.itech_backend.modules.buyer.repository.*;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.CartRepository;
+import com.itech.itech_backend.modules.buyer.repository.CartItemRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final UserRepository userRepository;
 
     public CartDto getUserCart(Long userId) {
@@ -171,3 +173,4 @@ public class CartService {
                 .build();
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.core.controller;
 
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.core.service.UserService;
@@ -166,3 +166,4 @@ public class UserController {
     // Note: Vendors are now in separate Vendors table
     // Note: Admins are now in separate Admins table
 }
+

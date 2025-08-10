@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.*;
 
@@ -18,3 +18,4 @@ public class LeadDto {
     private Double budget;
     private String urgency;
 }
+

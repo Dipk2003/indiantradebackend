@@ -1,8 +1,8 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
-import com.itech.itech_backend.dto.ContactMessageDto;
-import com.itech.itech_backend.model.ContactMessage;
-import com.itech.itech_backend.repository.ContactMessageRepository;
+import com.itech.itech_backend.modules.shared.dto.ContactMessageDto;
+import com.itech.itech_backend.modules.support.model.ContactMessage;
+import com.itech.itech_backend.modules.support.repository.ContactMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,3 +20,4 @@ public class ContactMessageService {
                 .build());
     }
 }
+

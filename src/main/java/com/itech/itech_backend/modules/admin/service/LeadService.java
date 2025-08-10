@@ -1,11 +1,12 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.admin.service;
 
-import com.itech.itech_backend.model.Lead;
+import com.itech.itech_backend.modules.admin.model.Lead;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.enums.LeadStatus;
 import com.itech.itech_backend.enums.LeadPriority;
-import com.itech.itech_backend.repository.LeadRepository;
+import com.itech.itech_backend.modules.admin.repository.LeadRepository;
 import com.itech.itech_backend.modules.vendor.service.VendorsService;
+import com.itech.itech_backend.modules.vendor.model.Vendors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -160,3 +161,4 @@ public class LeadService {
         return leadRepository.findAll();
     }
 }
+

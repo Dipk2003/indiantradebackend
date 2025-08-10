@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.Data;
 
@@ -7,3 +7,4 @@ public class VerifyOtpRequestDto {
     private String emailOrPhone;
     private String otp;
 }
+

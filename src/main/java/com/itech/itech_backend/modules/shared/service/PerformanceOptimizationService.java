@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.shared.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.core.model.User;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PerformanceOptimizationService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private BuyerProductRepository productRepository;
     
     @Autowired
     private UserRepository userRepository;
@@ -268,3 +268,4 @@ public class PerformanceOptimizationService {
         );
     }
 }
+

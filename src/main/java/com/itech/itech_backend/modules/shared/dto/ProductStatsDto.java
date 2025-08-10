@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,3 +24,4 @@ public class ProductStatsDto {
     private LocalDateTime createdAt;
     private String vendorName;
 }
+

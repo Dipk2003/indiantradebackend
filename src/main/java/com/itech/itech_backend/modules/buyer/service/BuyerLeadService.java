@@ -4,7 +4,7 @@ import com.itech.itech_backend.enums.LeadInteraction;
 import com.itech.itech_backend.modules.buyer.dto.BuyerLeadDto;
 import com.itech.itech_backend.modules.buyer.dto.LeadResponseDto;
 import com.itech.itech_backend.modules.buyer.dto.LeadStatsDto;
-import com.itech.itech_backend.model.BuyerLead;
+import com.itech.itech_backend.modules.shared.model.BuyerLead;
 import com.itech.itech_backend.modules.buyer.repository.BuyerLeadRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -580,3 +580,4 @@ public class BuyerLeadService {
         return value;
     }
 }
+

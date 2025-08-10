@@ -1,10 +1,10 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.admin.service;
 
-import com.itech.itech_backend.model.ErrorLog;
-import com.itech.itech_backend.model.SystemMetrics;
-import com.itech.itech_backend.repository.ErrorLogRepository;
-import com.itech.itech_backend.repository.SystemMetricsRepository;
-import com.itech.itech_backend.repository.ApiLogRepository;
+import com.itech.itech_backend.modules.shared.model.ErrorLog;
+import com.itech.itech_backend.modules.shared.model.SystemMetrics;
+import com.itech.itech_backend.modules.shared.repository.ErrorLogRepository;
+import com.itech.itech_backend.modules.shared.repository.SystemMetricsRepository;
+import com.itech.itech_backend.modules.shared.repository.ApiLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -200,3 +200,4 @@ public class CTODashboardService {
         }
     }
 }
+

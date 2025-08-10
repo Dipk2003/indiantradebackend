@@ -39,3 +39,4 @@ public class InvoiceGenerationDto {
     private LocalDateTime dueDate;
     private Map<String, Object> metadata;
 }
+

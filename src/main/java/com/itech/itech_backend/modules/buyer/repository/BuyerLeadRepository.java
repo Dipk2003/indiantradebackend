@@ -1,6 +1,6 @@
 package com.itech.itech_backend.modules.buyer.repository;
 
-import com.itech.itech_backend.model.BuyerLead;
+import com.itech.itech_backend.modules.shared.model.BuyerLead;
 import com.itech.itech_backend.modules.core.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -125,4 +125,7 @@ public interface BuyerLeadRepository extends JpaRepository<BuyerLead, Long> {
     List<Object[]> getLeadMetrics(@Param("today") LocalDateTime today, 
                                   @Param("thisWeek") LocalDateTime thisWeek, 
                                   @Param("thisMonth") LocalDateTime thisMonth);
+
+    // Add missing repository methods
+    Long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }

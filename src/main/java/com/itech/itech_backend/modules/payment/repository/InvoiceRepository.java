@@ -47,3 +47,4 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT i.type as type, COUNT(i) as count, SUM(i.totalAmount) as total FROM Invoice i WHERE i.status = 'PAID' GROUP BY i.type")
     List<Object[]> getRevenueByType();
 }
+

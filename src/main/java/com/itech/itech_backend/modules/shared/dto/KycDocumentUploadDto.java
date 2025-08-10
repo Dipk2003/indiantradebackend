@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import com.itech.itech_backend.enums.KycDocumentType;
 import lombok.Data;
@@ -11,3 +11,4 @@ public class KycDocumentUploadDto {
     private MultipartFile file;
     private String description;
 }
+

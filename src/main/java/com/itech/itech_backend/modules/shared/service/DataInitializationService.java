@@ -21,7 +21,7 @@ public class DataInitializationService implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final MicroCategoryRepository microCategoryRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final VendorsRepository vendorsRepository;
 
     @Override
@@ -189,3 +189,4 @@ public class DataInitializationService implements CommandLineRunner {
         return productRepository.save(product);
     }
 }
+

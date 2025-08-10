@@ -1,6 +1,6 @@
 package com.itech.itech_backend.modules.buyer.repository;
 
-import com.itech.itech_backend.model.Inquiry;
+import com.itech.itech_backend.modules.buyer.model.Inquiry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,3 +30,4 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
     long countByIsResolvedTrue();
     long countByCreatedAtAfter(java.time.LocalDateTime date);
 }
+

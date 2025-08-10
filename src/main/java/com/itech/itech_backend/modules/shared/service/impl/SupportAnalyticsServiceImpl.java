@@ -1,6 +1,6 @@
-package com.itech.itech_backend.service.impl;
+package com.itech.itech_backend.modules.shared.service;
 
-import com.itech.itech_backend.service.SupportAnalyticsService;
+import com.itech.itech_backend.modules.support.service.SupportAnalyticsService;
 import com.itech.marketplace.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,3 +37,4 @@ public class SupportAnalyticsServiceImpl implements SupportAnalyticsService {
         // Implementation for bulk assignment
     }
 }
+

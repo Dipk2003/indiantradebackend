@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.admin.controller;
 
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.service.ContentManagementService;
+import com.itech.itech_backend.modules.shared.model.*;
+import com.itech.itech_backend.modules.admin.service.ContentManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -95,3 +95,4 @@ public class ContentManagementController {
         return ResponseEntity.ok(isValid);
     }
 }
+

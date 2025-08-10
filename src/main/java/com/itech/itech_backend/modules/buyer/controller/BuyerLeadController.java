@@ -3,7 +3,7 @@ package com.itech.itech_backend.modules.buyer.controller;
 import com.itech.itech_backend.modules.buyer.dto.BuyerLeadDto;
 import com.itech.itech_backend.modules.buyer.dto.LeadResponseDto;
 import com.itech.itech_backend.modules.buyer.dto.LeadStatsDto;
-import com.itech.itech_backend.model.BuyerLead;
+import com.itech.itech_backend.modules.shared.model.BuyerLead;
 import com.itech.itech_backend.modules.buyer.service.BuyerLeadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -299,3 +299,4 @@ public class BuyerLeadController {
         }
     }
 }
+

@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.vendor.repository;
 
-import com.itech.itech_backend.model.VendorRanking;
+import com.itech.itech_backend.modules.vendor.model.VendorRanking;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,3 +14,4 @@ public interface VendorRankingRepository extends JpaRepository<VendorRanking, Lo
     @Query("SELECT vr FROM VendorRanking vr WHERE vr.vendor.id = :vendorId")
     Optional<VendorRanking> findByVendorId(@Param("vendorId") Long vendorId);
 }
+

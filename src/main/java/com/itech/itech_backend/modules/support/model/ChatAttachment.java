@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.support.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -100,3 +100,4 @@ public class ChatAttachment {
         return String.format("%.1f GB", bytes / (1024.0 * 1024.0 * 1024.0));
     }
 }
+

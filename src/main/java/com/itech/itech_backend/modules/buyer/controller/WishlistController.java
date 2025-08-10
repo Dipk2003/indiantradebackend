@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.buyer.controller;
 
-import com.itech.itech_backend.model.Wishlist;
-import com.itech.itech_backend.service.WishlistService;
+import com.itech.itech_backend.modules.buyer.model.Wishlist;
+import com.itech.itech_backend.modules.buyer.service.WishlistService;
 import com.itech.itech_backend.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -132,3 +132,4 @@ public class WishlistController {
         }
     }
 }
+

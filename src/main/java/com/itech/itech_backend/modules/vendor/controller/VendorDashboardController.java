@@ -1,9 +1,19 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.vendor.controller;
 
-import com.itech.itech_backend.dto.*;
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.repository.ProductImageRepository;
-import com.itech.itech_backend.service.*;
+import com.itech.itech_backend.modules.shared.dto.*;
+import com.itech.itech_backend.modules.shared.model.*;
+import com.itech.itech_backend.modules.vendor.model.VendorRanking;
+import com.itech.itech_backend.modules.vendor.model.VendorGstSelection;
+import com.itech.itech_backend.modules.vendor.model.VendorTdsSelection;
+import com.itech.itech_backend.modules.vendor.model.Vendors;
+import com.itech.itech_backend.modules.buyer.model.ProductImage;
+import com.itech.itech_backend.modules.buyer.repository.ProductImageRepository;
+import com.itech.itech_backend.modules.shared.service.*;
+import com.itech.itech_backend.modules.vendor.service.VendorRankingService;
+import com.itech.itech_backend.modules.vendor.service.VendorsService;
+import com.itech.itech_backend.modules.vendor.service.VendorTaxService;
+import com.itech.itech_backend.modules.vendor.service.ExcelImportService;
+import com.itech.itech_backend.modules.product.service.ProductService;
 import com.itech.itech_backend.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -257,8 +267,10 @@ public class VendorDashboardController {
 
             // Save image URLs in the database
             for (String imageUrl : imageUrls) {
+                // TODO: Fix product retrieval - getProductById returns Optional<ProductDto> but we need Product entity
+                // For now, we'll create a minimal Product entity or skip the product association
                 ProductImage productImage = ProductImage.builder()
-                        .product(productService.getProductById(productId))
+                        .product(null) // TODO: Set proper product entity once product service returns entities
                         .imageUrl(imageUrl)
                         .build();
                 productImageRepository.save(productImage);
@@ -569,3 +581,5 @@ public class VendorDashboardController {
         }
     }
 }
+
+

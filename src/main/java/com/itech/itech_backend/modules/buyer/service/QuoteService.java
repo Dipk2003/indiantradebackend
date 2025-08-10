@@ -1,8 +1,8 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.buyer.service;
 
-import com.itech.itech_backend.dto.CreateQuoteDto;
-import com.itech.itech_backend.model.Inquiry;
-import com.itech.itech_backend.model.Quote;
+import com.itech.itech_backend.modules.shared.dto.CreateQuoteDto;
+import com.itech.itech_backend.modules.buyer.model.Inquiry;
+import com.itech.itech_backend.modules.buyer.model.Quote;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import com.itech.itech_backend.modules.buyer.repository.InquiryRepository;
@@ -80,3 +80,4 @@ public class QuoteService {
         return quoteRepository.findByInquiryUserIdOrderByCreatedAtDesc(userId, pageable);
     }
 }
+

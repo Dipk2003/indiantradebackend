@@ -1,20 +1,21 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
-import com.itech.itech_backend.dto.ChatMessageDto;
+import com.itech.itech_backend.modules.shared.dto.ChatMessageDto;
 import com.itech.itech_backend.enums.MessageType;
-import com.itech.itech_backend.model.Chat;
-import com.itech.itech_backend.model.Inquiry;
+import com.itech.itech_backend.modules.support.model.Chat;
+import com.itech.itech_backend.modules.buyer.model.Inquiry;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.repository.ChatRepository;
-import com.itech.itech_backend.repository.InquiryRepository;
-import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.modules.support.repository.ChatRepository;
+import com.itech.itech_backend.modules.buyer.repository.InquiryRepository;
+import com.itech.itech_backend.modules.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.itech.itech_backend.model.ChatAttachment;
-import com.itech.itech_backend.repository.ChatAttachmentRepository;
+import com.itech.itech_backend.modules.support.model.ChatAttachment;
+import com.itech.itech_backend.modules.support.repository.ChatAttachmentRepository;
+import com.itech.itech_backend.modules.shared.service.FileUploadService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -110,7 +111,8 @@ public class ChatService {
                 .receiver(receiver)
                 .message(messageDto.getMessage())
                 .messageType(messageDto.getMessageType() != null ? 
-                    MessageType.valueOf(messageDto.getMessageType().toUpperCase()) : MessageType.TEXT)
+                    MessageType.valueOf(messageDto.getMessageType().toUpperCase()) : 
+                    MessageType.TEXT)
                 .isRead(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -251,3 +253,5 @@ public class ChatService {
         throw new RuntimeException("Not implemented yet");
     }
 }
+
+

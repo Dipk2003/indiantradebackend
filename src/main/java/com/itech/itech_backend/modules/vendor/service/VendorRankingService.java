@@ -1,8 +1,8 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.vendor.service;
 
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.model.VendorRanking;
-import com.itech.itech_backend.repository.VendorRankingRepository;
+import com.itech.itech_backend.modules.vendor.model.VendorRanking;
+import com.itech.itech_backend.modules.vendor.repository.VendorRankingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,3 +24,4 @@ public class VendorRankingService {
         return rankingRepo.findAll();
     }
 }
+

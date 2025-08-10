@@ -80,3 +80,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT SUM(oi.price * oi.quantity) FROM Order o JOIN o.items oi WHERE o.paymentStatus = 'PAID'")
     Double sumTotalRevenue();
 }
+

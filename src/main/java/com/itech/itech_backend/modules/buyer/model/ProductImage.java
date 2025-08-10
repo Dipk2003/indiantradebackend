@@ -20,3 +20,4 @@ public class ProductImage {
     @ManyToOne
     private Product product;
 }
+

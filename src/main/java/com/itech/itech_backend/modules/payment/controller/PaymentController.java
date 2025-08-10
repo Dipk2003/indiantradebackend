@@ -1,4 +1,4 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.payment.controller;
 
 import com.itech.itech_backend.modules.payment.model.Payment;
 import com.itech.itech_backend.modules.payment.model.SubscriptionPlan;
@@ -34,3 +34,4 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 }
+

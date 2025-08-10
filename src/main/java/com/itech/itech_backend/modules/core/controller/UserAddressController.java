@@ -1,4 +1,4 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.core.controller;
 
 import com.itech.itech_backend.modules.core.model.UserAddress;
 import com.itech.itech_backend.modules.core.service.UserAddressService;
@@ -136,3 +136,4 @@ public class UserAddressController {
         return 1L;
     }
 }
+

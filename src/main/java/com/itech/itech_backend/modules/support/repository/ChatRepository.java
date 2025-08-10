@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.support.repository;
 
-import com.itech.itech_backend.model.Chat;
+import com.itech.itech_backend.modules.support.model.Chat;
 import com.itech.itech_backend.modules.core.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,3 +49,4 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("SELECT COUNT(c) FROM Chat c WHERE c.receiver.id = :vendorId AND c.isRead = false")
     long countUnreadMessagesByVendorId(@Param("vendorId") Long vendorId);
 }
+

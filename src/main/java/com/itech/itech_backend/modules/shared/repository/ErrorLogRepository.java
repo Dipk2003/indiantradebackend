@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.shared.repository;
 
-import com.itech.itech_backend.model.ErrorLog;
+import com.itech.itech_backend.modules.shared.model.ErrorLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,3 +30,4 @@ public interface ErrorLogRepository extends JpaRepository<ErrorLog, Long> {
     @Query("SELECT el.endpoint, COUNT(el) FROM ErrorLog el WHERE el.endpoint IS NOT NULL GROUP BY el.endpoint ORDER BY COUNT(el) DESC")
     List<Object[]> getEndpointErrorStatistics();
 }
+

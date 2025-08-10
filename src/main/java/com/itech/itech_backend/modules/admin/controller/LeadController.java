@@ -1,9 +1,9 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.admin.controller;
 
-import com.itech.itech_backend.model.Lead;
+import com.itech.itech_backend.modules.admin.model.Lead;
 import com.itech.itech_backend.enums.LeadStatus;
 import com.itech.itech_backend.enums.LeadPriority;
-import com.itech.itech_backend.service.LeadService;
+import com.itech.itech_backend.modules.admin.service.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -203,3 +203,4 @@ public class LeadController {
         return ResponseEntity.ok(LeadPriority.values());
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.analytics.controller;
 
 import com.itech.itech_backend.modules.analytics.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
@@ -36,3 +36,4 @@ public class AnalyticsController {
         return ResponseEntity.ok(metrics);
     }
 }
+

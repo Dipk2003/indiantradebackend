@@ -1,10 +1,10 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.buyer.service;
 
-import com.itech.itech_backend.model.Wishlist;
+import com.itech.itech_backend.modules.buyer.model.Wishlist;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.buyer.repository.WishlistRepository;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.List;
 public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final UserRepository userRepository;
 
     public Wishlist addToWishlist(Long userId, Long productId) {
@@ -89,3 +89,4 @@ public class WishlistService {
         return wishlistRepository.findByVendorId(vendorId);
     }
 }
+

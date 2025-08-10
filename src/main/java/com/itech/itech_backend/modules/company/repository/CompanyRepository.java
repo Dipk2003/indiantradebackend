@@ -123,3 +123,4 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     @Query("SELECT c FROM Company c WHERE c.isVerified = true AND c.isPremium = true ORDER BY c.createdAt DESC")
     Page<Company> findTopVerifiedPremiumCompanies(Pageable pageable);
 }
+

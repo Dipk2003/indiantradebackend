@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "vendors")
+@Table(name = "vendor_profiles")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -281,3 +281,4 @@ public class Vendor {
         PUBLIC, PRIVATE, PREMIUM_ONLY, VERIFIED_BUYERS_ONLY
     }
 }
+

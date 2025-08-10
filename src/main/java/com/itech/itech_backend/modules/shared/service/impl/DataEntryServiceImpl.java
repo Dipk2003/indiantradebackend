@@ -1,9 +1,18 @@
-package com.itech.itech_backend.service.impl;
+package com.itech.itech_backend.modules.shared.service.impl;
 
-import com.itech.itech_backend.dto.*;
-import com.itech.itech_backend.model.*;
+import com.itech.itech_backend.modules.shared.dto.*;
+import com.itech.itech_backend.modules.buyer.model.Category;
+import com.itech.itech_backend.modules.buyer.model.SubCategory;
+import com.itech.itech_backend.modules.buyer.model.MicroCategory;
+import com.itech.itech_backend.modules.buyer.model.Product;
+import com.itech.itech_backend.modules.shared.dto.*;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
-import com.itech.itech_backend.service.DataEntryService;
+import com.itech.itech_backend.modules.vendor.service.DataEntryService;
+import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.SubCategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.MicroCategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
+import com.itech.itech_backend.modules.vendor.model.Vendors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,7 +39,7 @@ public class DataEntryServiceImpl implements DataEntryService {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final MicroCategoryRepository microCategoryRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final VendorsRepository vendorsRepository;
 
     @Override
@@ -502,3 +511,4 @@ public class DataEntryServiceImpl implements DataEntryService {
             .collect(Collectors.toList());
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.shared.model;
 
 import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
@@ -25,6 +25,15 @@ public class BuyerLead {
     private String email;
 
     private String phone;
+    
+    @Column(name = "name")
+    private String name;
+    
+    @Column(name = "company")
+    private String company;
+    
+    @Column(name = "message", length = 2000)
+    private String message;
 
     @Column(name = "search_query", length = 1000)
     private String searchQuery;
@@ -184,10 +193,11 @@ public class BuyerLead {
     }
 
     public enum LeadSource {
-        SEARCH, CATEGORY_BROWSE, PRODUCT_VIEW, CART_ABANDON, REFERRAL, DIRECT
+        SEARCH, CATEGORY_BROWSE, PRODUCT_VIEW, CART_ABANDON, REFERRAL, DIRECT, WEBSITE
     }
 
     public enum LeadStatus {
         NEW, CONTACTED, QUALIFIED, PROPOSAL_SENT, FOLLOW_UP, CONVERTED, CLOSED_LOST
     }
 }
+

@@ -47,3 +47,4 @@ public interface VendorsRepository extends JpaRepository<Vendors, Long> {
     @Query("SELECT DISTINCT v.state FROM Vendors v WHERE v.state IS NOT NULL AND v.verified = true ORDER BY v.state")
     List<String> findDistinctStates();
 }
+

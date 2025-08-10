@@ -1,9 +1,10 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.core.controller;
 
 import com.itech.itech_backend.modules.core.model.User;
-import com.itech.itech_backend.model.VendorTaxProfile;
+import com.itech.itech_backend.modules.vendor.model.VendorTaxProfile;
+import com.itech.itech_backend.modules.vendor.model.Vendors;
 import com.itech.itech_backend.modules.vendor.service.VendorsService;
-import com.itech.itech_backend.service.VendorTaxService;
+import com.itech.itech_backend.modules.vendor.service.VendorTaxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -246,3 +247,4 @@ public class PanVerificationController {
         }
     }
 }
+

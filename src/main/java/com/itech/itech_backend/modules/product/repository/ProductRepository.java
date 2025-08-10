@@ -114,7 +114,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     
     @Query("SELECT p FROM Product p WHERE " +
            "LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(p.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "p.description LIKE CONCAT('%', :searchTerm, '%') OR " +
            "LOWER(p.brand) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(p.sku) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Product> searchProducts(@Param("searchTerm") String searchTerm, Pageable pageable);
@@ -122,7 +122,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE " +
            "p.status = 'PUBLISHED' AND p.visibility = 'PUBLIC' AND (" +
            "LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(p.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "p.description LIKE CONCAT('%', :searchTerm, '%') OR " +
            "LOWER(p.brand) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(p.sku) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     Page<Product> searchPublishedProducts(@Param("searchTerm") String searchTerm, Pageable pageable);
@@ -338,3 +338,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByStatusOrderByTotalSoldQuantityDesc(Product.ProductStatus status, Pageable pageable);
     Page<Product> findByStatusOrderByViewCountDesc(Product.ProductStatus status, Pageable pageable);
 }
+

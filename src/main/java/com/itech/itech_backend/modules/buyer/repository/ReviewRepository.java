@@ -1,6 +1,6 @@
 package com.itech.itech_backend.modules.buyer.repository;
 
-import com.itech.itech_backend.model.Review;
+import com.itech.itech_backend.modules.buyer.model.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -48,3 +48,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r.rating, COUNT(r) FROM Review r WHERE r.vendor.id = :vendorId AND r.isApproved = true GROUP BY r.rating ORDER BY r.rating")
     List<Object[]> getRatingDistributionByVendorId(@Param("vendorId") Long vendorId);
 }
+

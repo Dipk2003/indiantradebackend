@@ -1,7 +1,7 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.vendor.repository;
 
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.model.VendorGstSelection;
+import com.itech.itech_backend.modules.vendor.model.VendorGstSelection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,3 +23,4 @@ public interface VendorGstSelectionRepository extends JpaRepository<VendorGstSel
     
     void deleteByVendorAndGstNumber(Vendors vendor, String gstNumber);
 }
+

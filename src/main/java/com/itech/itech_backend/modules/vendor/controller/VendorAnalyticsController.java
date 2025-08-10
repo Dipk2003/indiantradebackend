@@ -1,4 +1,4 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.vendor.controller;
 
 import com.itech.itech_backend.modules.vendor.service.VendorAnalyticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,3 +102,4 @@ public class VendorAnalyticsController {
         return ResponseEntity.ok(Map.of("message", "Dashboard preferences updated successfully"));
     }
 }
+

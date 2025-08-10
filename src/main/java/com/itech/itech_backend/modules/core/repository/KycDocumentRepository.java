@@ -1,8 +1,8 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.core.repository;
 
 import com.itech.itech_backend.enums.KycDocumentType;
 import com.itech.itech_backend.enums.KycStatus;
-import com.itech.itech_backend.model.KycDocument;
+import com.itech.itech_backend.modules.core.model.KycDocument;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,3 +38,4 @@ public interface KycDocumentRepository extends JpaRepository<KycDocument, Long> 
     
     boolean existsByVendorAndDocumentType(Vendors vendor, KycDocumentType documentType);
 }
+

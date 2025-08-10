@@ -1,6 +1,6 @@
 package com.itech.marketplace.service;
 
-import com.itech.itech_backend.model.Refund;
+import com.itech.itech_backend.modules.payment.model.Refund;
 import com.itech.marketplace.dto.RefundRequestDto;
 import com.itech.marketplace.dto.RefundAnalyticsDto;
 import org.springframework.data.domain.Page;
@@ -27,3 +27,4 @@ public interface RefundService {
     // Analytics
     RefundAnalyticsDto getRefundAnalytics(LocalDateTime startDate, LocalDateTime endDate);
 }
+

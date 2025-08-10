@@ -21,3 +21,4 @@ public class CompanyVerificationDto {
     private String verificationNotes;
     private String verifiedBy;
 }
+

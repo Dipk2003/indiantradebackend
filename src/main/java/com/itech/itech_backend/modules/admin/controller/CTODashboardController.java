@@ -1,6 +1,6 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.admin.controller;
 
-import com.itech.itech_backend.service.CTODashboardService;
+import com.itech.itech_backend.modules.admin.service.CTODashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,3 +58,4 @@ public class CTODashboardController {
         }
     }
 }
+

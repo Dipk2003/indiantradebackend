@@ -1,12 +1,12 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.analytics.service;
 
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.buyer.repository.InquiryRepository;
 import com.itech.itech_backend.modules.buyer.repository.QuoteRepository;
-import com.itech.itech_backend.repository.KycDocumentRepository;
-import com.itech.itech_backend.repository.SupportTicketRepository;
+import com.itech.itech_backend.modules.core.repository.KycDocumentRepository;
+import com.itech.itech_backend.modules.support.repository.SupportTicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class AdminAnalyticsService {
     private VendorsRepository vendorsRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private BuyerProductRepository productRepository;
 
     @Autowired
     private InquiryRepository inquiryRepository;
@@ -315,3 +315,4 @@ public class AdminAnalyticsService {
         return Math.round((double) newCount / days * 30 * 100.0) / 100.0;
     }
 }
+

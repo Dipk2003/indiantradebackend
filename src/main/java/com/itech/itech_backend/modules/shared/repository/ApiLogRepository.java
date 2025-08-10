@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.shared.repository;
 
-import com.itech.itech_backend.model.ApiLog;
+import com.itech.itech_backend.modules.shared.model.ApiLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,3 +18,4 @@ public interface ApiLogRepository extends JpaRepository<ApiLog, Long> {
     @Query("SELECT AVG(a.responseTime) FROM ApiLog a WHERE a.createdAt >= :date")
     Double getAverageResponseTimeSince(@Param("date") java.time.LocalDateTime date);
 }
+

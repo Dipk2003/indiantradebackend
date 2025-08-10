@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.shared.repository;
 
-import com.itech.itech_backend.model.Coupon;
+import com.itech.itech_backend.modules.shared.model.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,3 +11,4 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Optional<Coupon> findByCode(String code);
     Optional<Coupon> findByCodeAndIsActiveTrue(String code);
 }
+

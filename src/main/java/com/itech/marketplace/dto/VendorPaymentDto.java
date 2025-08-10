@@ -34,3 +34,4 @@ public class VendorPaymentDto {
     private String upiId;
     private Map<String, String> paymentDetails;
 }
+

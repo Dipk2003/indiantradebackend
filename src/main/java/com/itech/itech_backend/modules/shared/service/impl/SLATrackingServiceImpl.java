@@ -1,7 +1,7 @@
-package com.itech.itech_backend.service.impl;
+package com.itech.itech_backend.modules.shared.service;
 
-import com.itech.itech_backend.service.SLATrackingService;
-import com.itech.itech_backend.repository.SupportTicketRepository;
+import com.itech.itech_backend.modules.support.service.SLATrackingService;
+import com.itech.itech_backend.modules.support.repository.SupportTicketRepository;
 import com.itech.marketplace.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -158,3 +158,4 @@ public class SLATrackingServiceImpl implements SLATrackingService {
         }
     }
 }
+

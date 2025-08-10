@@ -1,9 +1,9 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.support.controller;
 
-import com.itech.itech_backend.dto.ChatbotRequestDto;
-import com.itech.itech_backend.dto.ChatbotResponseDto;
-import com.itech.itech_backend.model.ChatbotMessage;
-import com.itech.itech_backend.service.ChatbotService;
+import com.itech.itech_backend.modules.shared.dto.ChatbotRequestDto;
+import com.itech.itech_backend.modules.shared.dto.ChatbotResponseDto;
+import com.itech.itech_backend.modules.support.model.ChatbotMessage;
+import com.itech.itech_backend.modules.support.service.ChatbotService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -100,3 +100,4 @@ public class ChatbotController {
         }
     }
 }
+

@@ -1,9 +1,9 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.buyer.controller;
 
-import com.itech.itech_backend.dto.ProductSearchDto;
-import com.itech.itech_backend.dto.ProductSearchResponseDto;
+import com.itech.itech_backend.modules.shared.dto.ProductSearchDto;
+import com.itech.itech_backend.modules.shared.dto.ProductSearchResponseDto;
 import com.itech.itech_backend.modules.buyer.model.Product;
-import com.itech.itech_backend.service.ProductSearchService;
+import com.itech.itech_backend.modules.buyer.service.ProductSearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,3 +223,4 @@ public class ProductSearchController {
         }
     }
 }
+

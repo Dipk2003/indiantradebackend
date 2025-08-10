@@ -1,6 +1,6 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.shared.repository;
 
-import com.itech.itech_backend.model.SeoKeyword;
+import com.itech.itech_backend.modules.shared.model.SeoKeyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,3 +11,4 @@ public interface SeoKeywordRepository extends JpaRepository<SeoKeyword, Long> {
     List<SeoKeyword> findByTargetPageAndIsActiveTrue(String targetPage);
     List<SeoKeyword> findByTargetPageAndTargetIdAndIsActiveTrue(String targetPage, Long targetId);
 }
+

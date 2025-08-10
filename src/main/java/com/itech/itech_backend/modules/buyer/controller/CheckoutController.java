@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.buyer.controller;
 
-import com.itech.itech_backend.dto.CheckoutDto;
-import com.itech.itech_backend.dto.CartDto;
+import com.itech.itech_backend.modules.shared.dto.CheckoutDto;
+import com.itech.itech_backend.modules.shared.dto.CartDto;
 import com.itech.itech_backend.modules.buyer.model.Order;
 import com.itech.itech_backend.modules.buyer.service.CartService;
 import com.itech.itech_backend.modules.buyer.service.OrderService;
@@ -194,3 +194,4 @@ public class CheckoutController {
         }
     }
 }
+

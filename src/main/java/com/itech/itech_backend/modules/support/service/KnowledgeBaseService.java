@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
 import com.itech.marketplace.dto.*;
 import com.itech.marketplace.entity.KnowledgeBaseArticle;
@@ -20,3 +20,4 @@ public interface KnowledgeBaseService {
     List<KnowledgeBaseArticle> getPopularArticles();
     List<AutoResponseSuggestionDto> suggestAutoResponses(SuggestResponseDto dto);
 }
+

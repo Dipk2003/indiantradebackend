@@ -244,3 +244,4 @@ public class UpdateProductDto {
     private List<Long> upsellProductIds;
     private List<Long> relatedProductIds;
 }
+

@@ -60,3 +60,4 @@ public class Admins {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

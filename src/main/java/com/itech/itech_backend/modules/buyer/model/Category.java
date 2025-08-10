@@ -52,3 +52,4 @@ public class Category {
     @JsonIgnore
     private List<SubCategory> subCategories = new ArrayList<>();
 }
+

@@ -30,3 +30,4 @@ public class SubscriptionReportDto {
     private Map<String, BigDecimal> revenueByPlan;
     private Map<String, Long> subscriptionsByPeriod;
 }
+

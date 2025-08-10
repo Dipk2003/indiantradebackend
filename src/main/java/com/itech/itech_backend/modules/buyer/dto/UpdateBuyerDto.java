@@ -142,3 +142,4 @@ public class UpdateBuyerDto {
     // Note: Password updates should be handled separately through dedicated endpoints
     // Note: Sensitive fields like verification status, KYC info should be handled through dedicated admin endpoints
 }
+

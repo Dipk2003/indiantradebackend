@@ -263,3 +263,4 @@ public class CreateProductDto {
     private List<Long> upsellProductIds;
     private List<Long> relatedProductIds;
 }
+

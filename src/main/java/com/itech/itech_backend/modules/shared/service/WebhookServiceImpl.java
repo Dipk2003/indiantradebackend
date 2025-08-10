@@ -1,10 +1,10 @@
-package com.itech.itech_backend.modules.shared.service.impl;
+package com.itech.itech_backend.modules.shared.service;
 
-import com.itech.itech_backend.modules.order.model.*;
 import com.itech.itech_backend.modules.payment.model.*;
 import com.itech.itech_backend.modules.vendor.model.*;
 import com.itech.itech_backend.modules.payment.repository.RefundRepository;
 import com.itech.itech_backend.modules.payment.repository.PaymentRepository;
+import com.itech.itech_backend.modules.shared.service.WebhookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -56,7 +56,7 @@ public class WebhookServiceImpl implements WebhookService {
                 log.info("Updated existing refund from webhook: {}", refundId);
             } else {
                 // Find payment by Razorpay payment ID
-                Payment payment = paymentRepository.findByRazorpayPaymentId(paymentId).orElse(null);
+                Payment payment = paymentRepository.findByGatewayPaymentId(paymentId).orElse(null);
                 
                 if (payment != null) {
                     // Create new refund record
@@ -92,7 +92,7 @@ public class WebhookServiceImpl implements WebhookService {
         Refund refund = Refund.builder()
                 .refundId(generateRefundId())
                 .payment(payment)
-                .vendor(payment.getVendor())
+                .vendor(null) // TODO: Fix vendor relationship in Payment model
                 .refundAmount(refundAmount)
                 .originalAmount(payment.getAmount())
                 .status(refundStatus)
@@ -150,4 +150,5 @@ public class WebhookServiceImpl implements WebhookService {
         return "REF-" + timestamp + "-" + uuid;
     }
 }
+
 

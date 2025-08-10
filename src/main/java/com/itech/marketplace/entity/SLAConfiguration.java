@@ -52,3 +52,4 @@ public class SLAConfiguration {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

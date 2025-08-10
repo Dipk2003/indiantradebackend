@@ -1,7 +1,7 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.admin.service;
 
 import com.itech.itech_backend.modules.admin.model.Admins;
-import com.itech.itech_backend.repository.AdminsRepository;
+import com.itech.itech_backend.modules.admin.repository.AdminsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -102,3 +102,4 @@ public class AdminsService {
         }
     }
 }
+

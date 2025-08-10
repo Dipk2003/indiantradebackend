@@ -1,7 +1,10 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.admin.controller;
 
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.modules.buyer.repository.*;
+import com.itech.itech_backend.modules.shared.model.*;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.SubCategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.MicroCategoryRepository;
 import com.itech.itech_backend.modules.buyer.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +29,7 @@ public class CategoryManagementController {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final MicroCategoryRepository microCategoryRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
 
     // Category Management
 @GetMapping
@@ -468,3 +471,4 @@ public class CategoryManagementController {
         }
     }
 }
+

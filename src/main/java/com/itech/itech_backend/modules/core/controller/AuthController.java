@@ -1,14 +1,14 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.core.controller;
 
-import com.itech.itech_backend.dto.JwtResponse;
-import com.itech.itech_backend.dto.LoginRequestDto;
-import com.itech.itech_backend.dto.RegisterRequestDto;
-import com.itech.itech_backend.dto.SetPasswordDto;
-import com.itech.itech_backend.dto.VerifyOtpRequestDto;
-import com.itech.itech_backend.dto.ForgotPasswordRequestDto;
-import com.itech.itech_backend.dto.VerifyForgotPasswordOtpDto;
-import com.itech.itech_backend.service.AuthService;
-import com.itech.itech_backend.service.UnifiedAuthService;
+import com.itech.itech_backend.modules.shared.dto.JwtResponse;
+import com.itech.itech_backend.modules.shared.dto.LoginRequestDto;
+import com.itech.itech_backend.modules.shared.dto.RegisterRequestDto;
+import com.itech.itech_backend.modules.shared.dto.SetPasswordDto;
+import com.itech.itech_backend.modules.shared.dto.VerifyOtpRequestDto;
+import com.itech.itech_backend.modules.shared.dto.ForgotPasswordRequestDto;
+import com.itech.itech_backend.modules.shared.dto.VerifyForgotPasswordOtpDto;
+import com.itech.itech_backend.modules.core.service.AuthService;
+import com.itech.itech_backend.modules.core.service.UnifiedAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -266,3 +266,4 @@ public class AuthController {
         }
     }
 }
+

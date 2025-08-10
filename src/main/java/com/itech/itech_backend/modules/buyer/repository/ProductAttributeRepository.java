@@ -51,3 +51,4 @@ public interface ProductAttributeRepository extends JpaRepository<ProductAttribu
     // Pagination
     Page<ProductAttribute> findByIsActiveTrue(Pageable pageable);
 }
+

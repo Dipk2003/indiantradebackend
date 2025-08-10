@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.support.controller;
 
-import com.itech.itech_backend.model.ChatbotMessage;
-import com.itech.itech_backend.repository.ChatbotMessageRepository;
+import com.itech.itech_backend.modules.support.model.ChatbotMessage;
+import com.itech.itech_backend.modules.support.repository.ChatbotMessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -134,3 +134,4 @@ public class ChatbotAdminController {
         }
     }
 }
+

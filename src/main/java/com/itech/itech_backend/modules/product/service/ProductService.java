@@ -535,3 +535,4 @@ public interface ProductService {
      */
     String generateQrCode(Long productId);
 }
+

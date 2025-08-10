@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.buyer.service;
 
 import com.itech.itech_backend.modules.buyer.model.Category;
 import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
@@ -28,3 +28,4 @@ public class CategoryService {
         return categoryRepo.findAll();
     }
 }
+

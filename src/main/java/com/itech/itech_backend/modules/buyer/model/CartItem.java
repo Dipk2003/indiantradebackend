@@ -49,3 +49,4 @@ public class CartItem {
         return quantity * price;
     }
 }
+

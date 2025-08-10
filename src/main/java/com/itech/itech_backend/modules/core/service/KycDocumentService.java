@@ -1,13 +1,14 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.core.service;
 
-import com.itech.itech_backend.dto.KycDocumentUploadDto;
+import com.itech.itech_backend.modules.shared.dto.KycDocumentUploadDto;
 import com.itech.itech_backend.enums.KycDocumentType;
 import com.itech.itech_backend.enums.KycStatus;
-import com.itech.itech_backend.model.KycDocument;
+import com.itech.itech_backend.modules.core.model.KycDocument;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.repository.KycDocumentRepository;
+import com.itech.itech_backend.modules.core.repository.KycDocumentRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
+import com.itech.itech_backend.modules.shared.service.EmailService;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,4 +114,5 @@ public class KycDocumentService {
         }
     }
 }
+
 

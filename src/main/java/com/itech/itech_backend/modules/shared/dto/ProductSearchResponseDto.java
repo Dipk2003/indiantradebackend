@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import com.itech.itech_backend.modules.buyer.model.Product;
 import lombok.AllArgsConstructor;
@@ -50,3 +50,4 @@ public class ProductSearchResponseDto {
         private Double avgPrice;
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.admin.repository;
 
 import com.itech.itech_backend.modules.admin.model.Admins;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,3 +15,4 @@ public interface AdminsRepository extends JpaRepository<Admins, Long> {
     boolean existsByPhone(String phone);
     Optional<Admins> findByEmailAndIsActiveTrue(String email);
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
 import com.itech.marketplace.dto.*;
 import java.util.List;
@@ -10,3 +10,4 @@ public interface SupportAnalyticsService {
     CategoryAnalysisDto getCategoryAnalysis();
     void bulkAssignTickets(BulkAssignmentDto bulkAssignmentDto);
 }
+

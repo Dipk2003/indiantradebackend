@@ -18,3 +18,4 @@ public class CategoryAnalysisDto {
     private Double averageResponseTime;
     private Double averageResolutionTime;
 }
+

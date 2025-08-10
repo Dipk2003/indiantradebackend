@@ -1,11 +1,14 @@
 package com.itech.itech_backend.modules.buyer.service;
 
-import com.itech.itech_backend.dto.CheckoutDto;
+import com.itech.itech_backend.modules.shared.dto.CheckoutDto;
 import com.itech.itech_backend.modules.buyer.model.*;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.core.model.UserAddress;
 import com.itech.itech_backend.modules.payment.service.PaymentService;
-import com.itech.itech_backend.modules.buyer.repository.*;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.OrderRepository;
+import com.itech.itech_backend.modules.buyer.repository.CartRepository;
+import com.itech.itech_backend.modules.buyer.repository.CartItemRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.core.repository.UserAddressRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +35,7 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
     private final UserAddressRepository userAddressRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final PaymentService paymentService;
 
     public Map<String, Object> createOrder(Long userId, CheckoutDto checkoutDto) {
@@ -282,3 +285,4 @@ public class OrderService {
         }
     }
 }
+

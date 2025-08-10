@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
 import com.itech.marketplace.dto.*;
 import org.springframework.data.domain.Page;
@@ -12,3 +12,4 @@ public interface SLATrackingService {
     void escalateTicket(Long ticketId, EscalationDto escalationDto);
     List<OverdueTicketDto> getOverdueTickets();
 }
+

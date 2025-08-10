@@ -1,7 +1,7 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.admin.service;
 
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.repository.*;
+import com.itech.itech_backend.modules.shared.model.*;
+import com.itech.itech_backend.modules.shared.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -106,3 +106,4 @@ public class ContentManagementService {
         }
     }
 }
+

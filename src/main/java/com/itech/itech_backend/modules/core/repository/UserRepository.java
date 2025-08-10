@@ -42,3 +42,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.isActive = true ORDER BY u.createdAt DESC LIMIT :limit")
     List<User> findRecentActiveUsers(@Param("limit") int limit);
 }
+

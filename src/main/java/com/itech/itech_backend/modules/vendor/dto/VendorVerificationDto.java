@@ -36,3 +36,4 @@ public class VendorVerificationDto {
     private Boolean verifyFinancialInformation;
     private Boolean verifyReferences;
 }
+

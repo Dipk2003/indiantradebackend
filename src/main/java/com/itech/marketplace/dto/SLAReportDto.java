@@ -21,3 +21,4 @@ public class SLAReportDto {
     private Integer totalTickets;
     private Integer overdueTickets;
 }
+

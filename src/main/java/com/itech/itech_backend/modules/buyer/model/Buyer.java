@@ -304,6 +304,64 @@ public class Buyer {
     @Column(name = "phone_verified")
     private Boolean phoneVerified = false;
     
+    // Additional fields for compatibility
+    @Column(name = "password_hash")
+    private String passwordHash;
+    
+    @Column(name = "is_email_verified")
+    private Boolean isEmailVerified = false;
+    
+    @Column(name = "is_phone_verified")
+    private Boolean isPhoneVerified = false;
+    
+    @Column(name = "is_kyc_verified")
+    private Boolean isKycVerified = false;
+    
+    @Column(name = "last_login_date")
+    private LocalDateTime lastLoginDate;
+    
+    @Column(name = "email_verification_token")
+    private String emailVerificationToken;
+    
+    @Column(name = "email_verification_token_expiry")
+    private LocalDateTime emailVerificationTokenExpiry;
+    
+    @Column(name = "email_verification_date")
+    private LocalDateTime emailVerificationDate;
+    
+    @Column(name = "phone_verification_otp")
+    private String phoneVerificationOtp;
+    
+    @Column(name = "phone_verification_otp_expiry")
+    private LocalDateTime phoneVerificationOtpExpiry;
+    
+    @Column(name = "phone_verification_date")
+    private LocalDateTime phoneVerificationDate;
+    
+    @Column(name = "kyc_data", columnDefinition = "TEXT")
+    private String kycDataJson; // JSON representation of Map<String, Object>
+    
+    @Column(name = "kyc_attempts")
+    private Integer kycAttempts = 0;
+    
+    @Column(name = "kyc_verification_date")
+    private LocalDateTime kycVerificationDate;
+    
+    @Column(name = "suspension_end_date")
+    private LocalDateTime suspensionEndDate;
+    
+    @Column(name = "status_reason")
+    private String statusReason;
+    
+    @Column(name = "subscription_expiry_date")
+    private LocalDateTime subscriptionExpiryDate;
+    
+    @Column(name = "total_order_value", precision = 15, scale = 2)
+    private BigDecimal totalOrderValue = BigDecimal.ZERO;
+    
+    @Column(name = "company_name")
+    private String companyName;
+    
     // Audit Fields
     @CreationTimestamp
     @Column(name = "created_at")
@@ -325,7 +383,7 @@ public class Buyer {
     }
     
     public enum BuyerStatus {
-        ACTIVE, INACTIVE, SUSPENDED, BLOCKED, PENDING_VERIFICATION
+        ACTIVE, INACTIVE, SUSPENDED, BLOCKED, PENDING_VERIFICATION, DELETED
     }
     
     public enum BusinessType {
@@ -362,3 +420,4 @@ public class Buyer {
         PUBLIC, PRIVATE, VERIFIED_VENDORS_ONLY, PREMIUM_ONLY
     }
 }
+

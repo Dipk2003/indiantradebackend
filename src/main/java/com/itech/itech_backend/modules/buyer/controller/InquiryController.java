@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.buyer.controller;
 
-import com.itech.itech_backend.model.Inquiry;
-import com.itech.itech_backend.service.InquiryService;
+import com.itech.itech_backend.modules.buyer.model.Inquiry;
+import com.itech.itech_backend.modules.buyer.service.InquiryService;
 import com.itech.itech_backend.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -144,3 +144,4 @@ public class InquiryController {
         }
     }
 }
+

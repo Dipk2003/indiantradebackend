@@ -4,12 +4,12 @@ import com.itech.itech_backend.modules.vendor.model.Vendors;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.buyer.model.Order;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.buyer.repository.QuoteRepository;
 import com.itech.itech_backend.modules.buyer.repository.OrderRepository;
 import com.itech.itech_backend.modules.buyer.repository.InquiryRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
-import com.itech.itech_backend.repository.ChatRepository;
+import com.itech.itech_backend.modules.support.repository.ChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +29,7 @@ public class VendorAnalyticsService {
     private UserRepository userRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private BuyerProductRepository productRepository;
 
     @Autowired
     private QuoteRepository quoteRepository;
@@ -514,3 +514,4 @@ public class VendorAnalyticsService {
         return demand;
     }
 }
+

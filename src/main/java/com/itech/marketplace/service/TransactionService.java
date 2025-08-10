@@ -1,6 +1,7 @@
 package com.itech.marketplace.service;
 
-import com.itech.itech_backend.model.Transaction;
+import com.itech.itech_backend.modules.payment.model.Transaction;
+import com.itech.itech_backend.modules.payment.model.Refund;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public interface TransactionService {
     boolean isTransactionOwner(Long transactionId, String username);
     
     // Additional methods for RefundService
-    void createRefundTransaction(com.itech.itech_backend.model.Refund refund);
-    void updateRefundTransactionStatus(com.itech.itech_backend.model.Refund refund, com.itech.itech_backend.model.Transaction.TransactionStatus status);
+    void createRefundTransaction(Refund refund);
+    void updateRefundTransactionStatus(Refund refund, Transaction.TransactionStatus status);
 }
+

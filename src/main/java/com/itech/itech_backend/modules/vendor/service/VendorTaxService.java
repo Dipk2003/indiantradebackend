@@ -1,9 +1,10 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.vendor.service;
 
-import com.itech.itech_backend.dto.*;
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.modules.vendor.service.VendorsService;
+import com.itech.itech_backend.modules.shared.dto.*;
+import com.itech.itech_backend.modules.vendor.model.*;
+import com.itech.itech_backend.modules.vendor.repository.*;
+import com.itech.itech_backend.modules.shared.service.GstVerificationService;
+import com.itech.itech_backend.modules.core.service.PanVerificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,3 +194,4 @@ public class VendorTaxService {
         return tdsSelectionRepo.findSelectedTdsRatesByVendorAndPanNumber(vendor, panNumber);
     }
 }
+

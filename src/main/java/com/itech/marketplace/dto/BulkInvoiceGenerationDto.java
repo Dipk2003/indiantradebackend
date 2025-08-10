@@ -27,3 +27,4 @@ public class BulkInvoiceGenerationDto {
     private String description;
     private Map<String, Object> commonMetadata;
 }
+

@@ -3,7 +3,7 @@ package com.itech.itech_backend.modules.shared.service;
 import com.itech.itech_backend.modules.admin.model.Admins;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.repository.AdminsRepository;
+import com.itech.itech_backend.modules.admin.repository.AdminsRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,3 +62,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         throw new UsernameNotFoundException("User not found with email or phone: " + emailOrPhone);
     }
 }
+

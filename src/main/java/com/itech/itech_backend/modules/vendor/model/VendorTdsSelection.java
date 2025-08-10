@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.vendor.model;
 
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import jakarta.persistence.*;
@@ -62,3 +62,4 @@ public class VendorTdsSelection {
         updatedAt = java.time.LocalDateTime.now();
     }
 }
+

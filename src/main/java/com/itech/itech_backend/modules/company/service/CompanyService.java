@@ -91,3 +91,4 @@ public interface CompanyService {
     CompanyDto removeCompanyImage(Long companyId, String imageUrl);
     CompanyDto updateBankingInfo(Long companyId, String bankName, String accountNumber, String ifscCode, String accountHolderName);
 }
+

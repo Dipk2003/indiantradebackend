@@ -18,3 +18,4 @@ public class AgentPerformanceDto {
     private Double averageResolutionTime;
     private Double complianceRate;
 }
+

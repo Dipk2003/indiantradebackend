@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
 import com.itech.marketplace.dto.SLAConfigurationDto;
 import com.itech.marketplace.entity.SLAConfiguration;
@@ -9,3 +9,4 @@ public interface SLAConfigurationService {
     SLAConfiguration createConfiguration(SLAConfigurationDto dto);
     SLAConfiguration updateConfiguration(Long id, SLAConfigurationDto dto);
 }
+

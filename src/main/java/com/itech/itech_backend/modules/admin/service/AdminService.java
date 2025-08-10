@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.admin.service;
 
 import com.itech.itech_backend.modules.admin.model.Admins;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
@@ -24,3 +24,4 @@ public class AdminService {
         return vendorsRepository.save(vendor);
     }
 }
+

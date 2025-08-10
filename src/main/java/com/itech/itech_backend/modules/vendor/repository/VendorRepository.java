@@ -200,3 +200,4 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     @Query("SELECT v FROM Vendor v WHERE v.vendorStatus = 'PENDING' ORDER BY v.createdAt ASC")
     Page<Vendor> findPendingApprovalVendors(Pageable pageable);
 }
+

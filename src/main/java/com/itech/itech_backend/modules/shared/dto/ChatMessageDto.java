@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -73,3 +73,4 @@ public class ChatMessageDto {
         private boolean isProcessed;
     }
 }
+

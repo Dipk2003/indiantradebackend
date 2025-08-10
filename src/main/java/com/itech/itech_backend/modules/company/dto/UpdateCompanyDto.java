@@ -105,3 +105,4 @@ public class UpdateCompanyDto {
     // Status Updates (Only for admin users)
     private Company.CompanyStatus status;
 }
+

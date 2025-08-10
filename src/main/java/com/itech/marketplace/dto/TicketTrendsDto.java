@@ -26,3 +26,4 @@ public class TicketTrendsDto {
         private Integer escalatedTickets;
     }
 }
+

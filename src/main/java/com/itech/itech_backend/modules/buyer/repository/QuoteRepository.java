@@ -1,6 +1,6 @@
 package com.itech.itech_backend.modules.buyer.repository;
 
-import com.itech.itech_backend.model.Quote;
+import com.itech.itech_backend.modules.buyer.model.Quote;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -43,3 +43,4 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
     @Query("SELECT COUNT(q) FROM Quote q WHERE q.vendor.id = :vendorId AND q.isAccepted = true")
     long countAcceptedQuotesByVendorIdAlternate(@Param("vendorId") Long vendorId);
 }
+

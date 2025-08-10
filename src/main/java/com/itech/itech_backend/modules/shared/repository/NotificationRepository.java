@@ -1,7 +1,7 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.shared.repository;
 
-import com.itech.itech_backend.model.Notification;
-import com.itech.itech_backend.enums.NotificationType;
+import com.itech.itech_backend.modules.shared.model.Notification;
+import com.itech.itech_backend.modules.shared.model.enums.NotificationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,3 +32,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     long countByUserIdAndTypeAndIsReadFalse(@Param("userId") Long userId, @Param("type") NotificationType type);
 
 }
+

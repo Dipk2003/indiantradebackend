@@ -1,8 +1,8 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.vendor.controller;
 
-import com.itech.itech_backend.dto.*;
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.service.DataEntryService;
+import com.itech.itech_backend.modules.shared.dto.*;
+import com.itech.itech_backend.modules.shared.model.*;
+import com.itech.itech_backend.modules.vendor.service.DataEntryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -214,3 +214,4 @@ public class DataEntryController {
         return ResponseEntity.ok(dataEntryService.getSearchSuggestions(query));
     }
 }
+

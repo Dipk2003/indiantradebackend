@@ -1,9 +1,9 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.core.controller;
 
-import com.itech.itech_backend.dto.KycDocumentUploadDto;
+import com.itech.itech_backend.modules.shared.dto.KycDocumentUploadDto;
 import com.itech.itech_backend.enums.KycDocumentType;
-import com.itech.itech_backend.model.KycDocument;
-import com.itech.itech_backend.service.KycDocumentService;
+import com.itech.itech_backend.modules.core.model.KycDocument;
+import com.itech.itech_backend.modules.core.service.KycDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -131,3 +131,4 @@ public class KycDocumentController {
         );
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.buyer.model;
 
 import com.itech.itech_backend.modules.buyer.model.Product;
 import jakarta.persistence.*;
@@ -121,3 +121,4 @@ public class ProductVariant {
         return displayName.length() > 0 ? displayName.toString() : variantName;
     }
 }
+

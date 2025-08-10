@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,3 +41,4 @@ public class VendorGstSelectionDto {
         private boolean isSelected;
     }
 }
+

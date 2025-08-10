@@ -33,3 +33,4 @@ public class RefundRequestDto {
     @Builder.Default
     private Boolean autoProcess = false;
 }
+

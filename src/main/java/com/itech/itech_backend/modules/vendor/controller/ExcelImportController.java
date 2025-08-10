@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.vendor.controller;
 
-import com.itech.itech_backend.dto.ExcelImportResponseDto;
-import com.itech.itech_backend.service.ExcelImportService;
+import com.itech.itech_backend.modules.shared.dto.ExcelImportResponseDto;
+import com.itech.itech_backend.modules.vendor.service.ExcelImportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -100,3 +100,4 @@ public class ExcelImportController {
                 .body(csvTemplate);
     }
 }
+

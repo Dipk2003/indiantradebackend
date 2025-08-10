@@ -14,3 +14,4 @@ public class BulkInvoiceGenerationDto {
     private List<InvoiceGenerationDto> invoices;
     private String batchDescription;
 }
+

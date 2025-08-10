@@ -81,6 +81,7 @@ public class Order {
     private String razorpayPaymentId;
 
     @Builder.Default
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime updatedAt;
@@ -110,3 +111,4 @@ public class Order {
         REFUNDED
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.core.service;
 
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
@@ -56,3 +56,4 @@ public class UserMigrationService {
         }
     }
 }
+

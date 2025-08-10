@@ -152,3 +152,4 @@ public interface VendorService {
     Map<String, Object> getAdminDashboardData();
     List<VendorDto> getVendorRecommendations(String area, Vendor.BusinessCategory category, int limit);
 }
+

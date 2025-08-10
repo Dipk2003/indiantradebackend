@@ -1,8 +1,9 @@
 package com.itech.itech_backend.modules.payment.model;
 
-import com.itech.itech_backend.modules.order.model.Order;
+import com.itech.itech_backend.modules.buyer.model.Order;
 import com.itech.itech_backend.modules.buyer.model.Buyer;
 import com.itech.itech_backend.modules.company.model.Company;
+import com.itech.itech_backend.modules.vendor.model.Vendors;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +20,7 @@ import java.util.List;
     @Index(name = "idx_payment_reference", columnList = "payment_reference", unique = true),
     @Index(name = "idx_payment_order", columnList = "order_id"),
     @Index(name = "idx_payment_buyer", columnList = "buyer_id"),
+    @Index(name = "idx_payment_vendor", columnList = "vendor_id"),
     @Index(name = "idx_payment_status", columnList = "payment_status"),
     @Index(name = "idx_payment_method", columnList = "payment_method"),
     @Index(name = "idx_payment_created", columnList = "created_at"),
@@ -65,6 +67,10 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id")
+    private Vendors vendor;
 
     // ===============================
     // PAYMENT DETAILS
@@ -449,3 +455,4 @@ public class Payment {
         }
     }
 }
+

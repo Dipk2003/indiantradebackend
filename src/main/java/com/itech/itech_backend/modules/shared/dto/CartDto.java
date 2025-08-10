@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.*;
 
@@ -33,3 +33,4 @@ public class CartDto {
         private int availableStock;
     }
 }
+

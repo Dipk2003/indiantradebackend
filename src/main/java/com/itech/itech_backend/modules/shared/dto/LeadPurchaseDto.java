@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.*;
 
@@ -12,3 +12,4 @@ public class LeadPurchaseDto {
     private Long vendorId;
     private Double price;
 }
+

@@ -27,9 +27,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT COUNT(sc) FROM SubCategory sc WHERE sc.category.id = :categoryId")
     long countSubCategoriesByCategoryId(@Param("categoryId") Long categoryId);
     
-    @Query("SELECT COUNT(p) FROM Product p JOIN p.microCategory mc JOIN mc.subCategory sc WHERE sc.category.id = :categoryId")
+    @Query("SELECT COUNT(p) FROM BuyerProduct p JOIN p.microCategory mc JOIN mc.subCategory sc WHERE sc.category.id = :categoryId")
     long countProductsByCategoryId(@Param("categoryId") Long categoryId);
     
     @Query("SELECT c FROM Category c WHERE c.isActive = true ORDER BY c.displayOrder ASC, c.name ASC")
     List<Category> findAllActive();
 }
+

@@ -26,3 +26,4 @@ public class VendorPayment {
     private LocalDateTime createdAt;
     private Map<String, String> paymentDetails;
 }
+

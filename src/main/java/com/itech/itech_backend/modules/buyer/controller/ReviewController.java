@@ -1,8 +1,8 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.buyer.controller;
 
-import com.itech.itech_backend.model.Review;
-import com.itech.itech_backend.model.VendorReview;
-import com.itech.itech_backend.service.ReviewService;
+import com.itech.itech_backend.modules.buyer.model.Review;
+import com.itech.itech_backend.modules.vendor.model.VendorReview;
+import com.itech.itech_backend.modules.buyer.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,3 +40,4 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 }
+

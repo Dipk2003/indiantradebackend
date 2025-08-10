@@ -1,7 +1,7 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.support.controller;
 
-import com.itech.itech_backend.model.SupportTicket;
-import com.itech.itech_backend.service.SupportTicketService;
+import com.itech.itech_backend.modules.support.model.SupportTicket;
+import com.itech.itech_backend.modules.support.service.SupportTicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,3 +27,4 @@ public class SupportTicketController {
         return ResponseEntity.ok(tickets);
     }
 }
+

@@ -1,6 +1,6 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.payment.controller;
 
-import com.itech.itech_backend.service.WebhookService;
+import com.itech.itech_backend.modules.shared.service.WebhookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -28,3 +28,4 @@ public class RazorpayWebhookController {
         }
     }
 }
+

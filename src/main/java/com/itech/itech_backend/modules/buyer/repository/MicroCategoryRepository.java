@@ -24,7 +24,7 @@ public interface MicroCategoryRepository extends JpaRepository<MicroCategory, Lo
     @Query("SELECT mc FROM MicroCategory mc WHERE mc.subCategory.id = :subCategoryId ORDER BY mc.displayOrder ASC, mc.name ASC")
     List<MicroCategory> findBySubCategoryIdOrderByDisplayOrder(@Param("subCategoryId") Long subCategoryId);
     
-    @Query("SELECT COUNT(p) FROM Product p WHERE p.microCategory.id = :microCategoryId")
+    @Query("SELECT COUNT(p) FROM BuyerProduct p WHERE p.microCategory.id = :microCategoryId")
     long countProductsByMicroCategoryId(@Param("microCategoryId") Long microCategoryId);
     
     boolean existsByNameAndSubCategoryId(String name, Long subCategoryId);
@@ -36,3 +36,4 @@ public interface MicroCategoryRepository extends JpaRepository<MicroCategory, Lo
     @Query("SELECT COUNT(mc) FROM MicroCategory mc WHERE mc.subCategory.category.id = :categoryId")
     long countByCategoryId(@Param("categoryId") Long categoryId);
 }
+

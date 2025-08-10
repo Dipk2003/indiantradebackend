@@ -56,3 +56,4 @@ public class SubCategory {
     @JsonIgnore
     private List<MicroCategory> microCategories = new ArrayList<>();
 }
+

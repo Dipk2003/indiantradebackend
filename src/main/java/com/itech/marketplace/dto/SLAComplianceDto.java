@@ -26,3 +26,4 @@ public class SLAComplianceDto {
         private Double resolutionCompliance;
     }
 }
+

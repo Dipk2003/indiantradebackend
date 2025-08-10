@@ -30,3 +30,4 @@ public class FinancialReportDto {
     private Map<String, BigDecimal> revenueByType;
     private Map<String, BigDecimal> revenueByVendor;
 }
+

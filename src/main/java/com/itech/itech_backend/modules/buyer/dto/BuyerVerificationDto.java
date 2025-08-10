@@ -122,3 +122,4 @@ public class BuyerVerificationDto {
         return "HIGH".equals(riskLevel) || (riskScore != null && riskScore > 70);
     }
 }
+

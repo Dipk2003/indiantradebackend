@@ -1,6 +1,6 @@
-package com.itech.itech_backend.service.impl;
+package com.itech.itech_backend.modules.shared.service;
 
-import com.itech.itech_backend.service.SLAConfigurationService;
+import com.itech.itech_backend.modules.support.service.SLAConfigurationService;
 import com.itech.marketplace.dto.SLAConfigurationDto;
 import com.itech.marketplace.entity.SLAConfiguration;
 import lombok.RequiredArgsConstructor;
@@ -31,3 +31,4 @@ public class SLAConfigurationServiceImpl implements SLAConfigurationService {
         return config;
     }
 }
+

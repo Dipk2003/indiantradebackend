@@ -1,6 +1,6 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.shared.controller;
 
-import com.itech.itech_backend.service.FileUploadService;
+import com.itech.itech_backend.modules.shared.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -105,3 +105,4 @@ public class FileUploadController {
         }
     }
 }
+

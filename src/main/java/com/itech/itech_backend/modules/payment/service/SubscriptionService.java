@@ -1,10 +1,11 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.payment.service;
 
-import com.itech.itech_backend.dto.SubscriptionDto;
+import com.itech.itech_backend.modules.shared.dto.SubscriptionDto;
 import com.itech.itech_backend.modules.payment.model.Subscription;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.repository.SubscriptionRepository;
+import com.itech.itech_backend.modules.payment.repository.SubscriptionRepository;
+import com.itech.itech_backend.modules.vendor.service.VendorsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -150,3 +151,4 @@ public class SubscriptionService {
         return subscriptionRepository.findByVendorOrderByCreatedAtDesc(vendor);
     }
 }
+

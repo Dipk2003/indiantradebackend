@@ -1,4 +1,4 @@
-package com.itech.itech_backend.dto;
+package com.itech.itech_backend.modules.shared.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -39,3 +39,4 @@ public class ProductDto {
     private BigDecimal shippingCharge;
     private Boolean isActive;
 }
+

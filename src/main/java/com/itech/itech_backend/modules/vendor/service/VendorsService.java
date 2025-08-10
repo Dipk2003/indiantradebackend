@@ -118,3 +118,4 @@ public class VendorsService {
         return vendorsRepository.countVerifiedVendorsByCity(city);
     }
 }
+

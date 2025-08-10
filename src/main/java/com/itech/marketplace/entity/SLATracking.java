@@ -1,6 +1,6 @@
 package com.itech.marketplace.entity;
 
-import com.itech.itech_backend.model.SupportTicket;
+import com.itech.itech_backend.modules.support.model.SupportTicket;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -83,3 +83,4 @@ public class SLATracking {
         }
     }
 }
+

@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.buyer.model;
 
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.core.model.User;
@@ -44,3 +44,4 @@ public class Inquiry {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

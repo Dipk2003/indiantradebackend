@@ -47,3 +47,4 @@ public class PaymentSummaryDto {
         private BigDecimal successRate;
     }
 }
+

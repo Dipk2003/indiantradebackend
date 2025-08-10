@@ -53,3 +53,4 @@ public class BuyerLeadDto {
     private String currentSupplier;
     private Boolean agreesToMarketing;
 }
+

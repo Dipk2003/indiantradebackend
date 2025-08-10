@@ -1,12 +1,12 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.admin.controller;
 
-import com.itech.itech_backend.dto.ExcelImportResponseDto;
-import com.itech.itech_backend.service.ExcelImportService;
+import com.itech.itech_backend.modules.shared.dto.ExcelImportResponseDto;
+import com.itech.itech_backend.modules.vendor.service.ExcelImportService;
 
 import com.itech.itech_backend.enums.VendorType;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.service.AdminService;
+import com.itech.itech_backend.modules.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -73,3 +73,4 @@ public class AdminController {
 
 
 }
+

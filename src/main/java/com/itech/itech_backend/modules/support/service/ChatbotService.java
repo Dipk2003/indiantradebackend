@@ -1,10 +1,22 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.support.service;
 
-import com.itech.itech_backend.dto.ChatbotRequestDto;
-import com.itech.itech_backend.dto.ChatbotResponseDto;
+import com.itech.itech_backend.modules.shared.dto.ChatbotRequestDto;
+import com.itech.itech_backend.modules.shared.dto.ChatbotResponseDto;
 import com.itech.itech_backend.enums.VendorType;
-import com.itech.itech_backend.model.*;
-import com.itech.itech_backend.repository.*;
+import com.itech.itech_backend.modules.shared.model.*;
+import com.itech.itech_backend.modules.shared.repository.*;
+import com.itech.itech_backend.modules.vendor.model.Vendors;
+import com.itech.itech_backend.modules.buyer.model.Product;
+import com.itech.itech_backend.modules.buyer.model.Category;
+import com.itech.itech_backend.modules.vendor.model.VendorRanking;
+import com.itech.itech_backend.modules.support.model.ChatbotMessage;
+import com.itech.itech_backend.modules.core.model.User;
+import com.itech.itech_backend.modules.support.repository.ChatbotMessageRepository;
+import com.itech.itech_backend.modules.core.repository.UserRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
+import com.itech.itech_backend.modules.vendor.repository.VendorRankingRepository;
+import com.itech.itech_backend.modules.shared.service.OpenAiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +31,7 @@ public class ChatbotService {
 
     private final ChatbotMessageRepository chatbotMessageRepository;
     private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final VendorRankingRepository vendorRankingRepository;
     private final OpenAiService openAiService;
@@ -371,3 +383,4 @@ public class ChatbotService {
                 .build();
     }
 }
+

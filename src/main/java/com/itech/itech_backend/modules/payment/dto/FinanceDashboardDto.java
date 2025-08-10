@@ -31,3 +31,4 @@ public class FinanceDashboardDto {
     private Double revenueGrowthRate;
     private Double invoiceGrowthRate;
 }
+

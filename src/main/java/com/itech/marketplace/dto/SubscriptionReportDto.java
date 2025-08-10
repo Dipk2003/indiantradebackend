@@ -43,3 +43,4 @@ public class SubscriptionReportDto {
         private BigDecimal revenue;
     }
 }
+

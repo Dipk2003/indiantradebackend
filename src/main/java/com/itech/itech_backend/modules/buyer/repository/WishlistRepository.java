@@ -1,6 +1,6 @@
 package com.itech.itech_backend.modules.buyer.repository;
 
-import com.itech.itech_backend.model.Wishlist;
+import com.itech.itech_backend.modules.buyer.model.Wishlist;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import org.springframework.data.domain.Page;
@@ -28,3 +28,4 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     @Query("SELECT w FROM Wishlist w WHERE w.product.vendor.id = :vendorId")
     List<Wishlist> findByVendorId(@Param("vendorId") Long vendorId);
 }
+

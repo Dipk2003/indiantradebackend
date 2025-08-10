@@ -1,4 +1,4 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.shared.repository;
 
 import com.itech.itech_backend.modules.shared.model.ActivityLog;
 import com.itech.itech_backend.modules.core.model.User;
@@ -31,3 +31,4 @@ public interface ActivityLogRepository extends JpaRepository<ActivityLog, Long> 
     @Query("SELECT al.action, COUNT(al) FROM ActivityLog al GROUP BY al.action ORDER BY COUNT(al) DESC")
     List<Object[]> getActionStatistics();
 }
+

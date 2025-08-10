@@ -26,3 +26,4 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     
     int countByCartId(Long cartId);
 }
+

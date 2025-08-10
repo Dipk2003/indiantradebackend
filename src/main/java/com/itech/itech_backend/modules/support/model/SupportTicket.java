@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.support.model;
 
 import com.itech.itech_backend.enums.TicketStatus;
 import com.itech.itech_backend.enums.TicketPriority;
@@ -71,3 +71,4 @@ public class SupportTicket {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

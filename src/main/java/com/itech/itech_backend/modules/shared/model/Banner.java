@@ -1,4 +1,4 @@
-package com.itech.itech_backend.model;
+package com.itech.itech_backend.modules.shared.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,3 +48,4 @@ public class Banner {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

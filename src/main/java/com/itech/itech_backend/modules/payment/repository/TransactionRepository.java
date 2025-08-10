@@ -47,3 +47,4 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT DATE(t.createdAt) as date, SUM(t.amount) as amount FROM Transaction t WHERE t.status = 'COMPLETED' AND t.type = 'PAYMENT' AND t.createdAt >= :startDate GROUP BY DATE(t.createdAt) ORDER BY DATE(t.createdAt)")
     List<Object[]> getDailyTransactionVolume(@Param("startDate") LocalDateTime startDate);
 }
+

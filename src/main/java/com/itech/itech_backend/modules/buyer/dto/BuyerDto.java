@@ -143,3 +143,4 @@ public class BuyerDto {
     private Integer daysSinceLastOrder;
     private Double engagementScore; // based on activity metrics
 }
+

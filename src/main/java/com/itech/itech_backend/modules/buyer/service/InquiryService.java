@@ -1,12 +1,13 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.buyer.service;
 
-import com.itech.itech_backend.model.Inquiry;
+import com.itech.itech_backend.modules.buyer.model.Inquiry;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
 import com.itech.itech_backend.modules.buyer.repository.InquiryRepository;
-import com.itech.itech_backend.modules.buyer.repository.ProductRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
+import com.itech.itech_backend.modules.shared.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ import java.util.Optional;
 public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
-    private final ProductRepository productRepository;
+    private final BuyerProductRepository productRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
 
@@ -117,3 +118,4 @@ public class InquiryService {
         }
     }
 }
+

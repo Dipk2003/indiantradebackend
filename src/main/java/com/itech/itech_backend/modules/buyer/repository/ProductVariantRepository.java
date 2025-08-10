@@ -1,7 +1,7 @@
-package com.itech.itech_backend.repository;
+package com.itech.itech_backend.modules.buyer.repository;
 
 import com.itech.itech_backend.modules.buyer.model.Product;
-import com.itech.itech_backend.model.ProductVariant;
+import com.itech.itech_backend.modules.buyer.model.ProductVariant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -85,3 +85,4 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     @Query("SELECT v FROM ProductVariant v WHERE v.product.id = :productId ORDER BY v.viewCount DESC")
     List<ProductVariant> findMostViewedVariantsByProduct(@Param("productId") Long productId, Pageable pageable);
 }
+

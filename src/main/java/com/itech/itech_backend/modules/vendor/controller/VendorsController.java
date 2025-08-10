@@ -1,8 +1,8 @@
-package com.itech.itech_backend.controller;
+package com.itech.itech_backend.modules.vendor.controller;
 
 import com.itech.itech_backend.enums.VendorType;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
-import com.itech.itech_backend.service.VendorsService;
+import com.itech.itech_backend.modules.vendor.service.VendorsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -187,3 +187,4 @@ public class VendorsController {
         return ResponseEntity.ok(count);
     }
 }
+

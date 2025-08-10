@@ -27,7 +27,7 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> 
     @Query("SELECT COUNT(mc) FROM MicroCategory mc WHERE mc.subCategory.id = :subCategoryId")
     long countMicroCategoriesBySubCategoryId(@Param("subCategoryId") Long subCategoryId);
     
-    @Query("SELECT COUNT(p) FROM Product p JOIN p.microCategory mc WHERE mc.subCategory.id = :subCategoryId")
+    @Query("SELECT COUNT(p) FROM BuyerProduct p JOIN p.microCategory mc WHERE mc.subCategory.id = :subCategoryId")
     long countProductsBySubCategoryId(@Param("subCategoryId") Long subCategoryId);
     
     boolean existsByNameAndCategoryId(String name, Long categoryId);
@@ -36,3 +36,4 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> 
     @Query("SELECT COUNT(sc) FROM SubCategory sc WHERE sc.category.id = :categoryId")
     long countByCategoryId(@Param("categoryId") Long categoryId);
 }
+

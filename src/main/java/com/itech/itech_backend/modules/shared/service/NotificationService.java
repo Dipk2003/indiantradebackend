@@ -1,10 +1,10 @@
-package com.itech.itech_backend.service;
+package com.itech.itech_backend.modules.shared.service;
 
-import com.itech.itech_backend.enums.NotificationType;
-import com.itech.itech_backend.model.Notification;
+import com.itech.itech_backend.modules.shared.model.enums.NotificationType;
+import com.itech.itech_backend.modules.shared.model.Notification;
 import com.itech.itech_backend.modules.core.model.User;
-import com.itech.itech_backend.repository.NotificationRepository;
-import com.itech.itech_backend.repository.UserRepository;
+import com.itech.itech_backend.modules.shared.repository.NotificationRepository;
+import com.itech.itech_backend.modules.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -308,3 +308,4 @@ public class NotificationService {
         }
     }
 }
+

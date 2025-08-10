@@ -20,3 +20,4 @@ public class SupportDashboardDto {
     private Double averageResolutionTime;
     private Double complianceRate;
 }
+

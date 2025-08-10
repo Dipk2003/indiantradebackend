@@ -489,3 +489,4 @@ public interface BuyerService {
      */
     Map<String, Object> getBuyerSummary(Long buyerId);
 }
+
