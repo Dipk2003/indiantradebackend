@@ -303,5 +303,113 @@ public class SupportTicketService {
             log.error("Failed to send ticket response email", e);
         }
     }
+
+    // Additional methods for frontend API integration
+    public List<SupportTicket> getFilteredSupportTickets(String status, String priority, String search) {
+        log.info("🔍 Filtering tickets - Status: {}, Priority: {}, Search: {}", status, priority, search);
+        
+        List<SupportTicket> tickets = supportTicketRepository.findAll();
+        
+        // Apply search filter
+        if (search != null && !search.trim().isEmpty()) {
+            String searchLower = search.toLowerCase();
+            tickets = tickets.stream()
+                .filter(ticket -> 
+                    ticket.getSubject().toLowerCase().contains(searchLower) ||
+                    ticket.getDescription().toLowerCase().contains(searchLower) ||
+                    ticket.getUser().getName().toLowerCase().contains(searchLower) ||
+                    ticket.getUser().getEmail().toLowerCase().contains(searchLower) ||
+                    ticket.getTicketNumber().toLowerCase().contains(searchLower)
+                )
+                .toList();
+        }
+        
+        // Apply status filter
+        if (status != null && !"ALL".equals(status) && !status.trim().isEmpty()) {
+            TicketStatus ticketStatus = TicketStatus.valueOf(status);
+            tickets = tickets.stream()
+                .filter(ticket -> ticket.getStatus() == ticketStatus)
+                .toList();
+        }
+        
+        // Apply priority filter
+        if (priority != null && !"ALL".equals(priority) && !priority.trim().isEmpty()) {
+            TicketPriority ticketPriority = TicketPriority.valueOf(priority);
+            tickets = tickets.stream()
+                .filter(ticket -> ticket.getPriority() == ticketPriority)
+                .toList();
+        }
+        
+        log.info("📊 Filtered to {} tickets", tickets.size());
+        return tickets;
+    }
+
+    public SupportTicket getSupportTicketById(Long id) {
+        return getTicketById(id);
+    }
+
+    public SupportTicket updateSupportTicket(Long id, Map<String, Object> updates) {
+        log.info("🔄 Updating ticket {} with: {}", id, updates);
+        
+        SupportTicket ticket = getTicketById(id);
+        
+        // Update fields based on the updates map
+        if (updates.containsKey("status")) {
+            String statusStr = (String) updates.get("status");
+            TicketStatus status = TicketStatus.valueOf(statusStr);
+            ticket.setStatus(status);
+        }
+        
+        if (updates.containsKey("priority")) {
+            String priorityStr = (String) updates.get("priority");
+            TicketPriority priority = TicketPriority.valueOf(priorityStr);
+            ticket.setPriority(priority);
+        }
+        
+        if (updates.containsKey("assignedTo")) {
+            String assignedToName = (String) updates.get("assignedTo");
+            // For now, we'll store the name as a string
+            // In a real implementation, you'd find the User by name/email
+            ticket.setAssignedAt(LocalDateTime.now());
+        }
+        
+        if (updates.containsKey("response")) {
+            ticket.setResponse((String) updates.get("response"));
+            ticket.setRespondedAt(LocalDateTime.now());
+        }
+        
+        if (updates.containsKey("category")) {
+            ticket.setCategory((String) updates.get("category"));
+        }
+        
+        // Handle status-specific updates
+        TicketStatus status = ticket.getStatus();
+        if (status == TicketStatus.RESOLVED || status == TicketStatus.CLOSED) {
+            ticket.setResolvedAt(LocalDateTime.now());
+        }
+        
+        ticket.setUpdatedAt(LocalDateTime.now());
+        
+        SupportTicket updated = supportTicketRepository.save(ticket);
+        log.info("✅ Support ticket {} updated successfully", id);
+        return updated;
+    }
+
+    public SupportTicket updateTicketStatus(Long id, String newStatus, String assignedTo) {
+        log.info("🔄 Updating ticket {} status to: {}, assigned to: {}", id, newStatus, assignedTo);
+        
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("status", newStatus);
+        
+        if (assignedTo != null && !assignedTo.trim().isEmpty()) {
+            updates.put("assignedTo", assignedTo);
+        }
+        
+        return updateSupportTicket(id, updates);
+    }
+
+    public Map<String, Object> getTicketStats() {
+        return getTicketStatistics();
+    }
 }
 

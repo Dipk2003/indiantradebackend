@@ -12,7 +12,7 @@ import com.itech.itech_backend.modules.shared.service.*;
 import com.itech.itech_backend.modules.vendor.service.VendorRankingService;
 import com.itech.itech_backend.modules.vendor.service.VendorsService;
 import com.itech.itech_backend.modules.vendor.service.VendorTaxService;
-import com.itech.itech_backend.modules.vendor.service.ExcelImportService;
+import com.itech.itech_backend.modules.vendor.service.VendorProductImportService;
 import com.itech.itech_backend.modules.product.service.ProductService;
 import com.itech.itech_backend.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +35,13 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/vendor")
 @RequiredArgsConstructor
-@CrossOrigin
 @Slf4j
 public class VendorDashboardController {
 
     private final VendorRankingService rankingService;
     private final VendorsService vendorsService;
     private final VendorTaxService vendorTaxService;
-    private final ExcelImportService excelImportService;
+    private final VendorProductImportService vendorProductImportService;
     private final FileUploadService fileUploadService;
     private final ProductImageRepository productImageRepository;
     private final ProductService productService;
@@ -224,7 +223,7 @@ public class VendorDashboardController {
 
             log.info("Starting bulk import for vendor: {} with file: {}", vendorId, fileName);
             
-            ExcelImportResponseDto response = excelImportService.importProductsFromExcel(excelFile, vendorId);
+            ExcelImportResponseDto response = vendorProductImportService.importProductsFromExcel(excelFile, vendorId);
             
             if (response.getSuccess()) {
                 return ResponseEntity.ok(response);
@@ -560,8 +559,8 @@ public class VendorDashboardController {
 
             log.info("Starting CSV import for vendor: {} with file: {}", vendorId, fileName);
             
-            // Use existing ExcelImportService which already supports CSV
-            ExcelImportResponseDto response = excelImportService.importProductsFromExcel(csvFile, vendorId);
+            // Use existing VendorProductImportService which already supports CSV
+            ExcelImportResponseDto response = vendorProductImportService.importProductsFromExcel(csvFile, vendorId);
             
             if (response.getSuccess()) {
                 return ResponseEntity.ok(response);

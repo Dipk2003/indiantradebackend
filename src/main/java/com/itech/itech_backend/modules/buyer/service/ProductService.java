@@ -5,7 +5,7 @@ import com.itech.itech_backend.modules.shared.dto.ProductCategoryDto;
 import com.itech.itech_backend.modules.buyer.model.*;
 import com.itech.itech_backend.modules.vendor.model.*;
 import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
-import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerCategoryRepository;
 import com.itech.itech_backend.modules.buyer.repository.SubCategoryRepository;
 import com.itech.itech_backend.modules.buyer.repository.MicroCategoryRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final BuyerProductRepository productRepo;
-    private final CategoryRepository categoryRepo;
+    private final BuyerCategoryRepository categoryRepo;
     private final VendorsRepository vendorsRepo;
     private final UserRepository userRepository;
     private final SubCategoryRepository subCategoryRepo;

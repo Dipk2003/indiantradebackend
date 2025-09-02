@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/vendors")
-@CrossOrigin
 @RequiredArgsConstructor
 public class VendorsController {
 

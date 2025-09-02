@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "orders")
+@Entity(name = "BuyerOrder")
+@Table(name = "buyer_orders")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -84,8 +84,13 @@ public class Order {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
+    @Column(name = "shipped_at")
     private LocalDateTime shippedAt;
+    
+    @Column(name = "delivered_at")
     private LocalDateTime deliveredAt;
 
     @PreUpdate

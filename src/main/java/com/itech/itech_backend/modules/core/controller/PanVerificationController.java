@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 @RestController
 @RequestMapping("/tax")
 @RequiredArgsConstructor
-@CrossOrigin
 @Slf4j
 public class PanVerificationController {
 

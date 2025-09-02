@@ -11,7 +11,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/cto-dashboard")
 @RequiredArgsConstructor
-@CrossOrigin
 public class CTODashboardController {
 
     private final CTODashboardService ctoDashboardService;

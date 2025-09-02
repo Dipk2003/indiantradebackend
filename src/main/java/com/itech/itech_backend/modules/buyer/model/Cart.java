@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "BuyerCart")
 @Table(name = "cart")
 @Getter
 @Setter

@@ -21,7 +21,6 @@ import java.util.Map;
 @RequestMapping("/admin/chatbot")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
 public class ChatbotAdminController {
 
     private final ChatbotMessageRepository chatbotMessageRepository;

@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin
 @RequiredArgsConstructor
 @Slf4j
 public class OrderController {

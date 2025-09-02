@@ -36,16 +36,16 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     long countByProductId(Long productId);
     long countByProductIdAndIsApprovedTrue(Long productId);
     
-    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.product.id = :productId AND r.isApproved = true")
+    @Query("SELECT AVG(r.rating) FROM BuyerReview r WHERE r.product.id = :productId AND r.isApproved = true")
     Double getAverageRatingByProductId(@Param("productId") Long productId);
     
-    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.vendor.id = :vendorId AND r.isApproved = true")
+    @Query("SELECT AVG(r.rating) FROM BuyerReview r WHERE r.vendor.id = :vendorId AND r.isApproved = true")
     Double getAverageRatingByVendorId(@Param("vendorId") Long vendorId);
     
-    @Query("SELECT r.rating, COUNT(r) FROM Review r WHERE r.product.id = :productId AND r.isApproved = true GROUP BY r.rating ORDER BY r.rating")
+    @Query("SELECT r.rating, COUNT(r) FROM BuyerReview r WHERE r.product.id = :productId AND r.isApproved = true GROUP BY r.rating ORDER BY r.rating")
     List<Object[]> getRatingDistributionByProductId(@Param("productId") Long productId);
     
-    @Query("SELECT r.rating, COUNT(r) FROM Review r WHERE r.vendor.id = :vendorId AND r.isApproved = true GROUP BY r.rating ORDER BY r.rating")
+    @Query("SELECT r.rating, COUNT(r) FROM BuyerReview r WHERE r.vendor.id = :vendorId AND r.isApproved = true GROUP BY r.rating ORDER BY r.rating")
     List<Object[]> getRatingDistributionByVendorId(@Param("vendorId") Long vendorId);
 }
 

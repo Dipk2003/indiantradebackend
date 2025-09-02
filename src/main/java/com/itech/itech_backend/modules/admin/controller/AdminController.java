@@ -1,7 +1,7 @@
 package com.itech.itech_backend.modules.admin.controller;
 
 import com.itech.itech_backend.modules.shared.dto.ExcelImportResponseDto;
-import com.itech.itech_backend.modules.vendor.service.ExcelImportService;
+import com.itech.itech_backend.modules.vendor.service.VendorProductImportService;
 
 import com.itech.itech_backend.enums.VendorType;
 import com.itech.itech_backend.modules.core.model.User;
@@ -20,12 +20,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@CrossOrigin
+
 @Slf4j
 public class AdminController {
 
     private final AdminService adminService;
-    private final ExcelImportService excelImportService;
+    private final VendorProductImportService vendorProductImportService;
 
     @GetMapping("/vendors")
     public List<Vendors> getAllVendors() {
@@ -57,7 +57,7 @@ public class AdminController {
 
            log.info("Starting admin bulk import for vendor: {} with file: {}", vendorId, fileName);
 
-           ExcelImportResponseDto response = excelImportService.importProductsFromExcel(excelFile, vendorId);
+           ExcelImportResponseDto response = vendorProductImportService.importProductsFromExcel(excelFile, vendorId);
 
            if (response.getSuccess()) {
                return ResponseEntity.ok(response);

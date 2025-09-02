@@ -1,0 +1,84 @@
+{
+  "timestamp": "2025-08-21T18:08:51.031Z",
+  "totalTests": 13,
+  "successfulTests": 2,
+  "warnings": 7,
+  "failed": 4,
+  "successRate": 15.4,
+  "results": {
+    "database": [
+      {
+        "test": "Database Connection",
+        "result": "FAILED",
+        "details": "Cannot connect to MySQL database"
+      }
+    ],
+    "backend": [
+      {
+        "test": "Service Status",
+        "result": "FAILED",
+        "details": "Port 8080 listening, health check TIMEOUT"
+      },
+      {
+        "test": "Actuator Health",
+        "result": "WARNING",
+        "details": "HTTP TIMEOUT"
+      },
+      {
+        "test": "Categories API",
+        "result": "WARNING",
+        "details": "HTTP TIMEOUT"
+      },
+      {
+        "test": "Auth Login",
+        "result": "WARNING",
+        "details": "HTTP TIMEOUT"
+      },
+      {
+        "test": "Vendors API",
+        "result": "WARNING",
+        "details": "HTTP TIMEOUT"
+      },
+      {
+        "test": "Admin Analytics",
+        "result": "WARNING",
+        "details": "HTTP TIMEOUT"
+      },
+      {
+        "test": "CORS Configuration",
+        "result": "WARNING",
+        "details": "OPTIONS request returned ERROR"
+      }
+    ],
+    "frontend": [
+      {
+        "test": "Service Status",
+        "result": "FAILED",
+        "details": "Port 3000 listening, response TIMEOUT"
+      },
+      {
+        "test": "Package Configuration",
+        "result": "SUCCESS",
+        "details": "package.json found"
+      },
+      {
+        "test": "Environment Configuration",
+        "result": "SUCCESS",
+        "details": ".env.local found"
+      }
+    ],
+    "integration": [
+      {
+        "test": "Service Integration",
+        "result": "FAILED",
+        "details": "Backend: false, Frontend: false"
+      },
+      {
+        "test": "Frontend Assets",
+        "result": "WARNING",
+        "details": "Static assets TIMEOUT"
+      }
+    ]
+  },
+  "recommendation": "NEEDS_ATTENTION"
+}

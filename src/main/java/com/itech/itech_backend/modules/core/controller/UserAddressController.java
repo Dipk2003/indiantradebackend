@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/addresses")
-@CrossOrigin
 @RequiredArgsConstructor
 @Slf4j
 public class UserAddressController {

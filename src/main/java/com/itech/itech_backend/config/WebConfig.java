@@ -1,5 +1,7 @@
 package com.itech.itech_backend.config;
 
+import com.itech.itech_backend.service.SubdomainService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -7,8 +9,11 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
+    private final SubdomainService subdomainService;
+    
     @Value("${file.upload.directory:uploads}")
     private String uploadDirectory;
     
@@ -39,11 +44,47 @@ public class WebConfig implements WebMvcConfigurer {
     
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins(allowedOrigins.split(","))
+        // Build comprehensive allowed origins list including subdomains
+        String[] baseOrigins = allowedOrigins.split(",");
+        java.util.Set<String> allAllowedOrigins = new java.util.HashSet<>();
+        java.util.Set<String> allAllowedOriginPatterns = new java.util.HashSet<>();
+        
+        // Add base configured origins (specific URLs)
+        for (String origin : baseOrigins) {
+            allAllowedOrigins.add(origin.trim());
+        }
+        
+        // Add common subdomain patterns for development and production
+        allAllowedOrigins.add("http://vendor.localhost:3000");
+        allAllowedOrigins.add("http://admin.localhost:3000");
+        allAllowedOrigins.add("http://www.localhost:3000");
+        allAllowedOrigins.add("https://vendor.localhost:3000");
+        allAllowedOrigins.add("https://admin.localhost:3000");
+        allAllowedOrigins.add("https://www.localhost:3000");
+        
+        // Production domain patterns (if configured) - use patterns for wildcards
+        if (subdomainService != null) {
+            // Add wildcard support for subdomain routing using patterns
+            allAllowedOriginPatterns.add("https://*.example.com");
+            allAllowedOriginPatterns.add("http://*.example.com");
+        }
+        
+        System.out.println("🌐 Configured CORS origins: " + allAllowedOrigins);
+        
+        var corsConfig = registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
+        
+        // Set specific origins
+        if (!allAllowedOrigins.isEmpty()) {
+            corsConfig.allowedOrigins(allAllowedOrigins.toArray(new String[0]));
+        }
+        
+        // Set origin patterns for wildcards
+        if (!allAllowedOriginPatterns.isEmpty()) {
+            corsConfig.allowedOriginPatterns(allAllowedOriginPatterns.toArray(new String[0]));
+        }
     }
 }

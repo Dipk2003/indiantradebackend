@@ -1,0 +1,113 @@
+{
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "name": {
+        "type": "text",
+        "analyzer": "standard",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "autocomplete": {
+            "type": "text",
+            "analyzer": "edge_ngram_analyzer",
+            "search_analyzer": "standard"
+          }
+        }
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "standard"
+      },
+      "sku": {
+        "type": "keyword"
+      },
+      "price": {
+        "type": "double"
+      },
+      "minOrderQuantity": {
+        "type": "double"
+      },
+      "categories": {
+        "type": "keyword"
+      },
+      "brandName": {
+        "type": "keyword"
+      },
+      "vendorId": {
+        "type": "keyword"
+      },
+      "vendorName": {
+        "type": "keyword"
+      },
+      "tags": {
+        "type": "keyword"
+      },
+      "specifications": {
+        "type": "nested",
+        "properties": {
+          "name": {
+            "type": "keyword"
+          },
+          "value": {
+            "type": "keyword"
+          }
+        }
+      },
+      "city": {
+        "type": "keyword"
+      },
+      "state": {
+        "type": "keyword"
+      },
+      "inStock": {
+        "type": "boolean"
+      },
+      "stockQuantity": {
+        "type": "integer"
+      },
+      "rating": {
+        "type": "float"
+      },
+      "reviewCount": {
+        "type": "integer"
+      },
+      "featured": {
+        "type": "boolean"
+      },
+      "createdAt": {
+        "type": "date"
+      },
+      "updatedAt": {
+        "type": "date"
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "edge_ngram_analyzer": {
+          "tokenizer": "edge_ngram_tokenizer",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      },
+      "tokenizer": {
+        "edge_ngram_tokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 20,
+          "token_chars": [
+            "letter",
+            "digit"
+          ]
+        }
+      }
+    }
+  }
+}

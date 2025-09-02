@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/kyc")
-@CrossOrigin(origins = {"http://localhost:3000", "https://your-frontend-domain.com"})
 public class KycDocumentController {
 
     @Autowired

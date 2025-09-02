@@ -1,7 +1,7 @@
 package com.itech.itech_backend.modules.vendor.controller;
 
 import com.itech.itech_backend.modules.shared.dto.ExcelImportResponseDto;
-import com.itech.itech_backend.modules.vendor.service.ExcelImportService;
+import com.itech.itech_backend.modules.vendor.service.VendorProductImportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class ExcelImportController {
 
-    private final ExcelImportService excelImportService;
+    private final VendorProductImportService vendorProductImportService;
 
     /**
      * Import products from Excel/CSV file
@@ -61,7 +61,7 @@ public class ExcelImportController {
             }
 
             // Process the file
-            ExcelImportResponseDto response = excelImportService.importProductsFromExcel(file, vendorId);
+            ExcelImportResponseDto response = vendorProductImportService.importProductsFromExcel(file, vendorId);
             
             log.info("📈 Import completed - Success: {}, Failed: {}, Total: {}", 
                     response.getSuccessfulImports(), 

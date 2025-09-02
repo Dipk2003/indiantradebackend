@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/dataentry")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class DataEntryController {
 
     private final DataEntryService dataEntryService;

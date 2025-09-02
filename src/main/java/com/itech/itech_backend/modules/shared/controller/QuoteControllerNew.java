@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/quotes-new")
 @RequiredArgsConstructor
-@CrossOrigin
 @Slf4j
 public class QuoteControllerNew {
 

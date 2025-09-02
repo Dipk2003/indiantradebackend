@@ -21,7 +21,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/buyer-leads")
-@CrossOrigin
 @RequiredArgsConstructor
 public class BuyerLeadController {
 

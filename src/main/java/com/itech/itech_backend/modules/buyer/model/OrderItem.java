@@ -6,8 +6,8 @@ import com.itech.itech_backend.modules.vendor.model.Vendors;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "order_item")
+@Entity(name = "BuyerOrderItem")
+@Table(name = "buyer_order_items")
 @Getter
 @Setter
 @NoArgsConstructor

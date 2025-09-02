@@ -15,5 +15,8 @@ public class ChatbotRequestDto {
     
     // Optional: if user is logged in
     private Long userId;
+    
+    // User role for role-based responses (NON_LOGGED, BUYER, VENDOR, ADMIN)
+    private String userRole;
 }
 

@@ -2,7 +2,7 @@ package com.itech.itech_backend.modules.admin.controller;
 
 import com.itech.itech_backend.modules.shared.model.*;
 import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
-import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerCategoryRepository;
 import com.itech.itech_backend.modules.buyer.repository.SubCategoryRepository;
 import com.itech.itech_backend.modules.buyer.repository.MicroCategoryRepository;
 import com.itech.itech_backend.modules.buyer.model.*;
@@ -22,11 +22,10 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/admin/categories")
 @RequiredArgsConstructor
-@CrossOrigin
 @Slf4j
 public class CategoryManagementController {
 
-    private final CategoryRepository categoryRepository;
+    private final BuyerCategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final MicroCategoryRepository microCategoryRepository;
     private final BuyerProductRepository productRepository;

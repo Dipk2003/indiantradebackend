@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admins")
-@CrossOrigin
 @RequiredArgsConstructor
 public class AdminsController {
 

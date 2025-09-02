@@ -4,7 +4,7 @@ import com.itech.itech_backend.modules.shared.dto.ProductSearchDto;
 import com.itech.itech_backend.modules.shared.dto.ProductSearchResponseDto;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
-import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerCategoryRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class ProductSearchService {
     private BuyerProductRepository productRepository;
     
     @Autowired
-    private CategoryRepository categoryRepository;
+    private BuyerCategoryRepository categoryRepository;
     
     @Autowired
     private VendorsRepository vendorsRepository;

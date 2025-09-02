@@ -22,7 +22,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/vendors")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class VendorController {
     
     private final VendorService vendorService;

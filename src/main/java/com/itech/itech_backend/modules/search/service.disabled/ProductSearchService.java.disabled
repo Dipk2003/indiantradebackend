@@ -1,0 +1,135 @@
+package com.itech.itech_backend.modules.search.service;
+
+import com.itech.itech_backend.modules.search.model.ProductSearchDocument;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class ProductSearchService {
+
+    private final ElasticsearchOperations elasticsearchOperations;
+
+    public Page<ProductSearchDocument> searchProducts(
+            String query,
+            Map<String, List<String>> filters,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            Set<String> categories,
+            String city,
+            String state,
+            String sortBy,
+            SortOrder sortOrder,
+            Pageable pageable) {
+
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+
+        // Add full text search
+        if (query != null && !query.trim().isEmpty()) {
+            queryBuilder.must(QueryBuilders.multiMatchQuery(query)
+                    .field("name", 2.0f)
+                    .field("description")
+                    .field("tags")
+                    .field("brandName")
+                    .type(org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.BEST_FIELDS)
+                    .fuzziness("AUTO"));
+        }
+
+        // Add filters
+        if (filters != null) {
+            filters.forEach((field, values) -> {
+                if (!values.isEmpty()) {
+                    queryBuilder.filter(QueryBuilders.termsQuery(field, values));
+                }
+            });
+        }
+
+        // Add price range
+        if (minPrice != null || maxPrice != null) {
+            queryBuilder.filter(QueryBuilders.rangeQuery("price")
+                    .from(minPrice)
+                    .to(maxPrice));
+        }
+
+        // Add categories
+        if (categories != null && !categories.isEmpty()) {
+            queryBuilder.filter(QueryBuilders.termsQuery("categories", categories));
+        }
+
+        // Add location
+        if (city != null && !city.trim().isEmpty()) {
+            queryBuilder.filter(QueryBuilders.termQuery("city", city));
+        }
+        if (state != null && !state.trim().isEmpty()) {
+            queryBuilder.filter(QueryBuilders.termQuery("state", state));
+        }
+
+        // Build query
+        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder()
+                .withQuery(queryBuilder)
+                .withPageable(pageable);
+
+        // Add sorting
+        if (sortBy != null && !sortBy.trim().isEmpty()) {
+            searchQueryBuilder.withSort(SortBuilders.fieldSort(sortBy).order(sortOrder));
+        }
+
+        // Execute search
+        NativeSearchQuery searchQuery = searchQueryBuilder.build();
+        SearchHits<ProductSearchDocument> searchHits = elasticsearchOperations.search(
+                searchQuery, ProductSearchDocument.class);
+
+        // Convert results to page
+        List<ProductSearchDocument> products = searchHits.getSearchHits().stream()
+                .map(SearchHit::getContent)
+                .collect(Collectors.toList());
+
+        return new org.springframework.data.domain.PageImpl<>(
+                products,
+                pageable,
+                searchHits.getTotalHits());
+    }
+
+    public void indexProduct(ProductSearchDocument product) {
+        elasticsearchOperations.save(product);
+    }
+
+    public void indexProducts(List<ProductSearchDocument> products) {
+        products.forEach(this::indexProduct);
+    }
+
+    public void deleteProduct(String productId) {
+        elasticsearchOperations.delete(productId, ProductSearchDocument.class);
+    }
+
+    public ProductSearchDocument getProduct(String productId) {
+        return elasticsearchOperations.get(productId, ProductSearchDocument.class);
+    }
+
+    public void deleteIndex() {
+        elasticsearchOperations.indexOps(ProductSearchDocument.class).delete();
+    }
+
+    public void createIndex() {
+        elasticsearchOperations.indexOps(ProductSearchDocument.class).create();
+    }
+}

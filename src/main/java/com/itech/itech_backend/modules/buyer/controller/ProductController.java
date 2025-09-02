@@ -23,7 +23,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
-@CrossOrigin
 @Slf4j
 public class ProductController {
 

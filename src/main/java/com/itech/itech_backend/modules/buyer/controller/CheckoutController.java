@@ -19,7 +19,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/checkout")
-@CrossOrigin
 @RequiredArgsConstructor
 @Slf4j
 public class CheckoutController {

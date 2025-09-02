@@ -199,6 +199,9 @@ public class Product {
     
     @Column(name = "video_url", length = 500)
     private String videoUrl;
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProductVideo> videos;
 
     // ===============================
     // STATUS AND VISIBILITY

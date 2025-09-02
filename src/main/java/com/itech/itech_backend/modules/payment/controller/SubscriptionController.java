@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/subscriptions")
 @RequiredArgsConstructor
-@CrossOrigin
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;

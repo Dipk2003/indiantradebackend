@@ -70,7 +70,9 @@ public class SecurityConfig {
                                 "/api/content/coupons/validate/**",
                                 "/api/analytics/dashboard",
                                 "/api/analytics/test",
-                                "/api/analytics/test-dashboard"
+                                "/api/analytics/test-dashboard",
+                                "/api/public/**",
+                                "/api/cities/**"
                         ).permitAll()
                         .requestMatchers("/api/inquiries").hasAnyRole("USER", "VENDOR", "ADMIN")
                         .requestMatchers("/api/quotes").hasAnyRole("VENDOR", "ADMIN")
@@ -112,17 +114,36 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Use environment variable for allowed origins, fallback to wildcard
-        if (allowedOrigins != null && !allowedOrigins.equals("*")) {
+        // Configure origins based on environment
+        if (allowedOrigins != null && !allowedOrigins.equals("*") && !allowedOrigins.trim().isEmpty()) {
+            // Production or staging environment with specific origins
             List<String> origins = Arrays.asList(allowedOrigins.split(","));
-            configuration.setAllowedOrigins(origins);
+            configuration.setAllowedOrigins(origins.stream().map(String::trim).toList());
+            configuration.setAllowCredentials(true);
+            System.out.println("🔒 CORS configured for PRODUCTION with origins: " + origins);
         } else {
-            configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+            // Development environment with localhost origins
+            List<String> devOrigins = Arrays.asList(
+                "http://localhost:3000",
+                "http://localhost:3001", 
+                "http://127.0.0.1:3000",
+                "http://127.0.0.1:3001",
+                "https://localhost:3000",
+                "https://localhost:3001",
+                "http://vendor.localhost:3000",
+                "http://admin.localhost:3000",
+                "http://www.localhost:3000",
+                "https://vendor.localhost:3000",
+                "https://admin.localhost:3000",
+                "https://www.localhost:3000"
+            );
+            configuration.setAllowedOrigins(devOrigins);
+            configuration.setAllowCredentials(true);
+            System.out.println("🔧 CORS configured for DEVELOPMENT with origins: " + devOrigins);
         }
         
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L); // 1 hour
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

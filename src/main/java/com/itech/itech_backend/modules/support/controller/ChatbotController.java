@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/chatbot")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
 public class ChatbotController {
 
     private final ChatbotService chatbotService;
@@ -27,7 +26,7 @@ public class ChatbotController {
             HttpServletRequest httpRequest) {
         
         try {
-            log.info("Received chat request: {}", request.getMessage());
+            log.info("Received chat request: {} from user role: {}", request.getMessage(), request.getUserRole());
             
             // Set user IP if not provided
             if (request.getUserIp() == null || request.getUserIp().isEmpty()) {
@@ -39,6 +38,36 @@ public class ChatbotController {
             
         } catch (Exception e) {
             log.error("Error processing chat request: {}", e.getMessage(), e);
+            
+            ChatbotResponseDto errorResponse = ChatbotResponseDto.builder()
+                    .response("I'm sorry, I'm experiencing some technical difficulties. Please try again later.")
+                    .sessionId(request.getSessionId())
+                    .hasRecommendations(false)
+                    .build();
+            
+            return ResponseEntity.ok(errorResponse);
+        }
+    }
+    
+    // Add support endpoint with role-based routing
+    @PostMapping("/support/chat")
+    public ResponseEntity<ChatbotResponseDto> supportChat(
+            @RequestBody ChatbotRequestDto request,
+            HttpServletRequest httpRequest) {
+        
+        try {
+            log.info("Received support chat request: {} from user role: {}", request.getMessage(), request.getUserRole());
+            
+            // Set user IP if not provided
+            if (request.getUserIp() == null || request.getUserIp().isEmpty()) {
+                request.setUserIp(getClientIpAddress(httpRequest));
+            }
+            
+            ChatbotResponseDto response = chatbotService.processRoleBasedMessage(request);
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            log.error("Error processing support chat request: {}", e.getMessage(), e);
             
             ChatbotResponseDto errorResponse = ChatbotResponseDto.builder()
                     .response("I'm sorry, I'm experiencing some technical difficulties. Please try again later.")

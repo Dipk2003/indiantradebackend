@@ -21,10 +21,10 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> 
     
     List<SubCategory> findByCategoryIdAndIsActiveTrue(Long categoryId);
     
-    @Query("SELECT sc FROM SubCategory sc WHERE sc.category.id = :categoryId ORDER BY sc.displayOrder ASC, sc.name ASC")
+    @Query("SELECT sc FROM BuyerSubCategory sc WHERE sc.category.id = :categoryId ORDER BY sc.displayOrder ASC, sc.name ASC")
     List<SubCategory> findByCategoryIdOrderByDisplayOrder(@Param("categoryId") Long categoryId);
     
-    @Query("SELECT COUNT(mc) FROM MicroCategory mc WHERE mc.subCategory.id = :subCategoryId")
+    @Query("SELECT COUNT(mc) FROM BuyerMicroCategory mc WHERE mc.subCategory.id = :subCategoryId")
     long countMicroCategoriesBySubCategoryId(@Param("subCategoryId") Long subCategoryId);
     
     @Query("SELECT COUNT(p) FROM BuyerProduct p JOIN p.microCategory mc WHERE mc.subCategory.id = :subCategoryId")
@@ -33,7 +33,7 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> 
     boolean existsByNameAndCategoryId(String name, Long categoryId);
     
     // Additional count methods needed by DataEntryService
-    @Query("SELECT COUNT(sc) FROM SubCategory sc WHERE sc.category.id = :categoryId")
+    @Query("SELECT COUNT(sc) FROM BuyerSubCategory sc WHERE sc.category.id = :categoryId")
     long countByCategoryId(@Param("categoryId") Long categoryId);
 }
 

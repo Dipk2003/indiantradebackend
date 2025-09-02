@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/contact")
 @RequiredArgsConstructor
-@CrossOrigin
 public class ContactMessageController {
 
     private final ContactMessageService contactService;

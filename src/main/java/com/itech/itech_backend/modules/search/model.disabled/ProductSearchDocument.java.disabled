@@ -1,0 +1,81 @@
+package com.itech.itech_backend.modules.search.model;
+
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
+
+@Document(indexName = "products")
+@Data
+@Setting(settingPath = "elasticsearch/product-settings.json")
+public class ProductSearchDocument {
+
+    @Id
+    private String id;
+
+    @Field(type = FieldType.Text, analyzer = "autocomplete")
+    private String name;
+
+    @Field(type = FieldType.Text)
+    private String description;
+
+    @Field(type = FieldType.Keyword)
+    private String sku;
+
+    @Field(type = FieldType.Double)
+    private BigDecimal price;
+
+    @Field(type = FieldType.Double)
+    private BigDecimal minOrderQuantity;
+
+    @Field(type = FieldType.Keyword)
+    private Set<String> categories;
+
+    @Field(type = FieldType.Keyword)
+    private String brandName;
+
+    @Field(type = FieldType.Keyword)
+    private String vendorId;
+
+    @Field(type = FieldType.Keyword)
+    private String vendorName;
+
+    @Field(type = FieldType.Keyword)
+    private Set<String> tags;
+
+    @Field(type = FieldType.Object)
+    private List<Specification> specifications;
+
+    @Field(type = FieldType.Keyword)
+    private String city;
+
+    @Field(type = FieldType.Keyword)
+    private String state;
+
+    @Field(type = FieldType.Boolean)
+    private boolean inStock;
+
+    @Field(type = FieldType.Integer)
+    private Integer stockQuantity;
+
+    @Field(type = FieldType.Double)
+    private Double rating;
+
+    @Field(type = FieldType.Integer)
+    private Integer reviewCount;
+
+    @Field(type = FieldType.Boolean)
+    private boolean featured;
+
+    @Data
+    public static class Specification {
+        @Field(type = FieldType.Keyword)
+        private String name;
+
+        @Field(type = FieldType.Keyword)
+        private String value;
+    }
+}

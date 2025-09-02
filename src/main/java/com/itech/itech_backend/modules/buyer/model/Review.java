@@ -8,7 +8,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "BuyerReview")
 @Table(name = "reviews")
 @Getter
 @Setter

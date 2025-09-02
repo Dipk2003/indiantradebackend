@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/webhook")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class RazorpayWebhookController {

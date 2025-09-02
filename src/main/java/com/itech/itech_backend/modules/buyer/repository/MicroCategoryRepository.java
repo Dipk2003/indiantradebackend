@@ -21,7 +21,7 @@ public interface MicroCategoryRepository extends JpaRepository<MicroCategory, Lo
     
     List<MicroCategory> findBySubCategoryIdAndIsActiveTrue(Long subCategoryId);
     
-    @Query("SELECT mc FROM MicroCategory mc WHERE mc.subCategory.id = :subCategoryId ORDER BY mc.displayOrder ASC, mc.name ASC")
+    @Query("SELECT mc FROM BuyerMicroCategory mc WHERE mc.subCategory.id = :subCategoryId ORDER BY mc.displayOrder ASC, mc.name ASC")
     List<MicroCategory> findBySubCategoryIdOrderByDisplayOrder(@Param("subCategoryId") Long subCategoryId);
     
     @Query("SELECT COUNT(p) FROM BuyerProduct p WHERE p.microCategory.id = :microCategoryId")
@@ -29,11 +29,11 @@ public interface MicroCategoryRepository extends JpaRepository<MicroCategory, Lo
     
     boolean existsByNameAndSubCategoryId(String name, Long subCategoryId);
     
-    @Query("SELECT mc FROM MicroCategory mc WHERE mc.subCategory.category.id = :categoryId")
+    @Query("SELECT mc FROM BuyerMicroCategory mc WHERE mc.subCategory.category.id = :categoryId")
     List<MicroCategory> findByCategoryId(@Param("categoryId") Long categoryId);
     
     // Additional count methods needed by DataEntryService
-    @Query("SELECT COUNT(mc) FROM MicroCategory mc WHERE mc.subCategory.category.id = :categoryId")
+    @Query("SELECT COUNT(mc) FROM BuyerMicroCategory mc WHERE mc.subCategory.category.id = :categoryId")
     long countByCategoryId(@Param("categoryId") Long categoryId);
 }
 

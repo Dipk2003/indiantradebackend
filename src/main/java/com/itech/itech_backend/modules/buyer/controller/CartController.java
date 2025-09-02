@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/cart")
-@CrossOrigin
 @RequiredArgsConstructor
 @Slf4j
 public class CartController {

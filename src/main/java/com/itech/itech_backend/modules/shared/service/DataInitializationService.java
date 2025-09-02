@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class DataInitializationService implements CommandLineRunner {
 
-    private final CategoryRepository categoryRepository;
+    private final BuyerCategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final MicroCategoryRepository microCategoryRepository;
     private final BuyerProductRepository productRepository;

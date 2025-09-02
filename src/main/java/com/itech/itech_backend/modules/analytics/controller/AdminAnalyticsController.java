@@ -10,7 +10,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/analytics")
-@CrossOrigin(origins = {"http://localhost:3000", "https://your-frontend-domain.com"})
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminAnalyticsController {
 

@@ -8,7 +8,7 @@ import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.shared.dto.*;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import com.itech.itech_backend.modules.vendor.service.DataEntryService;
-import com.itech.itech_backend.modules.buyer.repository.CategoryRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerCategoryRepository;
 import com.itech.itech_backend.modules.buyer.repository.SubCategoryRepository;
 import com.itech.itech_backend.modules.buyer.repository.MicroCategoryRepository;
 import com.itech.itech_backend.modules.buyer.repository.BuyerProductRepository;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class DataEntryServiceImpl implements DataEntryService {
     
-    private final CategoryRepository categoryRepository;
+    private final BuyerCategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final MicroCategoryRepository microCategoryRepository;
     private final BuyerProductRepository productRepository;

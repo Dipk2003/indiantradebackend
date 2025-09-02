@@ -307,5 +307,41 @@ public class NotificationService {
             throw new RuntimeException("Failed to send bulk notification: " + e.getMessage());
         }
     }
+    
+    // Additional methods for disabled services compatibility
+    public void notifyVendor(String vendorId, String title, String message) {
+        log.info("Vendor notification - ID: {}, Title: {}, Message: {}", vendorId, title, message);
+        // Could convert vendorId to userId and send notification if needed
+    }
+    
+    public void notifyBuyer(String buyerId, String title, String message) {
+        log.info("Buyer notification - ID: {}, Title: {}, Message: {}", buyerId, title, message);
+        // Could convert buyerId to userId and send notification if needed
+    }
+    
+    public void notifyAdmin(String title, String message) {
+        log.info("Admin notification - Title: {}, Message: {}", title, message);
+        // Could send to all admin users if needed
+    }
+    
+    public void sendRFQNotification(String vendorId, Long rfqId, String message) {
+        log.info("Sending RFQ notification to vendor {} for RFQ {}: {}", vendorId, rfqId, message);
+        // Implementation for sending notifications
+    }
+    
+    public void sendBidNotification(String buyerId, Long rfqId, String message) {
+        log.info("Sending bid notification to buyer {} for RFQ {}: {}", buyerId, rfqId, message);
+        // Implementation for sending bid notifications
+    }
+    
+    public void sendEmailNotification(String email, String subject, String message) {
+        log.info("Sending email notification to {}: {}", email, subject);
+        // Implementation for email notifications
+    }
+    
+    public void sendSMSNotification(String phoneNumber, String message) {
+        log.info("Sending SMS notification to {}: {}", phoneNumber, message);
+        // Implementation for SMS notifications
+    }
 }
 

@@ -19,7 +19,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/wishlist")
 @RequiredArgsConstructor
-@CrossOrigin
 @Slf4j
 public class WishlistController {
 
