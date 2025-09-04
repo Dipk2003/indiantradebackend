@@ -48,5 +48,13 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     // Vendor analytics methods
     @Query("SELECT COUNT(c) FROM Chat c WHERE c.receiver.id = :vendorId AND c.isRead = false")
     long countUnreadMessagesByVendorId(@Param("vendorId") Long vendorId);
+    
+    // Additional methods required by SimpleChatService
+    @Query("SELECT c FROM Chat c WHERE (c.sender.id = :userId1 AND c.receiver.id = :userId2) OR (c.sender.id = :userId2 AND c.receiver.id = :userId1) ORDER BY c.createdAt ASC")
+    List<Chat> findChatsBetweenUsers(@Param("userId1") Long userId1, @Param("userId2") Long userId2);
+    
+    Page<Chat> findByReceiverIdOrderByCreatedAtDesc(Long receiverId, Pageable pageable);
+    
+    Page<Chat> findBySenderIdOrderByCreatedAtDesc(Long senderId, Pageable pageable);
 }
 

@@ -80,5 +80,14 @@ public class Chat {
             createdAt = LocalDateTime.now();
         }
     }
+    
+    // Convenience methods for backward compatibility
+    public Long getSenderId() {
+        return sender != null ? sender.getId() : null;
+    }
+    
+    public Long getReceiverId() {
+        return receiver != null ? receiver.getId() : null;
+    }
 }
 

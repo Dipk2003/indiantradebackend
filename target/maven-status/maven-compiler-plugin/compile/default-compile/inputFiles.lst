@@ -2,7 +2,6 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\Cach
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\OpenAPIConfig.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\PerformanceConfig.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\ProductionMailConfig.java
-D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\RedisCacheConfig.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\RedisConfig.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\SecurityConfig.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\SubdomainProperties.java
@@ -105,6 +104,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buy
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\ReviewRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\SubCategoryRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\repository\WishlistRepository.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\service\BasicSearchService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\service\BuyerCategoryService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\service\BuyerLeadService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\service\BuyerService.java
@@ -152,6 +152,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\cor
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\repository\UserAddressRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\repository\UserRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\AuthService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\EmailVerificationService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\KycDocumentService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\PanVerificationService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\UnifiedAuthService.java
@@ -346,6 +347,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\sup
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\service\ChatService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\service\ContactMessageService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\service\KnowledgeBaseService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\service\SimpleChatService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\service\SLAConfigurationService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\service\SLATrackingService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\support\service\SupportAnalyticsService.java

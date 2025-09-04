@@ -4,6 +4,8 @@ import com.itech.itech_backend.modules.buyer.model.*;
 import com.itech.itech_backend.modules.vendor.model.*;
 import com.itech.itech_backend.modules.buyer.repository.*;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
+import com.itech.itech_backend.modules.core.model.User;
+import com.itech.itech_backend.modules.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +25,7 @@ public class DataInitializationService implements CommandLineRunner {
     private final MicroCategoryRepository microCategoryRepository;
     private final BuyerProductRepository productRepository;
     private final VendorsRepository vendorsRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -90,7 +93,28 @@ public class DataInitializationService implements CommandLineRunner {
             return vendorsRepository.findByEmail("vendor@example.com").get();
         }
         
+        // First create a User
+        User user = User.builder()
+                .name("Sample Vendor")
+                .email("vendor@example.com")
+                .phone("+91-9876543210")
+                .password("$2a$10$encrypted_password_here")
+                .verified(true)
+                .role("ROLE_VENDOR")
+                .isActive(true)
+                .address("123 Main Street")
+                .city("Mumbai")
+                .state("Maharashtra")
+                .pincode("400001")
+                .country("India")
+                .createdAt(LocalDateTime.now())
+                .build();
+        
+        user = userRepository.save(user);
+        
+        // Then create a Vendor linked to the User
         Vendors vendor = Vendors.builder()
+                .user(user)
                 .name("Sample Vendor")
                 .email("vendor@example.com")
                 .phone("+91-9876543210")

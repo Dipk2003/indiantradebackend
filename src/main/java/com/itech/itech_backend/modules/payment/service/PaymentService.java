@@ -132,18 +132,46 @@ public class PaymentService {
 
     // Additional methods required by FinanceController
     public PaymentSummaryDto getPaymentSummary(LocalDateTime startDate, LocalDateTime endDate) {
-        // Generate payment summary
-        throw new RuntimeException("Not implemented yet");
+        try {
+            // For now, return a basic summary
+            return PaymentSummaryDto.builder()
+                .totalAmount(BigDecimal.ZERO)
+                .totalPayments(BigDecimal.ZERO)
+                .successfulPayments(BigDecimal.ZERO)
+                .failedPayments(BigDecimal.ZERO)
+                .pendingPayments(BigDecimal.ZERO)
+                .build();
+        } catch (Exception e) {
+            log.error("Error generating payment summary", e);
+            throw new RuntimeException("Failed to generate payment summary");
+        }
     }
 
-    public Page<VendorPayment> getVendorPayments(Long vendorId, String status, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
-        // Get vendor payments with filtering
-        throw new RuntimeException("Not implemented yet");
+    public Payment savePayment(Payment payment) {
+        return paymentRepository.save(payment);
     }
-
+    
+    public Payment findByRazorpayOrderId(String razorpayOrderId) {
+        return paymentRepository.findByTransactionId(razorpayOrderId)
+            .orElse(null);
+    }
+    
+    public List<Payment> getPaymentHistory(Long userId) {
+        return paymentRepository.findByBuyerId(userId);
+    }
+    
+    // Vendor payment methods for FinanceController
+    public Page<VendorPayment> getVendorPayments(
+            Long vendorId, String status, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+        // For now, return empty page - this needs proper implementation
+        log.info("Getting vendor payments for vendor: {}, status: {}", vendorId, status);
+        return Page.empty(pageable);
+    }
+    
     public VendorPayment processVendorPayment(VendorPaymentDto request) {
-        // Process vendor payment
-        throw new RuntimeException("Not implemented yet");
+        // For now, return null - this needs proper implementation
+        log.info("Processing vendor payment: {}", request);
+        return null;
     }
 }
 

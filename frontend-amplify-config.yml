@@ -1,0 +1,33 @@
+# =============================================================================
+# AWS Amplify Build Configuration for iTech Frontend
+# =============================================================================
+# Save this as: amplify.yml in your frontend root directory
+
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Starting pre-build phase..."
+        - npm --version
+        - node --version
+        - npm ci --cache .npm --prefer-offline --no-audit --progress=false
+    build:
+      commands:
+        - echo "Starting build phase..."
+        - echo "Building Next.js application for production..."
+        - npm run build:production
+    postBuild:
+      commands:
+        - echo "Build completed successfully!"
+        - echo "Files in .next directory:"
+        - ls -la .next/
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .npm/**/*
+      - .next/cache/**/*
+      - node_modules/**/*

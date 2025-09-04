@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,88 +17,110 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
-    
-    @Value("${spring.web.cors.allowed-origins:*}")
-    private String allowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("🔧 Configuring Security with Complete CORS Integration");
+        
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**",
-                                "/health/**",
-                                "/health",
-                                "/api/products/search",
-                                "/api/products/category/**",
-                                "/api/products/vendor/{vendorId}",
-                                "/api/products/vendor1/products",
-                                "/api/products/featured",
-                                "/api/products/{productId}",
-                                "/api/products/test/**",
-                                "/categories/**",
-                                "/api/categories/**",
-                                "/contact/**",
-                                "/api/chatbot/**",
-                                "/test/**",
-                                "/api/files/**",
-                                "/uploads/**",
-                                "/api/gst/**",
-                                "/api/pan/**",
-                                "/api/vendors/**",
-                                "/api/leads/**",
-                                "/api/orders/**",
-                                "/api/cart/**",
-                                "/api/upload/**",
-                                "/api/excel/**",
-                                "/api/dataentry/**",
-                                "/api/reviews/product/**",
-                                "/api/reviews/vendor/**",
-                                "/api/payments/subscription-plans",
-                                "/api/content/banners",
-                                "/api/content/coupons/validate/**",
-                                "/api/analytics/dashboard",
-                                "/api/analytics/test",
-                                "/api/analytics/test-dashboard",
-                                "/api/public/**",
-                                "/api/cities/**"
-                        ).permitAll()
-                        .requestMatchers("/api/inquiries").hasAnyRole("USER", "VENDOR", "ADMIN")
-                        .requestMatchers("/api/quotes").hasAnyRole("VENDOR", "ADMIN")
-                        .requestMatchers("/api/reviews/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/support-tickets").hasAnyRole("USER", "VENDOR", "ADMIN")
-                        .requestMatchers("/api/wishlist/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/payments/**").hasAnyRole("VENDOR", "ADMIN")
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/products").hasRole("VENDOR")
-                        .requestMatchers("/api/products/vendor/my-products").hasRole("VENDOR")
-                        .requestMatchers("/api/products/vendor/add").hasRole("VENDOR")
-                        .requestMatchers("/api/products/*/images").hasRole("VENDOR")
-                        .requestMatchers("/api/products/*/status").hasRole("VENDOR")
-                        .requestMatchers("/api/products/*/approve").hasRole("ADMIN")
-                        .requestMatchers("/api/products/*/feature").hasRole("ADMIN")
-                        .requestMatchers("/api/products/pending-approval").hasRole("ADMIN")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/vendor/**").hasAnyRole("VENDOR", "ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                // === PUBLIC ENDPOINTS (NO AUTH REQUIRED) ===
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(
+                    "/actuator/**",
+                    "/health/**",
+                    "/health"
+                ).permitAll()
+                
+                // === ALL AUTH ENDPOINTS (REGISTRATION & LOGIN) ===
+                .requestMatchers(
+                    "/auth/**",
+                    "/api/auth/**",
+                    "/api/v1/auth/**"
+                ).permitAll()
+                
+                // === PUBLIC PRODUCT ENDPOINTS ===
+                .requestMatchers(HttpMethod.GET, 
+                    "/api/products/**",
+                    "/api/v1/products/**",
+                    "/products/**"
+                ).permitAll()
+                
+                // === PUBLIC CATEGORY ENDPOINTS ===
+                .requestMatchers(HttpMethod.GET,
+                    "/api/categories/**", 
+                    "/api/v1/categories/**",
+                    "/categories/**"
+                ).permitAll()
+                
+                // === VENDOR ENDPOINTS (REQUIRE VENDOR ROLE) ===
+                .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("VENDOR")
+                .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("VENDOR")
+                .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("VENDOR")
+                .requestMatchers("/api/products/vendor/**").hasRole("VENDOR")
+                .requestMatchers("/api/v1/products/vendor/**").hasRole("VENDOR")
+                
+                // === ADMIN ENDPOINTS ===
+                .requestMatchers("/admin/**", "/api/admin/**", "/api/v1/admin/**").hasRole("ADMIN")
+                
+                // === ALL OTHER ENDPOINTS ===
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+        System.out.println("✅ Security configuration completed with CORS integration");
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        System.out.println("🌐 Configuring CORS for Frontend-Backend Integration");
+        
+        CorsConfiguration configuration = new CorsConfiguration();
+        
+        // Allow all localhost variations for development
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3000",
+            "http://localhost:3001", 
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:3001",
+            "https://localhost:3000",
+            "https://localhost:3001"
+        ));
+        
+        // Allow all HTTP methods
+        configuration.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"
+        ));
+        
+        // Allow all headers
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        
+        // Allow credentials
+        configuration.setAllowCredentials(true);
+        
+        // Cache preflight for 1 hour
+        configuration.setMaxAge(3600L);
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        
+        System.out.println("✅ CORS configured for localhost:3000 with all methods and headers");
+        return source;
     }
 
     @Bean
@@ -108,46 +131,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        
-        // Configure origins based on environment
-        if (allowedOrigins != null && !allowedOrigins.equals("*") && !allowedOrigins.trim().isEmpty()) {
-            // Production or staging environment with specific origins
-            List<String> origins = Arrays.asList(allowedOrigins.split(","));
-            configuration.setAllowedOrigins(origins.stream().map(String::trim).toList());
-            configuration.setAllowCredentials(true);
-            System.out.println("🔒 CORS configured for PRODUCTION with origins: " + origins);
-        } else {
-            // Development environment with localhost origins
-            List<String> devOrigins = Arrays.asList(
-                "http://localhost:3000",
-                "http://localhost:3001", 
-                "http://127.0.0.1:3000",
-                "http://127.0.0.1:3001",
-                "https://localhost:3000",
-                "https://localhost:3001",
-                "http://vendor.localhost:3000",
-                "http://admin.localhost:3000",
-                "http://www.localhost:3000",
-                "https://vendor.localhost:3000",
-                "https://admin.localhost:3000",
-                "https://www.localhost:3000"
-            );
-            configuration.setAllowedOrigins(devOrigins);
-            configuration.setAllowCredentials(true);
-            System.out.println("🔧 CORS configured for DEVELOPMENT with origins: " + devOrigins);
-        }
-        
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setMaxAge(3600L); // 1 hour
-        
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }

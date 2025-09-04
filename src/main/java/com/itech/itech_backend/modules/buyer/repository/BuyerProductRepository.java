@@ -7,13 +7,14 @@ import com.itech.itech_backend.modules.buyer.model.MicroCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface BuyerProductRepository extends JpaRepository<Product, Long> {
+public interface BuyerProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     // Basic finders
     List<Product> findByVendor(Vendors vendor);
     Page<Product> findByIsActiveTrue(Pageable pageable);
@@ -138,5 +139,15 @@ public interface BuyerProductRepository extends JpaRepository<Product, Long> {
     
     Page<Product> findByVendorIdAndIdNotAndIsActiveTrueAndIsApprovedTrue(
         Long vendorId, Long excludeId, Pageable pageable);
+    
+    // Additional search methods
+    @Query("SELECT DISTINCT p.name FROM BuyerProduct p WHERE LOWER(p.name) LIKE %:query% AND p.isActive = true ORDER BY p.name LIMIT :limit")
+    List<String> findProductNameSuggestions(@Param("query") String query, @Param("limit") int limit);
+    
+    @Query("SELECT p FROM BuyerProduct p WHERE p.isFeatured = true AND p.isActive = true AND p.isApproved = true ORDER BY p.createdAt DESC LIMIT :limit")
+    List<Product> findFeaturedProducts(@Param("limit") int limit);
+    
+    @Query("SELECT p FROM BuyerProduct p WHERE p.isActive = true AND p.isApproved = true ORDER BY p.orderCount DESC LIMIT :limit")
+    List<Product> findPopularProducts(@Param("limit") int limit);
 }
 

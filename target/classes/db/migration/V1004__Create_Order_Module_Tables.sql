@@ -343,11 +343,8 @@ ADD CONSTRAINT chk_order_items_quantities CHECK (
 );
 
 -- ===============================
--- INSERT COMMENTS FOR TRACKING
+-- MIGRATION COMPLETED SUCCESSFULLY
 -- ===============================
-INSERT IGNORE INTO flyway_schema_history_comments (version, description, created_at) 
-VALUES ('1004', 'Create comprehensive Order Management System tables with proper relationships, constraints and indexes', NOW())
-ON DUPLICATE KEY UPDATE description = VALUES(description);
 
 -- ===============================
 -- CREATE SAMPLE DATA (Optional - Remove in production)

@@ -338,7 +338,6 @@ com\itech\itech_backend\modules\buyer\repository\BuyerRepository.class
 com\itech\itech_backend\modules\vendor\model\VendorRanking$VendorRankingBuilder.class
 com\itech\itech_backend\modules\shared\dto\VerifyForgotPasswordOtpDto.class
 com\itech\marketplace\dto\SLAReportDto$SLAReportDtoBuilder.class
-com\itech\itech_backend\config\RedisCacheConfig.class
 com\itech\itech_backend\modules\payment\model\PaymentRefund.class
 com\itech\itech_backend\modules\product\controller\ProductVideoController.class
 com\itech\itech_backend\modules\shared\dto\CategoryStatsDto.class
@@ -436,7 +435,9 @@ com\itech\itech_backend\modules\buyer\dto\BuyerVerificationDto.class
 com\itech\itech_backend\modules\core\model\OtpVerification.class
 com\itech\itech_backend\modules\order\model\OrderCommunication$Direction.class
 com\itech\marketplace\dto\SLAComplianceDto$SLAComplianceDetail.class
+com\itech\itech_backend\modules\core\service\EmailVerificationService.class
 com\itech\itech_backend\modules\shared\repository\CampaignRepository.class
+com\itech\itech_backend\modules\support\service\SimpleChatService.class
 com\itech\itech_backend\modules\shared\dto\CategoryHierarchyDto.class
 com\itech\itech_backend\modules\buyer\controller\CartController.class
 com\itech\itech_backend\modules\product\model\Product$ProductStatus.class
@@ -444,7 +445,6 @@ com\itech\marketplace\dto\RefundRequestDto.class
 com\itech\itech_backend\modules\payment\model\Invoice$InvoiceBuilder.class
 com\itech\itech_backend\modules\vendor\repository\VendorTdsSelectionRepository.class
 com\itech\itech_backend\modules\shared\model\BuyerLead$BuyerLeadBuilder.class
-com\itech\itech_backend\config\DatabaseConfig.class
 com\itech\itech_backend\modules\product\dto\CreateProductVideoDto$CreateProductVideoDtoBuilder.class
 com\itech\itech_backend\modules\shared\dto\CheckoutDto$CheckoutDtoBuilder.class
 com\itech\marketplace\dto\AutoResponseSuggestionDto$AutoResponseSuggestionDtoBuilder.class
@@ -590,6 +590,7 @@ com\itech\itech_backend\modules\vendor\dto\UpdateVendorDto.class
 com\itech\itech_backend\modules\shared\dto\ExcelImportDto$ExcelImportDtoBuilder.class
 com\itech\itech_backend\modules\shared\dto\CategoryHierarchyDto$MicroCategoryHierarchyDto.class
 com\itech\itech_backend\modules\buyer\model\Buyer$BusinessType.class
+com\itech\itech_backend\modules\buyer\service\BasicSearchService.class
 com\itech\itech_backend\modules\shared\dto\ChatbotResponseDto$VendorRecommendationDto$VendorRecommendationDtoBuilder.class
 com\itech\itech_backend\modules\shared\dto\SetPasswordDto.class
 com\itech\itech_backend\exception\ErrorResponse.class
@@ -695,7 +696,6 @@ com\itech\itech_backend\modules\shared\dto\CartDto$CartItemDto$CartItemDtoBuilde
 com\itech\itech_backend\modules\core\service\UnifiedAuthService.class
 com\itech\itech_backend\modules\core\model\UserAddress$UserAddressBuilder.class
 com\itech\itech_backend\modules\payment\dto\BulkInvoiceGenerationDto.class
-com\itech\itech_backend\config\DatabaseOptimizationConfig.class
 com\itech\marketplace\dto\VendorPaymentDto$VendorPaymentDtoBuilder.class
 com\itech\itech_backend\modules\buyer\model\Order$PaymentStatus.class
 com\itech\itech_backend\modules\shared\dto\UpdateCategoryDto$UpdateCategoryDtoBuilder.class

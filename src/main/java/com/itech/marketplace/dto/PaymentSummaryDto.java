@@ -19,6 +19,7 @@ public class PaymentSummaryDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     
+    private BigDecimal totalAmount;  // Total amount field
     private BigDecimal totalPayments;
     private BigDecimal successfulPayments;
     private BigDecimal failedPayments;

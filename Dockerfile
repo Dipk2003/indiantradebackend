@@ -1,5 +1,5 @@
 # =============================================================================
-# iTech Backend - Multi-Stage Docker Build
+# iTech Backend - Multi-Stage Docker Build for AWS Production
 # =============================================================================
 # Stage 1: Build the application
 # =============================================================================
@@ -18,8 +18,8 @@ RUN mvn dependency:go-offline -B
 # Copy source code
 COPY src ./src
 
-# Build the application
-RUN mvn clean package -DskipTests
+# Build the application for production
+RUN mvn clean package -DskipTests -Dspring.profiles.active=production
 
 # =============================================================================
 # Stage 2: Runtime image
@@ -63,8 +63,22 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
 # Set JVM options for production
 ENV JAVA_OPTS="-Xmx1g -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication"
 
-# Default profile
+# Default profile for AWS
 ENV SPRING_PROFILES_ACTIVE=production
+ENV SERVER_PORT=8080
+ENV DATABASE_URL=
+ENV JDBC_DATABASE_USERNAME=
+ENV JDBC_DATABASE_PASSWORD=
+ENV REDIS_HOST=
+ENV REDIS_PORT=6379
+ENV JWT_SECRET=
+ENV RAZORPAY_KEY_ID=
+ENV RAZORPAY_KEY_SECRET=
+ENV AWS_S3_BUCKET=
+ENV AWS_S3_REGION=
+ENV EMAIL_HOST=
+ENV EMAIL_USERNAME=
+ENV EMAIL_PASSWORD=
 
 # Entry point
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

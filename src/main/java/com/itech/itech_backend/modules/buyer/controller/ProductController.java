@@ -3,6 +3,7 @@ package com.itech.itech_backend.modules.buyer.controller;
 import com.itech.itech_backend.modules.shared.dto.ProductDto;
 import com.itech.itech_backend.modules.buyer.model.Product;
 import com.itech.itech_backend.modules.buyer.service.ProductService;
+import com.itech.itech_backend.modules.buyer.service.BasicSearchService;
 import com.itech.itech_backend.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService productService;
+    private final BasicSearchService basicSearchService;
     private final JwtTokenUtil jwtTokenUtil;
 
     // Add Category, Subcategory, Microcategory, Product
@@ -91,15 +93,31 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<Page<Product>> searchProducts(
             @RequestParam String query,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Product> products = productService.searchProducts(query, pageable);
+            Page<Product> products = basicSearchService.searchProducts(query, category, city, minPrice, maxPrice, pageable);
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             log.error("Error searching products", e);
             return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    @GetMapping("/search/suggestions")
+    public ResponseEntity<List<String>> getSearchSuggestions(
+            @RequestParam String query) {
+        try {
+            List<String> suggestions = basicSearchService.getSearchSuggestions(query);
+            return ResponseEntity.ok(suggestions);
+        } catch (Exception e) {
+            log.error("Error getting search suggestions", e);
+            return ResponseEntity.ok(List.of());
         }
     }
 
