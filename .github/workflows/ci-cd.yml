@@ -57,22 +57,13 @@ jobs:
     - name: Build JAR
       run: mvn clean package -DskipTests
     
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-south-1
-    
-    - name: Upload JAR to S3 for EB deployment
+    - name: Skip AWS S3 upload (configure secrets first)
       run: |
-        # Create deployment package name with timestamp
-        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-        JAR_NAME="itech-backend-${TIMESTAMP}.jar"
-        
-        # Upload to S3
-        aws s3 cp target/*.jar s3://elasticbeanstalk-ap-south-1-339713017351/${JAR_NAME}
-        echo "JAR uploaded to S3 as ${JAR_NAME}"
+        echo "AWS credentials not configured yet"
+        echo "Add AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to GitHub secrets"
+        echo "Then uncomment the AWS deployment steps"
+        ls -la target/
+        echo "JAR build completed successfully!"
     
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
