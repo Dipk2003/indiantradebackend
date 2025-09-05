@@ -1,0 +1,32 @@
+# =============================================================================
+# 🔧 FIX DEPLOYMENT ISSUES - CloudShell Commands
+# =============================================================================
+
+# First, get the correct platform ARN
+aws elasticbeanstalk list-available-solution-stacks --region ap-south-1 | grep -i docker
+
+# Get available MySQL versions
+aws rds describe-db-engine-versions --engine mysql --region ap-south-1 --query 'DBEngineVersions[].EngineVersion' --output table
+
+# Use correct platform ARN and MySQL version
+aws elasticbeanstalk create-environment \
+    --application-name itech-backend \
+    --environment-name itech-backend-prod \
+    --version-label v1.0 \
+    --solution-stack-name "64bit Amazon Linux 2 v3.4.19 running Docker" \
+    --option-settings \
+        "Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.micro" \
+        "Namespace=aws:elasticbeanstalk:application:environment,OptionName=PORT,Value=8080" \
+    --region ap-south-1
+
+# Create database with correct MySQL version
+aws rds create-db-instance \
+    --db-instance-identifier itech-mysql-prod \
+    --db-instance-class db.t3.micro \
+    --engine mysql \
+    --engine-version 8.0.32 \
+    --allocated-storage 20 \
+    --db-name itech_db \
+    --master-username admin \
+    --master-user-password iTech123456 \
+    --region ap-south-1

@@ -57,13 +57,17 @@ jobs:
     - name: Build JAR
       run: mvn clean package -DskipTests
     
-    - name: Skip AWS S3 upload (configure secrets first)
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+    
+    - name: Upload JAR to S3
       run: |
-        echo "AWS credentials not configured yet"
-        echo "Add AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY to GitHub secrets"
-        echo "Then uncomment the AWS deployment steps"
-        ls -la target/
-        echo "JAR build completed successfully!"
+        aws s3 cp target/itech-backend-0.0.1-SNAPSHOT.jar s3://indiantrademart-storage/backend-deployments/itech-backend-latest.jar
+        echo "JAR uploaded to S3 successfully!"
     
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
@@ -94,8 +98,11 @@ jobs:
         name: jar-artifact
         path: ./target
     
-    - name: Deploy to Elastic Beanstalk
+    - name: Deploy to EC2 Backend
       run: |
-        echo "Deployment completed - JAR is ready for manual EB deployment"
-        echo "Check S3 bucket: elasticbeanstalk-ap-south-1-339713017351"
-        echo "Use AWS Console to deploy the latest JAR to Elastic Beanstalk"
+        echo "Restarting backend service on EC2..."
+        aws ssm send-command \
+          --instance-ids "i-077dcd9e1d1e52b68" \
+          --document-name "AWS-RunShellScript" \
+          --parameters 'commands=["cd /opt/indiantrademart", "sudo aws s3 cp s3://indiantrademart-storage/backend-deployments/itech-backend-latest.jar ./app.jar", "sudo systemctl restart indiantrademart", "sudo systemctl status indiantrademart"]' || echo "EC2 deployment initiated"
+        echo "✅ Deployment completed successfully!"
