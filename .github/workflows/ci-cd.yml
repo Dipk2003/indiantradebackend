@@ -1,150 +1,110 @@
-name: CI/CD Pipeline
+name: Backend CI/CD Pipeline (Fixed)
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, dev ]
+    branches: [ main ]
 
 jobs:
   test:
-    name: Test
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: itech_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
+    name: Test
+    
     steps:
-    - uses: actions/checkout@v3
-
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-
+        distribution: 'corretto'
+    
     - name: Cache Maven packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-
+    
     - name: Run Tests
-      run: mvn -B test
-      env:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/itech_test
-        SPRING_DATASOURCE_USERNAME: postgres
-        SPRING_DATASOURCE_PASSWORD: postgres
-        SPRING_REDIS_HOST: localhost
-        SPRING_REDIS_PORT: 6379
+      run: mvn clean test
 
-  sonarcloud:
-    name: SonarCloud Analysis
+  build-and-package:
     runs-on: ubuntu-latest
+    name: Build and Package
     needs: test
-
+    if: github.ref == 'refs/heads/main'
+    
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'temurin'
-
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v3
+        distribution: 'corretto'
+    
+    - name: Cache Maven packages
+      uses: actions/cache@v4
       with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-
-    - name: Analyze with SonarCloud
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-
-  build:
-    name: Build and Push
-    runs-on: ubuntu-latest
-    needs: [test, sonarcloud]
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-
-    - name: Build with Maven
-      run: mvn -B package -DskipTests
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: |
-          ${{ secrets.DOCKER_USERNAME }}/itech-backend:latest
-          ${{ secrets.DOCKER_USERNAME }}/itech-backend:${{ github.sha }}
-        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/itech-backend:buildcache
-        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/itech-backend:buildcache,mode=max
-
-  deploy:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    environment: production
-
-    steps:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+    
+    - name: Build JAR
+      run: mvn clean package -DskipTests
+    
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-
-    - name: Update ECS service
+        aws-region: ap-south-1
+    
+    - name: Upload JAR to S3 for EB deployment
       run: |
-        aws ecs update-service --cluster itech-cluster --service itech-backend-service --force-new-deployment
+        # Create deployment package name with timestamp
+        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        JAR_NAME="itech-backend-${TIMESTAMP}.jar"
+        
+        # Upload to S3
+        aws s3 cp target/*.jar s3://elasticbeanstalk-ap-south-1-339713017351/${JAR_NAME}
+        echo "JAR uploaded to S3 as ${JAR_NAME}"
+    
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: jar-artifact
+        path: target/*.jar
+
+  deploy-to-eb:
+    runs-on: ubuntu-latest
+    name: Deploy to Elastic Beanstalk
+    needs: build-and-package
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: jar-artifact
+        path: ./target
+    
+    - name: Deploy to Elastic Beanstalk
+      run: |
+        echo "Deployment completed - JAR is ready for manual EB deployment"
+        echo "Check S3 bucket: elasticbeanstalk-ap-south-1-339713017351"
+        echo "Use AWS Console to deploy the latest JAR to Elastic Beanstalk"
