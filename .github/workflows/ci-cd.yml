@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -94,7 +99,7 @@ jobs:
             \"echo 'Backing up previous version...'\",
             \"sudo mv app.jar app.jar.backup.\$(date +%Y%m%d_%H%M%S) 2>/dev/null || echo 'No previous version to backup'\",
             \"echo 'Downloading new JAR from GitHub...'\",
-            \"sudo curl -L -o app.jar 'https://github.com/${{ github.repository }}/releases/download/latest/itech-backend-latest.jar' || echo 'Release download failed, trying artifact...'\",
+            \"sudo curl -L -o app.jar 'https://github.com/${{ github.repository }}/releases/download/build-${{ github.run_number }}/itech-backend-0.0.1-SNAPSHOT.jar' || echo 'Release download failed, trying artifact...'\",
             \"echo 'Setting permissions...'\",
             \"sudo chmod +x app.jar\",
             \"echo 'Starting service...'\",
@@ -108,11 +113,11 @@ jobs:
         echo "✅ Deployment command sent to EC2!"
         
     - name: Create GitHub Release (Alternative to S3)
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: github.ref == 'refs/heads/main'
       with:
-        tag_name: latest
-        name: Latest Build ${{ github.sha }}
+        tag_name: build-${{ github.run_number }}
+        name: Build ${{ github.run_number }} - ${{ github.sha }}
         body: |
           🚀 Latest deployment of iTech Backend
           
@@ -123,11 +128,10 @@ jobs:
           - Spring Boot: 3.5.3
           
           **Deployment:**
-          - Application JAR: itech-backend-latest.jar
+          - Application JAR: itech-backend-0.0.1-SNAPSHOT.jar
           - Health Check: http://43.205.124.205:8080/actuator/health
         files: target/itech-backend-0.0.1-SNAPSHOT.jar
-        prerelease: false
-        make_latest: true
+        fail_on_unmatched_files: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
