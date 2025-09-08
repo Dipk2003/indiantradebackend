@@ -27,13 +27,13 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     boolean existsByPhone(String phone);
     boolean existsByCompanyId(Long companyId);
     
-    // Find by vendor status
-    List<Vendor> findByVendorStatus(Vendor.VendorStatus vendorStatus);
-    Page<Vendor> findByVendorStatus(Vendor.VendorStatus vendorStatus, Pageable pageable);
+    // Find by verification status  
+    List<Vendor> findByVerificationStatus(com.itech.itech_backend.enums.VerificationStatus verificationStatus);
+    Page<Vendor> findByVerificationStatus(com.itech.itech_backend.enums.VerificationStatus verificationStatus, Pageable pageable);
     
-    // Find by vendor type
-    List<Vendor> findByVendorType(VendorType vendorType);
-    Page<Vendor> findByVendorType(VendorType vendorType, Pageable pageable);
+    // Find by business type
+    List<Vendor> findByBusinessType(com.itech.itech_backend.enums.VendorBusinessType businessType);
+    Page<Vendor> findByBusinessType(com.itech.itech_backend.enums.VendorBusinessType businessType, Pageable pageable);
     
     // Find by active status
     List<Vendor> findByIsActive(Boolean isActive);
@@ -76,17 +76,17 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     
     // Search functionality
     @Query("SELECT v FROM Vendor v WHERE " +
-           "LOWER(v.vendorName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(v.businessName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(v.displayName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(v.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(v.businessType) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+           "LOWER(CAST(v.businessType AS string)) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Vendor> searchVendors(@Param("searchTerm") String searchTerm, Pageable pageable);
     
     // Advanced search with filters
     @Query("SELECT v FROM Vendor v WHERE " +
-           "(:vendorName IS NULL OR LOWER(v.vendorName) LIKE LOWER(CONCAT('%', :vendorName, '%'))) AND " +
-           "(:vendorType IS NULL OR v.vendorType = :vendorType) AND " +
-           "(:vendorStatus IS NULL OR v.vendorStatus = :vendorStatus) AND " +
+           "(:vendorName IS NULL OR LOWER(v.businessName) LIKE LOWER(CONCAT('%', :vendorName, '%'))) AND " +
+           "(:vendorType IS NULL OR v.businessType = :vendorType) AND " +
+           "(:vendorStatus IS NULL OR v.verificationStatus = :vendorStatus) AND " +
            "(:isActive IS NULL OR v.isActive = :isActive) AND " +
            "(:isVerified IS NULL OR v.isVerified = :isVerified) AND " +
            "(:kycApproved IS NULL OR v.kycApproved = :kycApproved) AND " +
@@ -95,8 +95,8 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
            "(:installationService IS NULL OR v.installationService = :installationService)")
     Page<Vendor> findVendorsWithFilters(
         @Param("vendorName") String vendorName,
-        @Param("vendorType") VendorType vendorType,
-        @Param("vendorStatus") Vendor.VendorStatus vendorStatus,
+        @Param("vendorType") com.itech.itech_backend.enums.VendorBusinessType vendorType,
+        @Param("vendorStatus") com.itech.itech_backend.enums.VerificationStatus vendorStatus,
         @Param("isActive") Boolean isActive,
         @Param("isVerified") Boolean isVerified,
         @Param("kycApproved") Boolean kycApproved,
@@ -123,7 +123,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     
     // Featured and premium vendors
     @Query("SELECT v FROM Vendor v WHERE v.featuredVendor = true AND v.isActive = true " +
-           "ORDER BY v.vendorType DESC, v.averageRating DESC")
+           "ORDER BY v.businessType DESC, v.averageRating DESC")
     Page<Vendor> findFeaturedVendors(Pageable pageable);
     
     // Recent vendors
@@ -140,11 +140,11 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
                                          @Param("endDate") LocalDateTime endDate);
     
     // Statistics queries
-    @Query("SELECT COUNT(v) FROM Vendor v WHERE v.vendorStatus = :status")
-    long countByStatus(@Param("status") Vendor.VendorStatus status);
+    @Query("SELECT COUNT(v) FROM Vendor v WHERE v.verificationStatus = :status")
+    long countByVerificationStatus(@Param("status") com.itech.itech_backend.enums.VerificationStatus status);
     
-    @Query("SELECT COUNT(v) FROM Vendor v WHERE v.vendorType = :type")
-    long countByType(@Param("type") VendorType type);
+    @Query("SELECT COUNT(v) FROM Vendor v WHERE v.businessType = :type")
+    long countByBusinessType(@Param("type") com.itech.itech_backend.enums.VendorBusinessType type);
     
     @Query("SELECT COUNT(v) FROM Vendor v WHERE v.isVerified = true")
     long countVerifiedVendors();
@@ -197,7 +197,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     @Query("SELECT v FROM Vendor v WHERE v.createdAt >= :fromDate ORDER BY v.createdAt DESC")
     List<Vendor> findVendorsRegisteredSince(@Param("fromDate") LocalDateTime fromDate);
     
-    @Query("SELECT v FROM Vendor v WHERE v.vendorStatus = 'PENDING' ORDER BY v.createdAt ASC")
+    @Query("SELECT v FROM Vendor v WHERE v.verificationStatus = 'PENDING' ORDER BY v.createdAt ASC")
     Page<Vendor> findPendingApprovalVendors(Pageable pageable);
 }
 

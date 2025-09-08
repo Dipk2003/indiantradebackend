@@ -1,7 +1,10 @@
 package com.itech.itech_backend.modules.vendor.model;
 
 import com.itech.itech_backend.enums.VendorType;
+import com.itech.itech_backend.enums.VendorBusinessType;
+import com.itech.itech_backend.enums.VerificationStatus;
 import com.itech.itech_backend.modules.company.model.Company;
+import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "vendor_profiles")
+@Table(name = "vendors")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,32 +27,35 @@ public class Vendor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    // Link to User (required in database)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    
     // Link to Company (One vendor can represent one company)
-    @OneToOne
-    @JoinColumn(name = "company_id", unique = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
     private Company company;
     
     // Vendor Account Information
-    @Column(nullable = false, length = 100)
-    private String vendorName;
+    @Column(name = "business_name", nullable = false, length = 255)
+    private String businessName;
     
-    @Column(unique = true, nullable = false, length = 100)
+    // Contact Information
+    @Column(name = "email", length = 255)
     private String email;
     
-    @Column(unique = true, length = 20)
+    @Column(name = "phone", length = 20)
     private String phone;
     
-    @Column(nullable = false)
-    private String password; // This will be encrypted
-    
-    // Vendor Type and Status
+    // Business Type and Status
     @Enumerated(EnumType.STRING)
-    @Column(name = "vendor_type")
-    private VendorType vendorType = VendorType.BASIC;
+    @Column(name = "business_type", nullable = false)
+    private VendorBusinessType businessType;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "vendor_status")
-    private VendorStatus vendorStatus = VendorStatus.PENDING;
+    @Column(name = "verification_status")
+    private VerificationStatus verificationStatus = VerificationStatus.PENDING;
     
     @Column(name = "is_active")
     private Boolean isActive = true;
@@ -86,9 +92,6 @@ public class Vendor {
     // Business Information
     @Column(name = "established_year")
     private Integer establishedYear;
-    
-    @Column(name = "business_type")
-    private String businessType;
     
     @ElementCollection
     @Enumerated(EnumType.STRING)

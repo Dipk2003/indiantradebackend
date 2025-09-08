@@ -52,6 +52,7 @@ com\itech\itech_backend\modules\payment\model\Invoice$InvoiceStatus.class
 com\itech\itech_backend\modules\buyer\model\ProductAttributeValue.class
 com\itech\itech_backend\modules\shared\dto\UpdateMicroCategoryDto.class
 com\itech\itech_backend\modules\buyer\repository\BuyerLeadRepository.class
+com\itech\itech_backend\modules\vendor\model\VendorServiceArea$VendorServiceAreaBuilder.class
 com\itech\itech_backend\modules\buyer\model\Buyer$Industry.class
 com\itech\marketplace\dto\BulkAssignmentDto.class
 com\itech\itech_backend\modules\product\service\ProductVideoService$ProductVideoStatsDto$ProductVideoStatsDtoBuilder.class
@@ -65,10 +66,12 @@ com\itech\itech_backend\modules\payment\model\Invoice$InvoiceType.class
 com\itech\itech_backend\modules\shared\service\DataInitializationService.class
 com\itech\itech_backend\modules\payment\model\Payment$RiskLevel.class
 com\itech\itech_backend\modules\shared\model\SystemMetrics.class
+com\itech\itech_backend\modules\vendor\model\VendorCertification.class
 com\itech\itech_backend\modules\order\model\Order$Address.class
 com\itech\itech_backend\controller\SupportDashboardController.class
 com\itech\itech_backend\modules\payment\model\Transaction$TransactionStatus.class
 com\itech\itech_backend\modules\buyer\model\Buyer$PaymentMethod.class
+com\itech\itech_backend\modules\vendor\service\VendorProfileService.class
 com\itech\itech_backend\modules\buyer\model\OrderItem.class
 com\itech\itech_backend\modules\shared\dto\CreateProductDto.class
 com\itech\itech_backend\modules\imports\controller\ImportController.class
@@ -118,6 +121,8 @@ com\itech\itech_backend\modules\core\repository\UserRepository.class
 com\itech\itech_backend\modules\support\service\ContactMessageService.class
 com\itech\itech_backend\modules\shared\dto\SubCategoryDto$SubCategoryDtoBuilder.class
 com\itech\marketplace\dto\SubscriptionReportDto$SubscriptionTrend$SubscriptionTrendBuilder.class
+com\itech\itech_backend\modules\vendor\model\VendorProfile$VendorType.class
+com\itech\itech_backend\modules\company\model\CompanyIndustry$Industry.class
 com\itech\itech_backend\modules\support\service\SupportTicketService.class
 com\itech\marketplace\dto\SubscriptionReportDto$SubscriptionReportDtoBuilder.class
 com\itech\itech_backend\modules\buyer\service\ProductSearchService.class
@@ -129,6 +134,7 @@ com\itech\itech_backend\modules\buyer\repository\MicroCategoryRepository.class
 com\itech\marketplace\dto\SLATrackingDto.class
 com\itech\itech_backend\modules\shared\dto\ProductStatsDto$ProductStatsDtoBuilder.class
 com\itech\itech_backend\modules\shared\dto\ProductSearchResponseDto$SearchStats$SearchStatsBuilder.class
+com\itech\itech_backend\modules\rfq\model\Quotation$QuotationBuilder.class
 com\itech\itech_backend\modules\directory\model\ServiceProviderImage$ImageType.class
 com\itech\itech_backend\ItechBackendApplication.class
 com\itech\itech_backend\modules\shared\dto\ChatbotResponseDto.class
@@ -138,11 +144,13 @@ com\itech\itech_backend\modules\buyer\model\Category.class
 com\itech\itech_backend\modules\shared\dto\CartDto.class
 com\itech\itech_backend\modules\vendor\controller\VendorsController.class
 com\itech\itech_backend\modules\product\repository\ProductRepository.class
+com\itech\itech_backend\modules\rfq\model\Quotation.class
 com\itech\itech_backend\modules\shared\dto\ChatbotResponseDto$VendorRecommendationDto.class
 com\itech\itech_backend\modules\shared\model\Banner$BannerBuilder.class
 com\itech\itech_backend\modules\payment\model\Payment$PaymentStatus.class
 com\itech\itech_backend\modules\company\model\Company$CompanyType.class
 com\itech\itech_backend\modules\shared\dto\BulkImportResponseDto$BulkImportResponseDtoBuilder.class
+com\itech\itech_backend\modules\vendor\model\VendorPaymentMethod$PaymentType.class
 com\itech\itech_backend\modules\buyer\model\Buyer$ProfileVisibility.class
 com\itech\itech_backend\modules\directory\repository\ContactInquiryRepository.class
 com\itech\marketplace\dto\SLAConfigurationDto.class
@@ -152,6 +160,7 @@ com\itech\itech_backend\interceptor\RequestValidationInterceptor.class
 com\itech\itech_backend\modules\shared\dto\CategoryHierarchyDto$SubCategoryHierarchyDto$SubCategoryHierarchyDtoBuilder.class
 com\itech\itech_backend\modules\shared\service\NotificationService.class
 com\itech\itech_backend\modules\shared\service\GstVerificationService.class
+com\itech\itech_backend\modules\rfq\model\Inquiry.class
 com\itech\itech_backend\modules\shared\service\SmsService.class
 com\itech\itech_backend\config\WebSocketConfig.class
 com\itech\itech_backend\service\CacheService.class
@@ -159,6 +168,7 @@ com\itech\marketplace\dto\KnowledgeBaseArticleDto.class
 com\itech\itech_backend\modules\vendor\service\DataEntryService.class
 com\itech\marketplace\dto\GSTReportDto$GSTReportDtoBuilder.class
 com\itech\itech_backend\modules\payment\model\Payment$PaymentType.class
+com\itech\itech_backend\modules\vendor\repository\VendorProfileRepository.class
 com\itech\marketplace\dto\TicketTrendsDto$TicketTrend.class
 com\itech\itech_backend\modules\shared\repository\ActivityLogRepository.class
 com\itech\itech_backend\modules\payment\dto\SubscriptionReportDto.class
@@ -170,6 +180,7 @@ com\itech\itech_backend\modules\buyer\repository\OrderRepository.class
 com\itech\itech_backend\modules\buyer\repository\ProductAttributeRepository.class
 com\itech\itech_backend\modules\payment\service\RefundService.class
 com\itech\itech_backend\modules\buyer\controller\BuyerCategoryController$CategoryRequest.class
+com\itech\itech_backend\modules\vendor\model\VendorSpecialization.class
 com\itech\itech_backend\modules\admin\controller\CategoryManagementController$CategoryTreeNode$SubCategoryNode$SubCategoryNodeBuilder.class
 com\itech\itech_backend\modules\imports\model\ImportResult$ImportStatus.class
 com\itech\marketplace\dto\EscalationDto.class
@@ -238,6 +249,7 @@ com\itech\itech_backend\modules\shared\dto\VendorGstSelectionDto$SelectedTdsRate
 com\itech\marketplace\dto\InvoiceGenerationDto.class
 com\itech\itech_backend\modules\admin\controller\AdminController.class
 com\itech\itech_backend\modules\buyer\model\Inquiry$InquiryBuilder.class
+com\itech\itech_backend\modules\vendor\model\VendorSpecialization$VendorSpecializationBuilder.class
 com\itech\itech_backend\modules\buyer\controller\OrderController.class
 com\itech\itech_backend\modules\shared\dto\MegaMenuDataDto$MegaMenuItemDto$MegaMenuItemDtoBuilder.class
 com\itech\marketplace\dto\FinanceDashboardDto$RecentTransaction$RecentTransactionBuilder.class
@@ -250,11 +262,13 @@ com\itech\marketplace\dto\CategoryAnalysisDto.class
 com\itech\itech_backend\modules\buyer\service\impl\BuyerServiceImpl.class
 com\itech\itech_backend\modules\support\service\SLATrackingService.class
 com\itech\itech_backend\modules\shared\model\BuyerLead.class
+com\itech\itech_backend\modules\vendor\model\VendorProfile$VendorStatus.class
 com\itech\itech_backend\modules\category\service\CategoryService.class
 com\itech\marketplace\dto\SuggestResponseDto$SuggestResponseDtoBuilder.class
 com\itech\itech_backend\modules\buyer\model\ProductAttribute$ProductAttributeBuilder.class
 com\itech\itech_backend\modules\shared\dto\UpdateMicroCategoryDto$UpdateMicroCategoryDtoBuilder.class
 com\itech\itech_backend\modules\buyer\model\CartItem.class
+com\itech\itech_backend\modules\core\util\UserCompatibilityHelper.class
 com\itech\itech_backend\modules\company\model\Company$AnnualTurnover.class
 com\itech\itech_backend\modules\vendor\dto\VendorPackagePurchaseDto$VendorPackagePurchaseDtoBuilder.class
 com\itech\itech_backend\modules\buyer\controller\ProductController.class
@@ -275,6 +289,7 @@ com\itech\itech_backend\modules\core\repository\UserAddressRepository.class
 com\itech\itech_backend\modules\buyer\model\Buyer$SubscriptionType.class
 com\itech\itech_backend\modules\core\controller\UserAddressController.class
 com\itech\itech_backend\modules\shared\dto\SubscriptionDto$SubscriptionDtoBuilder.class
+com\itech\itech_backend\modules\vendor\model\VendorCategory$Category.class
 com\itech\marketplace\dto\FinanceDashboardDto$PendingRefund$PendingRefundBuilder.class
 com\itech\itech_backend\modules\company\controller\CompanyController.class
 com\itech\itech_backend\modules\buyer\model\Quote.class
@@ -282,13 +297,17 @@ com\itech\itech_backend\modules\product\dto\ProductDto$RelatedProductDto.class
 com\itech\itech_backend\modules\shared\model\Notification.class
 com\itech\itech_backend\modules\shared\dto\LeadPurchaseDto$LeadPurchaseDtoBuilder.class
 com\itech\itech_backend\modules\vendor\model\Vendor$PaymentMethod.class
+com\itech\itech_backend\modules\company\model\CompanyImage$ImageType.class
 com\itech\itech_backend\modules\vendor\dto\VendorVerificationDto.class
 com\itech\itech_backend\modules\product\service\ProductService.class
 com\itech\itech_backend\modules\admin\service\ContentManagementService.class
+com\itech\itech_backend\modules\vendor\model\VendorProfile$CatalogVisibility.class
 com\itech\itech_backend\modules\shared\service\GstVerificationService$2.class
 com\itech\itech_backend\modules\shared\dto\ProductDataEntryDto$ProductDataEntryDtoBuilder.class
 com\itech\marketplace\dto\GSTReportDto$GSTSummary.class
+com\itech\itech_backend\modules\company\model\CompanyIndustry.class
 com\itech\itech_backend\modules\order\model\OrderItem$ItemFulfillmentStatus.class
+com\itech\itech_backend\modules\core\model\User$UserRole.class
 com\itech\marketplace\dto\FinanceDashboardDto$RecentTransaction.class
 com\itech\itech_backend\config\VerificationConfig.class
 com\itech\itech_backend\modules\shared\dto\JwtResponse$UserInfo$UserInfoBuilder.class
@@ -298,6 +317,7 @@ com\itech\itech_backend\modules\order\dto\CreateOrderRequest$OrderItemRequest$Or
 com\itech\itech_backend\modules\buyer\service\BuyerLeadService.class
 com\itech\itech_backend\enums\LeadInteraction.class
 com\itech\itech_backend\modules\shared\model\BuyerLead$LeadUrgency.class
+com\itech\itech_backend\modules\vendor\model\VendorProfile$VendorProfileBuilder.class
 com\itech\itech_backend\modules\vendor\dto\VendorPackagePurchaseDto.class
 com\itech\itech_backend\modules\payment\service\WebhookService.class
 com\itech\itech_backend\modules\shared\repository\BannerRepository.class
@@ -305,6 +325,7 @@ com\itech\marketplace\dto\FinancialReportDto$FinancialReportDtoBuilder.class
 com\itech\itech_backend\modules\buyer\model\ProductImage.class
 com\itech\itech_backend\modules\vendor\model\VendorReview.class
 com\itech\itech_backend\modules\payment\controller\SubscriptionController.class
+com\itech\itech_backend\modules\company\model\CompanyCertification.class
 com\itech\itech_backend\modules\vendor\controller\VendorPackageController.class
 com\itech\itech_backend\modules\buyer\repository\ReviewRepository.class
 com\itech\itech_backend\config\SubdomainProperties$SubdomainConfig.class
@@ -315,6 +336,7 @@ com\itech\itech_backend\modules\shared\dto\ProductDataEntryDto.class
 com\itech\itech_backend\modules\directory\dto\DirectorySearchFiltersDto.class
 com\itech\itech_backend\modules\vendor\model\VendorTdsSelection.class
 com\itech\itech_backend\modules\shared\dto\CreateQuoteDto.class
+com\itech\itech_backend\modules\company\model\CompanyImage.class
 com\itech\itech_backend\modules\shared\dto\SearchSuggestionsDto$SearchSuggestionsDtoBuilder.class
 com\itech\itech_backend\modules\support\model\SupportTicket$SupportTicketBuilder.class
 com\itech\itech_backend\modules\core\model\KycDocument.class
@@ -374,6 +396,7 @@ com\itech\itech_backend\modules\order\model\Order$PaymentMethod.class
 com\itech\itech_backend\modules\buyer\model\Buyer$BuyerStatus.class
 com\itech\itech_backend\modules\support\model\ChatAttachment$ChatAttachmentBuilder.class
 com\itech\itech_backend\security\service\SecurityEventLogger.class
+com\itech\itech_backend\modules\rfq\model\Inquiry$Priority.class
 com\itech\itech_backend\config\RedisConfig.class
 com\itech\marketplace\dto\TicketTrendsDto$TicketTrend$TicketTrendBuilder.class
 com\itech\itech_backend\modules\payment\model\Transaction.class
@@ -391,12 +414,14 @@ com\itech\itech_backend\modules\payment\dto\GSTReportDto$GstInvoiceSummary.class
 com\itech\itech_backend\modules\vendor\service\VendorServiceImpl.class
 com\itech\itech_backend\modules\directory\model\ServiceProvider.class
 com\itech\itech_backend\modules\security\model\Permission.class
+com\itech\itech_backend\modules\vendor\model\VendorCategory$VendorCategoryBuilder.class
 com\itech\itech_backend\modules\admin\controller\CategoryManagementController$ProductRequest.class
 com\itech\itech_backend\modules\shared\dto\ChatMessageDto$ChatAttachmentDto.class
 com\itech\itech_backend\modules\core\model\User.class
 com\itech\itech_backend\modules\vendor\dto\VendorPackagePlanDto$VendorPackagePlanDtoBuilder.class
 com\itech\itech_backend\modules\shared\dto\BulkImportResponseDto.class
 com\itech\itech_backend\modules\support\service\ChatbotService$1.class
+com\itech\itech_backend\modules\rfq\model\Inquiry$InquiryBuilder.class
 com\itech\itech_backend\modules\directory\model\ContactInquiry$InquiryPriority.class
 com\itech\itech_backend\modules\employee\service\EmployeeProfileService$1.class
 com\itech\marketplace\dto\SupportDashboardDto$SupportDashboardDtoBuilder.class
@@ -453,6 +478,7 @@ com\itech\itech_backend\modules\payment\dto\FinanceDashboardDto.class
 com\itech\itech_backend\modules\shared\dto\MegaMenuDataDto$MegaMenuDataDtoBuilder.class
 com\itech\itech_backend\modules\shared\service\EmailService.class
 com\itech\itech_backend\modules\vendor\service\VendorRankingService.class
+com\itech\itech_backend\modules\rfq\model\Quotation$QuotationStatus.class
 com\itech\itech_backend\modules\vendor\dto\VendorDto.class
 com\itech\marketplace\dto\FinanceDashboardDto.class
 com\itech\itech_backend\modules\vendor\model\Vendor$BusinessCategory.class
@@ -476,6 +502,7 @@ com\itech\itech_backend\modules\payment\dto\FinanceDashboardDto$FinanceDashboard
 com\itech\itech_backend\modules\shared\dto\SubscriptionDto.class
 com\itech\itech_backend\modules\shared\model\Campaign$CampaignBuilder.class
 com\itech\itech_backend\modules\company\service\CompanyService.class
+com\itech\itech_backend\modules\rfq\model\Inquiry$InquiryStatus.class
 com\itech\itech_backend\modules\product\dto\ProductDto$ProductVariantDto.class
 com\itech\itech_backend\modules\shared\model\enums\NotificationType.class
 com\itech\itech_backend\modules\rfq\model\RFQBid$BidStatus.class
@@ -562,6 +589,8 @@ com\itech\itech_backend\modules\order\model\OrderCommunication$CommunicationType
 com\itech\itech_backend\modules\vendor\model\VendorPackage.class
 com\itech\marketplace\dto\TicketTrendsDto.class
 com\itech\itech_backend\modules\buyer\service\QuoteService.class
+com\itech\itech_backend\modules\vendor\controller\VendorProfileController.class
+com\itech\itech_backend\modules\vendor\model\VendorServiceArea.class
 com\itech\itech_backend\modules\buyer\controller\ProductSearchController.class
 com\itech\itech_backend\modules\shared\service\UserDetailsServiceImpl.class
 com\itech\itech_backend\modules\payment\repository\RefundRepository.class
@@ -578,8 +607,10 @@ com\itech\itech_backend\modules\shared\dto\ProductSearchDto.class
 com\itech\itech_backend\modules\admin\controller\CategoryManagementController$CategoryTreeNode.class
 com\itech\itech_backend\modules\buyer\controller\WishlistController.class
 com\itech\itech_backend\modules\company\model\Company$BusinessCategory.class
+com\itech\itech_backend\modules\vendor\model\VendorCertification$VendorCertificationBuilder.class
 com\itech\marketplace\dto\FinanceDashboardDto$TransactionChartData$TransactionChartDataBuilder.class
 com\itech\itech_backend\modules\analytics\model\Analytics$TrendDirection.class
+com\itech\itech_backend\enums\VendorBusinessType.class
 com\itech\itech_backend\modules\chat\model\ChatMessage$ChatMessageBuilder.class
 com\itech\itech_backend\modules\shared\model\ApiLog$ApiLogBuilder.class
 com\itech\itech_backend\modules\vendor\model\VendorPackageTransaction$TransactionStatus.class
@@ -597,6 +628,7 @@ com\itech\itech_backend\exception\ErrorResponse.class
 com\itech\itech_backend\modules\admin\controller\CategoryManagementController$MicroCategoryRequest.class
 com\itech\itech_backend\modules\buyer\dto\BuyerDto.class
 com\itech\itech_backend\modules\product\dto\ProductDto.class
+com\itech\itech_backend\modules\product\model\Product$ProductBuilder.class
 com\itech\itech_backend\modules\vendor\service\VendorProductImportService.class
 com\itech\marketplace\dto\FinanceDashboardDto$TransactionChartData.class
 com\itech\marketplace\dto\GSTReportDto.class
@@ -653,6 +685,7 @@ com\itech\itech_backend\middleware\SubdomainMiddleware.class
 com\itech\itech_backend\modules\directory\controller\DirectoryController.class
 com\itech\itech_backend\modules\buyer\model\Cart$CartBuilder.class
 com\itech\marketplace\dto\FinanceDashboardDto$RevenueChartData$RevenueChartDataBuilder.class
+com\itech\itech_backend\modules\company\model\CompanyCertification$CompanyCertificationBuilder.class
 com\itech\itech_backend\modules\core\service\UserAddressService.class
 com\itech\itech_backend\modules\rfq\model\RFQ$PaymentTerms.class
 com\itech\itech_backend\config\SubdomainProperties$CorsConfig.class
@@ -664,8 +697,10 @@ com\itech\itech_backend\modules\vendor\model\Vendor$CatalogVisibility.class
 com\itech\itech_backend\modules\buyer\repository\ProductVariantRepository.class
 com\itech\itech_backend\enums\NotificationType.class
 com\itech\marketplace\dto\SubscriptionReportDto.class
+com\itech\itech_backend\modules\company\model\Company$CompanyBuilder.class
 com\itech\itech_backend\modules\order\dto\CreateOrderRequest$OrderItemRequest.class
 com\itech\itech_backend\modules\admin\model\Admins.class
+com\itech\itech_backend\modules\company\model\CompanyIndustry$CompanyIndustryBuilder.class
 com\itech\itech_backend\modules\order\model\OrderCommunication$Priority.class
 com\itech\itech_backend\modules\order\model\Order$OrderPriority.class
 com\itech\itech_backend\modules\shared\dto\CategoryDto.class
@@ -693,17 +728,21 @@ com\itech\marketplace\entity\SLAConfiguration$SLAConfigurationBuilder.class
 com\itech\itech_backend\config\ValidationConfig.class
 com\itech\itech_backend\modules\shared\dto\ForgotPasswordRequestDto.class
 com\itech\itech_backend\modules\shared\dto\CartDto$CartItemDto$CartItemDtoBuilder.class
+com\itech\itech_backend\modules\company\model\CompanyImage$CompanyImageBuilder.class
 com\itech\itech_backend\modules\core\service\UnifiedAuthService.class
 com\itech\itech_backend\modules\core\model\UserAddress$UserAddressBuilder.class
 com\itech\itech_backend\modules\payment\dto\BulkInvoiceGenerationDto.class
+com\itech\itech_backend\modules\vendor\model\VendorCategory.class
 com\itech\marketplace\dto\VendorPaymentDto$VendorPaymentDtoBuilder.class
 com\itech\itech_backend\modules\buyer\model\Order$PaymentStatus.class
 com\itech\itech_backend\modules\shared\dto\UpdateCategoryDto$UpdateCategoryDtoBuilder.class
 com\itech\itech_backend\modules\company\model\Company.class
+com\itech\itech_backend\modules\vendor\model\VendorPaymentMethod.class
 com\itech\itech_backend\modules\dataentry\controller\CityController.class
 com\itech\itech_backend\modules\analytics\service\AnalyticsService.class
 com\itech\itech_backend\modules\shared\model\Banner.class
 com\itech\itech_backend\modules\vendor\model\VendorPackageTransaction$VendorPackageTransactionBuilder.class
+com\itech\itech_backend\modules\vendor\model\VendorProfile.class
 com\itech\itech_backend\modules\shared\service\CloudStorageService.class
 com\itech\itech_backend\modules\order\dto\CreateOrderRequest$CreateOrderRequestBuilder.class
 com\itech\itech_backend\modules\rfq\repository\RFQBidRepository.class
@@ -732,6 +771,7 @@ com\itech\itech_backend\modules\core\model\User$UserBuilder.class
 com\itech\marketplace\dto\FinancialReportDto$RevenueDataPoint.class
 com\itech\marketplace\dto\RefundAnalyticsDto$RefundTrend$RefundTrendBuilder.class
 com\itech\itech_backend\modules\buyer\dto\LeadStatsDto$LeadStatsDtoBuilder.class
+com\itech\itech_backend\modules\vendor\model\VendorPaymentMethod$VendorPaymentMethodBuilder.class
 com\itech\itech_backend\modules\payment\model\Transaction$TransactionBuilder.class
 com\itech\itech_backend\modules\payment\dto\GSTReportDto.class
 com\itech\itech_backend\modules\shared\service\KnowledgeBaseServiceImpl.class

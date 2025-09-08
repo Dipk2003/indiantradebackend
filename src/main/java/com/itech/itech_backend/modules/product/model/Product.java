@@ -1,33 +1,32 @@
 package com.itech.itech_backend.modules.product.model;
 
-import com.itech.itech_backend.modules.vendor.model.Vendors;
+import com.itech.itech_backend.modules.vendor.model.VendorProfile;
 import com.itech.itech_backend.modules.company.model.Company;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "products", indexes = {
-    @Index(name = "idx_product_sku", columnList = "sku", unique = true),
+    @Index(name = "idx_product_sku", columnList = "sku"),
     @Index(name = "idx_product_vendor", columnList = "vendor_id"),
     @Index(name = "idx_product_category", columnList = "category"),
     @Index(name = "idx_product_status", columnList = "status"),
-    @Index(name = "idx_product_brand", columnList = "brand"),
+    @Index(name = "idx_product_visibility", columnList = "visibility"),
     @Index(name = "idx_product_featured", columnList = "is_featured"),
-    @Index(name = "idx_product_price", columnList = "unit_price"),
-    @Index(name = "idx_product_created", columnList = "created_at")
+    @Index(name = "idx_product_price", columnList = "unit_price")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -40,7 +39,7 @@ public class Product {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id", nullable = false)
-    private Vendors vendor;
+    private VendorProfile vendor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")

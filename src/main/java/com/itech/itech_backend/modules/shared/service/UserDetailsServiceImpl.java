@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return new org.springframework.security.core.userdetails.User(
                     emailOrPhone,
                     u.getPassword(),
-                    Collections.singletonList(new SimpleGrantedAuthority(u.getRole()))
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + u.getRole().name()))
             );
         }
         

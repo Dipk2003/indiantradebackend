@@ -22,8 +22,8 @@ public interface VendorService {
     // Vendor listing and search
     Page<VendorDto> getAllVendors(Pageable pageable);
     Page<VendorDto> searchVendors(String searchTerm, Pageable pageable);
-    Page<VendorDto> getVendorsWithFilters(String vendorName, VendorType vendorType,
-                                        Vendor.VendorStatus vendorStatus, Boolean isActive,
+    Page<VendorDto> getVendorsWithFilters(String vendorName, com.itech.itech_backend.enums.VendorBusinessType businessType,
+                                        com.itech.itech_backend.enums.VerificationStatus verificationStatus, Boolean isActive,
                                         Boolean isVerified, Boolean kycApproved,
                                         BigDecimal minRating, Boolean deliveryAvailable,
                                         Boolean installationService, Pageable pageable);
@@ -33,17 +33,17 @@ public interface VendorService {
     VendorDto submitKyc(Long vendorId, List<String> documentUrls);
     Page<VendorDto> getPendingKycVendors(Pageable pageable);
     Page<VendorDto> getPendingApprovalVendors(Pageable pageable);
-    Page<VendorDto> getVendorsByStatus(Vendor.VendorStatus status, Pageable pageable);
+    Page<VendorDto> getVendorsByStatus(com.itech.itech_backend.enums.VerificationStatus status, Pageable pageable);
     
     // Vendor status management
-    VendorDto updateVendorStatus(Long vendorId, Vendor.VendorStatus status);
+    VendorDto updateVendorStatus(Long vendorId, com.itech.itech_backend.enums.VerificationStatus status);
     VendorDto activateVendor(Long vendorId);
     VendorDto deactivateVendor(Long vendorId);
     VendorDto suspendVendor(Long vendorId, String reason);
     
     // Vendor type and subscription management
-    Page<VendorDto> getVendorsByType(VendorType vendorType, Pageable pageable);
-    VendorDto upgradeVendorType(Long vendorId, VendorType vendorType);
+    Page<VendorDto> getVendorsByType(com.itech.itech_backend.enums.VendorBusinessType businessType, Pageable pageable);
+    VendorDto upgradeVendorType(Long vendorId, com.itech.itech_backend.enums.VendorBusinessType businessType);
     VendorDto setFeaturedVendor(Long vendorId, Boolean featured);
     VendorDto setPriorityListing(Long vendorId, Boolean priority);
     
@@ -121,8 +121,8 @@ public interface VendorService {
     long getVerifiedVendorsCount();
     long getKycApprovedVendorsCount();
     long getFeaturedVendorsCount();
-    Map<Vendor.VendorStatus, Long> getVendorCountByStatus();
-    Map<VendorType, Long> getVendorCountByType();
+    Map<com.itech.itech_backend.enums.VerificationStatus, Long> getVendorCountByStatus();
+    Map<com.itech.itech_backend.enums.VendorBusinessType, Long> getVendorCountByType();
     Map<Vendor.BusinessCategory, Long> getVendorCountByCategory();
     BigDecimal getAverageVendorRating();
     BigDecimal getTotalPlatformRevenue();
@@ -135,9 +135,9 @@ public interface VendorService {
     
     // Bulk operations
     List<VendorDto> createVendorsInBulk(List<CreateVendorDto> createVendorDtos);
-    Map<String, Object> bulkUpdateVendorStatus(List<Long> vendorIds, Vendor.VendorStatus status);
+    Map<String, Object> bulkUpdateVendorStatus(List<Long> vendorIds, com.itech.itech_backend.enums.VerificationStatus status);
     Map<String, Object> bulkVerifyVendors(List<Long> vendorIds, Boolean approved);
-    Map<String, Object> bulkUpdateVendorType(List<Long> vendorIds, VendorType vendorType);
+    Map<String, Object> bulkUpdateVendorType(List<Long> vendorIds, com.itech.itech_backend.enums.VendorBusinessType businessType);
     
     // Export functionality
     byte[] exportVendorsToExcel(List<Long> vendorIds);

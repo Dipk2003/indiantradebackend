@@ -1,28 +1,38 @@
 package com.itech.itech_backend.modules.company.model;
 
+import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "companies")
-@Data
+@Table(name = "companies", indexes = {
+    @Index(name = "idx_company_gst", columnList = "gstNumber"),
+    @Index(name = "idx_company_pan", columnList = "panNumber"),
+    @Index(name = "idx_company_status", columnList = "status"),
+    @Index(name = "idx_company_verification", columnList = "verificationStatus")
+})
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Company {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false, length = 100)
-    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_user_id")
+    private User ownerUser;
+
+    @Column(name = "company_name", nullable = false, length = 150)
+    private String companyName;
     
     @Column(name = "legal_name", length = 150)
     private String legalName;
@@ -220,6 +230,15 @@ public class Company {
     
     public enum SubscriptionType {
         FREE, BASIC, PREMIUM, ENTERPRISE
+    }
+    
+    // Backward compatibility methods
+    public String getName() {
+        return this.companyName;
+    }
+    
+    public void setName(String name) {
+        this.companyName = name;
     }
 }
 

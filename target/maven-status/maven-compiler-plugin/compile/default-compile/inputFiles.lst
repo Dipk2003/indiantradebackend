@@ -21,6 +21,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\Messa
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\NotificationType.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\TicketPriority.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\TicketStatus.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\VendorBusinessType.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\VendorType.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\VerificationStatus.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\exception\ErrorResponse.java
@@ -134,6 +135,9 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\com
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\dto\CreateCompanyDto.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\dto\UpdateCompanyDto.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\model\Company.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\model\CompanyCertification.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\model\CompanyImage.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\model\CompanyIndustry.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\repository\CompanyRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\service\CompanyService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\company\service\CompanyServiceImpl.java
@@ -159,6 +163,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\cor
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\UserAddressService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\UserMigrationService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\UserService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\util\UserCompatibilityHelper.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\controller\CityController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\controller\StateController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\entity\State.java
@@ -227,6 +232,8 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\pro
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\product\service\ProductService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\product\service\ProductServiceImpl.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\product\service\ProductVideoService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\rfq\model\Inquiry.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\rfq\model\Quotation.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\rfq\model\RFQ.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\rfq\model\RFQBid.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\rfq\repository\RFQBidRepository.java
@@ -358,6 +365,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\ven
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\controller\VendorController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\controller\VendorDashboardController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\controller\VendorPackageController.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\controller\VendorProfileController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\controller\VendorsController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\dto\CreateVendorDto.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\dto\UpdateVendorDto.java
@@ -366,13 +374,19 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\ven
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\dto\VendorPackagePurchaseDto.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\dto\VendorVerificationDto.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\Vendor.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorCategory.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorCertification.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorGstSelection.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorPackage.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorPackageFeature.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorPackageTransaction.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorPaymentMethod.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorProfile.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorRanking.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorReview.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\Vendors.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorServiceArea.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorSpecialization.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorTaxProfile.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VendorTdsSelection.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\model\VerificationDocument.java
@@ -380,6 +394,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\ven
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\repository\VendorPackageFeatureRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\repository\VendorPackageRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\repository\VendorPackageTransactionRepository.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\repository\VendorProfileRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\repository\VendorRankingRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\repository\VendorRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\repository\VendorReviewRepository.java
@@ -393,6 +408,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\ven
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorPackageInitializationService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorPackageService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorProductImportService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorProfileService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorRankingService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorServiceImpl.java

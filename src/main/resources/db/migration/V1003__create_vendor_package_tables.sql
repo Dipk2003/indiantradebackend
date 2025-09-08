@@ -149,10 +149,5 @@ CREATE TABLE IF NOT EXISTS vendor_package_transactions (
     INDEX idx_created_at (created_at)
 );
 
--- Add indexes for better performance
-CREATE INDEX idx_vendor_packages_plan_active ON vendor_packages(plan_type, is_active);
-CREATE INDEX idx_vendor_packages_popular_active ON vendor_packages(is_popular, is_active, sort_order);
-CREATE INDEX idx_transactions_vendor_status ON vendor_package_transactions(vendor_id, status, created_at);
-CREATE INDEX idx_transactions_package_status ON vendor_package_transactions(vendor_package_id, status, created_at);
-
 -- Migration completed successfully
+-- Note: Additional indexes are already defined in the table creation statements above

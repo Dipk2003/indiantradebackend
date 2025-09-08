@@ -100,9 +100,9 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
            "GROUP BY oi.productCategory ORDER BY SUM(oi.totalPrice) DESC")
     List<Object[]> getTopRevenueCategories();
     
-    @Query("SELECT oi.vendor.vendorName, COUNT(oi), SUM(oi.totalPrice) FROM OrderItem oi " +
+    @Query("SELECT oi.vendor.businessName, COUNT(oi), SUM(oi.totalPrice) FROM OrderItem oi " +
            "WHERE oi.order.orderStatus = 'COMPLETED' " +
-           "GROUP BY oi.vendor.vendorName ORDER BY SUM(oi.totalPrice) DESC")
+           "GROUP BY oi.vendor.businessName ORDER BY SUM(oi.totalPrice) DESC")
     List<Object[]> getTopVendorsByRevenue();
     
     // ===============================

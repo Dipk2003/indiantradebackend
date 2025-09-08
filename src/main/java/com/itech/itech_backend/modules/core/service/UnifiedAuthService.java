@@ -69,8 +69,8 @@ public class UnifiedAuthService {
                         .email(vendor.getEmail())
                         .phone(vendor.getPhone())
                         .password(vendor.getPassword())
-                        .role(vendor.getRole())
-                        .verified(vendor.isVerified())
+                        .role(User.UserRole.valueOf(vendor.getRole()))
+                        .isVerified(vendor.isVerified())
                         .build();
                 }
             } else if (adminExists) {
@@ -83,8 +83,8 @@ public class UnifiedAuthService {
                         .email(admin.getEmail())
                         .phone(admin.getPhone())
                         .password(admin.getPassword())
-                        .role(admin.getRole())
-                        .verified(admin.isVerified())
+                        .role(User.UserRole.valueOf(admin.getRole()))
+                        .isVerified(admin.isVerified())
                         .build();
                 }
             }
@@ -132,7 +132,7 @@ public class UnifiedAuthService {
         System.out.println("✅ User found: " + user.getEmail() + ", Role: " + user.getRole());
         
         // Validate role if expectedRole is specified
-        if (expectedRole != null && !expectedRole.equals(user.getRole())) {
+        if (expectedRole != null && !expectedRole.equals(user.getRoleAsString())) {
             System.out.println("❌ Role mismatch: Expected " + expectedRole + ", Found " + user.getRole());
             throw new RuntimeException("Invalid email and password");
         }
@@ -154,7 +154,7 @@ public class UnifiedAuthService {
         System.out.println("✅ Password validated successfully");
         
         // Generate token directly with user ID
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRoleAsString(), user.getId());
         System.out.println("✅ Token generated successfully");
         
         // Create response with user info
@@ -165,7 +165,7 @@ public class UnifiedAuthService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .role(user.getRole().replace("ROLE_", ""))
+                .role(user.getRoleWithReplace("ROLE_", ""))
                 .isVerified(user.isVerified())
                 .build())
             .build();
@@ -212,7 +212,7 @@ public class UnifiedAuthService {
         // This is already handled in the generateAndSendOtp method
         
         // Generate and send OTP
-        return generateAndSendOtp(loginRequest.getEmailOrPhone(), user.getRole());
+        return generateAndSendOtp(loginRequest.getEmailOrPhone(), user.getRoleAsString());
     }
 
     public JwtResponse verifyOtpAndGenerateToken(VerifyOtpRequestDto dto) {
@@ -243,7 +243,7 @@ public class UnifiedAuthService {
         updateUserVerificationStatus(user.getEmail(), true);
         otpRepo.delete(otp);
         
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRoleAsString(), user.getId());
         System.out.println("✅ OTP verification successful for: " + dto.getEmailOrPhone());
         
         return JwtResponse.builder()
@@ -253,7 +253,7 @@ public class UnifiedAuthService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .role(user.getRole().replace("ROLE_", ""))
+                .role(user.getRoleWithReplace("ROLE_", ""))
                 .isVerified(user.isVerified())
                 .build())
             .build();
@@ -287,8 +287,8 @@ public class UnifiedAuthService {
                 .email(savedVendor.getEmail())
                 .phone(savedVendor.getPhone())
                 .password(savedVendor.getPassword())
-                .role(savedVendor.getRole())
-                .verified(savedVendor.isVerified())
+                .role(User.UserRole.valueOf(savedVendor.getRole()))
+                .isVerified(savedVendor.isVerified())
                 .build();
         } else if ("ROLE_ADMIN".equals(dto.getRole())) {
             // Create admin in Admins table
@@ -312,8 +312,8 @@ public class UnifiedAuthService {
                 .email(savedAdmin.getEmail())
                 .phone(savedAdmin.getPhone())
                 .password(savedAdmin.getPassword())
-                .role(savedAdmin.getRole())
-                .verified(savedAdmin.isVerified())
+                .role(User.UserRole.valueOf(savedAdmin.getRole()))
+                .isVerified(savedAdmin.isVerified())
                 .build();
         } else {
             // Create regular user in User table
@@ -322,8 +322,8 @@ public class UnifiedAuthService {
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
                 .password(encodedPassword)
-                .role(dto.getRole())
-                .verified(false);
+                .role(User.UserRole.valueOf(dto.getRole()))
+                .isVerified(false);
             
             return userRepository.save(userBuilder.build());
         }
@@ -438,8 +438,8 @@ public class UnifiedAuthService {
                 .email(vendor.getEmail())
                 .phone(vendor.getPhone())
                 .password(vendor.getPassword())
-                .role(vendor.getRole())
-                .verified(vendor.isVerified())
+                .role(User.UserRole.valueOf(vendor.getRole()))
+                .isVerified(vendor.isVerified())
                 .build();
         }
         
@@ -454,8 +454,8 @@ public class UnifiedAuthService {
                 .email(admin.getEmail())
                 .phone(admin.getPhone())
                 .password(admin.getPassword())
-                .role(admin.getRole())
-                .verified(admin.isVerified())
+                .role(User.UserRole.valueOf(admin.getRole()))
+                .isVerified(admin.isVerified())
                 .build();
         }
         
@@ -730,8 +730,8 @@ public class UnifiedAuthService {
             "email", user.getEmail(),
             "phone", user.getPhone() != null ? user.getPhone() : "",
             "address", user.getAddress() != null ? user.getAddress() : "",
-            "role", user.getRole().replace("ROLE_", "").toLowerCase(),
-            "userType", user.getRole().replace("ROLE_", "").toLowerCase(),
+            "role", user.getRoleWithReplace("ROLE_", "").toLowerCase(),
+            "userType", user.getRoleWithReplace("ROLE_", "").toLowerCase(),
             "isVerified", user.isVerified(),
             "createdAt", user.getCreatedAt() != null ? user.getCreatedAt().toString() : ""
         );
@@ -830,7 +830,7 @@ public class UnifiedAuthService {
         System.out.println("✅ Email found with role: " + user.getRole());
         return Map.of(
             "exists", "true",
-            "role", user.getRole(),
+            "role", user.getRoleAsString(),
             "email", user.getEmail()
         );
     }
@@ -879,7 +879,7 @@ public class UnifiedAuthService {
         otpRepo.delete(otp);
         
         // Generate token and login the user
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRoleAsString(), user.getId());
         
         System.out.println("✅ Forgot password OTP verification successful, user logged in");
         
@@ -890,7 +890,7 @@ public class UnifiedAuthService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .role(user.getRole().replace("ROLE_", ""))
+                .role(user.getRoleWithReplace("ROLE_", ""))
                 .isVerified(user.isVerified())
                 .build())
             .build();

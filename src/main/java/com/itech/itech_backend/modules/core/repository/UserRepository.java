@@ -22,15 +22,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     long countByRole(String role);
     
     // Verification status queries
-    List<User> findByVerifiedTrue();
-    List<User> findByVerifiedFalse();
+    List<User> findByIsVerifiedTrue();
+    List<User> findByIsVerifiedFalse();
     
     // Active status queries
     List<User> findByIsActiveTrue();
     List<User> findByIsActiveFalse();
     
     // Combined queries
-    List<User> findByRoleAndVerifiedTrue(String role);
+    List<User> findByRoleAndIsVerifiedTrue(String role);
     List<User> findByRoleAndIsActiveTrue(String role);
     
     // Count methods for analytics

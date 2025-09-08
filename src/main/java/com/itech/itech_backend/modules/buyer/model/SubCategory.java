@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "BuyerSubCategory")
+@Table(name = "sub_categories")
 @Getter
 @Setter
 @NoArgsConstructor

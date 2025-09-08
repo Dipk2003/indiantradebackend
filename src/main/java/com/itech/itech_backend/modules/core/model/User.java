@@ -6,7 +6,11 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "user", indexes = {
+    @Index(name = "idx_user_email", columnList = "email"),
+    @Index(name = "idx_user_phone", columnList = "phone"),
+    @Index(name = "idx_user_role", columnList = "role")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,64 +22,146 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 255)
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 20)
     private String phone;
+    
+    @Column(nullable = false, length = 255)
+    private String password;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private UserRole role = UserRole.BUYER;
+    
+    @Column(name = "is_verified")
+    @Builder.Default
+    private Boolean isVerified = false;
+    
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean isActive = true;
+    
+    @Column(name = "profile_image_url", length = 500)
+    private String profileImageUrl;
     
     @Column(length = 500)
     private String address;
     
+    @Column(length = 100)
     private String city;
     
+    @Column(length = 100)
     private String state;
     
+    @Column(length = 10)
     private String pincode;
     
-    private String country;
-    
-    @Column(nullable = false)
-    private String password;
+    @Column(length = 100)
+    @Builder.Default
+    private String country = "India";
 
-    @Builder.Default
-    private boolean verified = false;
-    
-    @Column(name = "is_verified")
-    @Builder.Default
-    private boolean isVerified = false;
-    
-    public boolean isVerified() {
-        return isVerified;
-    }
-    
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-        this.isVerified = verified;
-    }
-    
-    public void setIsVerified(boolean isVerified) {
-        this.isVerified = isVerified;
-        this.verified = isVerified;
-    }
-
-    @Builder.Default
-    private String role = "ROLE_USER";
-    
-    @Builder.Default
-    private boolean isActive = true;
-
+    @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+    
+    // Enums
+    public enum UserRole {
+        ADMIN, BUYER, VENDOR, SUPPORT, EMPLOYEE, ROLE_VENDOR, ROLE_USER
+    }
+    
+    // Helper methods
+    public boolean isAdmin() {
+        return role == UserRole.ADMIN;
+    }
+    
+    public boolean isVendor() {
+        return role == UserRole.VENDOR;
+    }
+    
+    public boolean isBuyer() {
+        return role == UserRole.BUYER;
+    }
+    
+    public boolean isEmployee() {
+        return role == UserRole.EMPLOYEE;
+    }
+    
+    public boolean isSupport() {
+        return role == UserRole.SUPPORT;
+    }
+    
+    // Backward compatibility methods
+    public boolean isVerified() {
+        return this.isVerified != null && this.isVerified;
+    }
+    
+    public void setVerified(boolean verified) {
+        this.isVerified = verified;
+    }
+    
+    public void setActive(boolean active) {
+        this.isActive = active;
+    }
+    
+    public boolean getActive() {
+        return this.isActive != null && this.isActive;
+    }
+    
+    // Role utility methods for backward compatibility
+    public String getRoleAsString() {
+        return this.role != null ? this.role.name() : null;
+    }
+    
+    public void setRole(String roleString) {
+        if (roleString != null) {
+            try {
+                this.role = UserRole.valueOf(roleString.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                this.role = UserRole.BUYER; // default fallback
+            }
+        }
+    }
+    
+    public UserRole getRoleEnum() {
+        return this.role;
+    }
+    
+    public void setRoleEnum(UserRole role) {
+        this.role = role;
+    }
+    
+    // Additional helper methods for role string operations
+    public String getRoleFormatted() {
+        if (this.role == null) return "";
+        return this.role.name().replace("_", " ").toLowerCase();
+    }
+    
+    public boolean hasRole(String roleName) {
+        return this.role != null && this.role.name().equalsIgnoreCase(roleName);
+    }
+    
+    public boolean isRoleEmpty() {
+        return this.role == null;
+    }
+    
+    public String getRoleWithReplace(String oldStr, String newStr) {
+        return this.role != null ? this.role.name().replace(oldStr, newStr) : "";
+    }
+    
+    // Note: Custom builder methods are handled by Lombok's @Builder annotation
 }
 

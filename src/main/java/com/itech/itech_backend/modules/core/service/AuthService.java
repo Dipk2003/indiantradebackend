@@ -58,8 +58,8 @@ private final OtpVerificationRepository otpRepo;
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
                 .password(dto.getPassword())
-                .role(role)
-                .verified(false)
+                .role(User.UserRole.valueOf(role.replace("ROLE_", "")))
+                .isVerified(false)
                 .build();
             user = userRepository.save(user);
             System.out.println("✅ Created new user: " + user.getName());
@@ -296,7 +296,7 @@ private final OtpVerificationRepository otpRepo;
                     User refreshedUser = userRepository.findByEmailOrPhone(contact, contact).orElse(user);
                     System.out.println("🔄 Refreshed User Role: " + refreshedUser.getRole());
                     
-                    String token = jwtUtil.generateToken(refreshedUser.getEmail(), refreshedUser.getRole(), refreshedUser.getId());
+                    String token = jwtUtil.generateToken(refreshedUser.getEmail(), refreshedUser.getRoleAsString(), refreshedUser.getId());
                     System.out.println("✅ JWT Token Generated Successfully with role: " + refreshedUser.getRole() + " and user ID: " + refreshedUser.getId());
                     System.out.println("🔐 Token: " + token.substring(0, 20) + "...");
 
@@ -307,7 +307,7 @@ private final OtpVerificationRepository otpRepo;
                             .id(refreshedUser.getId())
                             .email(refreshedUser.getEmail())
                             .name(refreshedUser.getName())
-                            .role(refreshedUser.getRole().replace("ROLE_", ""))
+                            .role(refreshedUser.getRoleWithReplace("ROLE_", ""))
                             .isVerified(refreshedUser.isVerified())
                             .build())
                         .build();
@@ -360,9 +360,9 @@ private final OtpVerificationRepository otpRepo;
         }
         
         // For non-admin users, set role to ROLE_VENDOR if not already set
-        if (user.getRole() == null || user.getRole().isEmpty() || user.getRole().equals("ROLE_USER")) {
+        if (user.isRoleEmpty() || user.hasRole("USER")) {
             System.out.println("🔄 Fixing user role from " + user.getRole() + " to ROLE_VENDOR");
-            user.setRole("ROLE_VENDOR");
+            user.setRole("VENDOR");
             userRepository.save(user);
             System.out.println("✅ Fixed user role to ROLE_VENDOR for: " + user.getName());
         } else {

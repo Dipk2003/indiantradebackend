@@ -52,12 +52,12 @@ public class UserService {
 
     // Get verified users
     public List<User> getVerifiedUsers() {
-        return userRepository.findByVerifiedTrue();
+        return userRepository.findByIsVerifiedTrue();
     }
 
     // Get unverified users
     public List<User> getUnverifiedUsers() {
-        return userRepository.findByVerifiedFalse();
+        return userRepository.findByIsVerifiedFalse();
     }
 
     // Get active users
@@ -78,7 +78,7 @@ public class UserService {
             user.setName(userDetails.getName());
             user.setEmail(userDetails.getEmail());
             user.setPhone(userDetails.getPhone());
-            user.setRole(userDetails.getRole());
+            user.setRoleEnum(userDetails.getRole());
             
             // Note: Vendor-specific fields are now handled by the Vendors entity
             // Admin-specific fields would need to be added to User entity if needed

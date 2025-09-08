@@ -21,7 +21,7 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
     
     Long countByProductVendorIdAndIsResolvedFalse(Long vendorId);
     
-    @Query("SELECT COUNT(i) FROM Inquiry i WHERE i.product.vendor.id = :vendorId")
+    @Query("SELECT COUNT(i) FROM BuyerInquiry i WHERE i.product.vendor.id = :vendorId")
     Long countByVendorId(@Param("vendorId") Long vendorId);
     
     List<Inquiry> findByProductIdOrderByCreatedAtDesc(Long productId);

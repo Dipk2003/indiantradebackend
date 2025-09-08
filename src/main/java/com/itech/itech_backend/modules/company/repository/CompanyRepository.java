@@ -63,14 +63,14 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     
     // Search functionality
     @Query("SELECT c FROM Company c WHERE " +
-           "LOWER(c.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(c.companyName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(c.legalName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(c.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Company> searchCompanies(@Param("searchTerm") String searchTerm, Pageable pageable);
     
     // Advanced search with filters
     @Query("SELECT c FROM Company c WHERE " +
-           "(:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+           "(:name IS NULL OR LOWER(c.companyName) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
            "(:city IS NULL OR LOWER(c.city) = LOWER(:city)) AND " +
            "(:state IS NULL OR LOWER(c.state) = LOWER(:state)) AND " +
            "(:companyType IS NULL OR c.companyType = :companyType) AND " +

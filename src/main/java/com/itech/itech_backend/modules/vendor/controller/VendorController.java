@@ -95,8 +95,8 @@ public class VendorController {
     @GetMapping("/filter")
     public ResponseEntity<Page<VendorDto>> getVendorsWithFilters(
             @RequestParam(required = false) String vendorName,
-            @RequestParam(required = false) VendorType vendorType,
-            @RequestParam(required = false) Vendor.VendorStatus vendorStatus,
+            @RequestParam(required = false) com.itech.itech_backend.enums.VendorBusinessType businessType,
+            @RequestParam(required = false) com.itech.itech_backend.enums.VerificationStatus verificationStatus,
             @RequestParam(required = false) Boolean isActive,
             @RequestParam(required = false) Boolean isVerified,
             @RequestParam(required = false) Boolean kycApproved,
@@ -115,7 +115,7 @@ public class VendorController {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortDirection, sort));
         
         Page<VendorDto> vendors = vendorService.getVendorsWithFilters(
-            vendorName, vendorType, vendorStatus, isActive, isVerified, kycApproved,
+            vendorName, businessType, verificationStatus, isActive, isVerified, kycApproved,
             minRating, deliveryAvailable, installationService, pageRequest
         );
         return ResponseEntity.ok(vendors);
@@ -162,7 +162,7 @@ public class VendorController {
     
     @GetMapping("/status/{status}")
     public ResponseEntity<Page<VendorDto>> getVendorsByStatus(
-            @PathVariable Vendor.VendorStatus status,
+            @PathVariable com.itech.itech_backend.enums.VerificationStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         
@@ -176,7 +176,7 @@ public class VendorController {
     // Vendor status management
     @PatchMapping("/{id}/status")
     public ResponseEntity<VendorDto> updateVendorStatus(@PathVariable Long id, 
-                                                       @RequestParam Vendor.VendorStatus status) {
+                                                       @RequestParam com.itech.itech_backend.enums.VerificationStatus status) {
         log.info("REST request to update vendor status for ID: {} to {}", id, status);
         VendorDto vendorDto = vendorService.updateVendorStatus(id, status);
         return ResponseEntity.ok(vendorDto);
@@ -204,24 +204,24 @@ public class VendorController {
     }
     
     // Vendor type and subscription management
-    @GetMapping("/type/{vendorType}")
+    @GetMapping("/type/{businessType}")
     public ResponseEntity<Page<VendorDto>> getVendorsByType(
-            @PathVariable VendorType vendorType,
+            @PathVariable com.itech.itech_backend.enums.VendorBusinessType businessType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         
-        log.debug("REST request to get vendors by type: {}", vendorType);
+        log.debug("REST request to get vendors by type: {}", businessType);
         
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "vendorName"));
-        Page<VendorDto> vendors = vendorService.getVendorsByType(vendorType, pageRequest);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "businessName"));
+        Page<VendorDto> vendors = vendorService.getVendorsByType(businessType, pageRequest);
         return ResponseEntity.ok(vendors);
     }
     
     @PostMapping("/{id}/upgrade")
     public ResponseEntity<VendorDto> upgradeVendorType(@PathVariable Long id, 
-                                                      @RequestParam VendorType vendorType) {
-        log.info("REST request to upgrade vendor type for ID: {} to {}", id, vendorType);
-        VendorDto vendorDto = vendorService.upgradeVendorType(id, vendorType);
+                                                      @RequestParam com.itech.itech_backend.enums.VendorBusinessType businessType) {
+        log.info("REST request to upgrade vendor type for ID: {} to {}", id, businessType);
+        VendorDto vendorDto = vendorService.upgradeVendorType(id, businessType);
         return ResponseEntity.ok(vendorDto);
     }
     
@@ -250,7 +250,7 @@ public class VendorController {
         
         log.debug("REST request to get vendors by category: {}", category);
         
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "vendorName"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "businessName"));
         Page<VendorDto> vendors = vendorService.getVendorsByCategory(category, pageRequest);
         return ResponseEntity.ok(vendors);
     }
@@ -263,7 +263,7 @@ public class VendorController {
         
         log.debug("REST request to get vendors by service area: {}", area);
         
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "vendorName"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "businessName"));
         Page<VendorDto> vendors = vendorService.getVendorsByServiceArea(area, pageRequest);
         return ResponseEntity.ok(vendors);
     }

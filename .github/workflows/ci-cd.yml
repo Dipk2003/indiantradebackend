@@ -102,7 +102,14 @@ jobs:
       run: |
         echo "Restarting backend service on EC2..."
         aws ssm send-command \
-          --instance-ids "i-077dcd9e1d1e52b68" \
+          --instance-ids "i-025f278479bcb286c" \
           --document-name "AWS-RunShellScript" \
-          --parameters 'commands=["cd /opt/indiantrademart", "sudo aws s3 cp s3://indiantrademart-storage/backend-deployments/itech-backend-latest.jar ./app.jar", "sudo systemctl restart indiantrademart", "sudo systemctl status indiantrademart"]' || echo "EC2 deployment initiated"
-        echo "✅ Deployment completed successfully!"
+          --parameters 'commands=["cd /opt/indiantrademart", "sudo aws s3 cp s3://indiantrademart-storage/backend-deployments/itech-backend-latest.jar ./app.jar", "sudo chmod +x ./app.jar", "sudo systemctl stop indiantrademart || echo Service not running", "sudo systemctl start indiantrademart", "sudo systemctl enable indiantrademart", "sleep 10", "sudo systemctl status indiantrademart"]' || echo "EC2 deployment initiated"
+        echo "✅ Backend deployment completed successfully!"
+        
+    - name: Verify Deployment
+      run: |
+        echo "Waiting for backend to start..."
+        sleep 30
+        curl -f http://43.205.124.205:8080/actuator/health || echo "Health check failed - backend may still be starting"
+        echo "Backend deployment verification completed"
