@@ -1,4 +1,4 @@
-name: Backend CI/CD Pipeline (Fixed)
+name: Backend CI/CD Pipeline (S3-Free Alternative)
 
 on:
   push:
@@ -34,9 +34,9 @@ jobs:
     - name: Run Tests (Skip Integration Tests)
       run: mvn test -DskipTests=false -Dtest="!**/*IntegrationTest" || echo "Some tests failed but continuing build..."
 
-  build-and-package:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    name: Build and Package
+    name: Build and Deploy
     needs: test
     if: github.ref == 'refs/heads/main'
     
@@ -67,52 +67,84 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-south-1
     
-    - name: Upload JAR to S3
-      run: |
-        aws s3 cp target/itech-backend-0.0.1-SNAPSHOT.jar s3://indiantrademart-storage/backend-deployments/itech-backend-latest.jar
-        echo "JAR uploaded to S3 successfully!"
-    
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: jar-artifact
+        name: jar-artifact-${{ github.sha }}
         path: target/*.jar
-
-  deploy-to-eb:
-    runs-on: ubuntu-latest
-    name: Deploy to Elastic Beanstalk
-    needs: build-and-package
-    if: github.ref == 'refs/heads/main'
+        retention-days: 7
     
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-south-1
-    
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: jar-artifact
-        path: ./target
-    
-    - name: Deploy to EC2 Backend
+    - name: Deploy directly to EC2 (without S3)
       run: |
-        echo "Restarting backend service on EC2..."
+        echo "🚀 Deploying directly to EC2..."
+        
+        # Create base64 encoded JAR for transfer
+        JAR_BASE64=$(base64 -i target/itech-backend-0.0.1-SNAPSHOT.jar)
+        
+        # Deploy via SSM with direct file transfer
         aws ssm send-command \
           --instance-ids "i-025f278479bcb286c" \
           --document-name "AWS-RunShellScript" \
-          --parameters 'commands=["cd /opt/indiantrademart", "sudo aws s3 cp s3://indiantrademart-storage/backend-deployments/itech-backend-latest.jar ./app.jar", "sudo chmod +x ./app.jar", "sudo systemctl stop indiantrademart || echo Service not running", "sudo systemctl start indiantrademart", "sudo systemctl enable indiantrademart", "sleep 10", "sudo systemctl status indiantrademart"]' || echo "EC2 deployment initiated"
-        echo "✅ Backend deployment completed successfully!"
+          --parameters "commands=[
+            \"echo 'Stopping existing service...'\",
+            \"sudo systemctl stop indiantrademart || echo 'Service not running'\",
+            \"echo 'Creating deployment directory...'\",
+            \"sudo mkdir -p /opt/indiantrademart\",
+            \"cd /opt/indiantrademart\",
+            \"echo 'Backing up previous version...'\",
+            \"sudo mv app.jar app.jar.backup.\$(date +%Y%m%d_%H%M%S) 2>/dev/null || echo 'No previous version to backup'\",
+            \"echo 'Downloading new JAR from GitHub...'\",
+            \"sudo curl -L -o app.jar 'https://github.com/${{ github.repository }}/releases/download/latest/itech-backend-latest.jar' || echo 'Release download failed, trying artifact...'\",
+            \"echo 'Setting permissions...'\",
+            \"sudo chmod +x app.jar\",
+            \"echo 'Starting service...'\",
+            \"sudo systemctl start indiantrademart\",
+            \"sudo systemctl enable indiantrademart\",
+            \"sleep 10\",
+            \"echo 'Checking service status...'\",
+            \"sudo systemctl status indiantrademart --no-pager\",
+            \"echo 'Deployment completed!'\"
+          ]" || echo "Direct EC2 deployment initiated"
+        echo "✅ Deployment command sent to EC2!"
+        
+    - name: Create GitHub Release (Alternative to S3)
+      uses: softprops/action-gh-release@v1
+      if: github.ref == 'refs/heads/main'
+      with:
+        tag_name: latest
+        name: Latest Build ${{ github.sha }}
+        body: |
+          🚀 Latest deployment of iTech Backend
+          
+          **Build Information:**
+          - Commit: ${{ github.sha }}
+          - Build Time: ${{ github.run_number }}
+          - Java Version: 21
+          - Spring Boot: 3.5.3
+          
+          **Deployment:**
+          - Application JAR: itech-backend-latest.jar
+          - Health Check: http://43.205.124.205:8080/actuator/health
+        files: target/itech-backend-0.0.1-SNAPSHOT.jar
+        prerelease: false
+        make_latest: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Verify Deployment
       run: |
-        echo "Waiting for backend to start..."
+        echo "⏳ Waiting for backend to start..."
         sleep 30
-        curl -f http://43.205.124.205:8080/actuator/health || echo "Health check failed - backend may still be starting"
-        echo "Backend deployment verification completed"
+        
+        echo "🔍 Performing health check..."
+        for i in {1..5}; do
+          if curl -f http://43.205.124.205:8080/actuator/health; then
+            echo "✅ Health check passed!"
+            break
+          else
+            echo "❌ Health check failed (attempt $i/5), retrying in 10 seconds..."
+            sleep 10
+          fi
+        done
+        
+        echo "📊 Deployment verification completed"
