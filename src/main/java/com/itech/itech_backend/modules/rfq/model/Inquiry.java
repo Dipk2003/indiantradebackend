@@ -45,7 +45,7 @@ public class Inquiry {
     private Product product;
 
     @Column(length = 300)
-    private String subject;
+    private String title;
 
     @Column(columnDefinition = "TEXT")
     private String message;
@@ -92,7 +92,7 @@ public class Inquiry {
 
     // Enums
     public enum InquiryStatus {
-        PENDING, RESPONDED, NEGOTIATING, CLOSED, CANCELLED
+        PENDING, RESPONDED, CLOSED
     }
 
     public enum Priority {
@@ -101,7 +101,7 @@ public class Inquiry {
 
     // Helper methods
     public boolean isActive() {
-        return status == InquiryStatus.PENDING || status == InquiryStatus.RESPONDED || status == InquiryStatus.NEGOTIATING;
+        return status == InquiryStatus.PENDING || status == InquiryStatus.RESPONDED;
     }
 
     public boolean hasQuotations() {

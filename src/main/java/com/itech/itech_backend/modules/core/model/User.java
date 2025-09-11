@@ -39,11 +39,11 @@ public class User {
     @Builder.Default
     private UserRole role = UserRole.BUYER;
     
-    @Column(name = "is_verified")
+    @Column(name = "is_verified", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     @Builder.Default
     private Boolean isVerified = false;
     
-    @Column(name = "is_active")
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     @Builder.Default
     private Boolean isActive = true;
     
@@ -80,7 +80,7 @@ public class User {
     
     // Enums
     public enum UserRole {
-        ADMIN, BUYER, VENDOR, SUPPORT, EMPLOYEE, ROLE_VENDOR, ROLE_USER
+        BUYER, SELLER, ADMIN, SUPPORT, CTO, DATA_ENTRY
     }
     
     // Helper methods
@@ -88,20 +88,24 @@ public class User {
         return role == UserRole.ADMIN;
     }
     
-    public boolean isVendor() {
-        return role == UserRole.VENDOR;
+    public boolean isSeller() {
+        return role == UserRole.SELLER;
     }
     
     public boolean isBuyer() {
         return role == UserRole.BUYER;
     }
     
-    public boolean isEmployee() {
-        return role == UserRole.EMPLOYEE;
-    }
-    
     public boolean isSupport() {
         return role == UserRole.SUPPORT;
+    }
+    
+    public boolean isCTO() {
+        return role == UserRole.CTO;
+    }
+    
+    public boolean isDataEntry() {
+        return role == UserRole.DATA_ENTRY;
     }
     
     // Backward compatibility methods

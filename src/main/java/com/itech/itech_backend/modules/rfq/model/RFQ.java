@@ -1,5 +1,6 @@
 package com.itech.itech_backend.modules.rfq.model;
 
+import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,8 +23,9 @@ public class RFQ {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String buyerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buyer_id", nullable = false)
+    private User buyer;
 
     @Column(nullable = false)
     private String title;
@@ -46,10 +48,8 @@ public class RFQ {
     @Column(name = "delivery_date")
     private LocalDateTime deliveryDate;
 
-    @ElementCollection
-    @CollectionTable(name = "rfq_categories")
-    @Builder.Default
-    private List<String> categories = new ArrayList<>();
+    @Column(nullable = false)
+    private String category;
 
     @ElementCollection
     @CollectionTable(name = "rfq_specifications")
@@ -103,12 +103,9 @@ public class RFQ {
     private LocalDateTime updatedAt;
 
     public enum RFQStatus {
-        DRAFT,
-        ACTIVE,
+        OPEN,
         CLOSED,
-        EXPIRED,
-        AWARDED,
-        CANCELLED
+        FULFILLED
     }
 
     public enum PaymentTerms {

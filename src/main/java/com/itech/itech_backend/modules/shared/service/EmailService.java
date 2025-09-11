@@ -147,7 +147,9 @@ public class EmailService {
             System.out.println("-".repeat(80));
             System.out.println(buildForgotPasswordEmailContent(otp));
             System.out.println("-".repeat(80));
-            System.out.println("\n🔑 YOUR PASSWORD RECOVERY OTP IS: " + otp);
+            System.out.println("\n🔥🔥🔥 PASSWORD RECOVERY OTP 🔥🔥🔥");
+            System.out.println("🎯 🎯 🎯     YOUR OTP IS: " + otp + "     🎯 🎯 🎯");
+            System.out.println("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥");
         } else {
             System.out.println("Subject: Indian Trade Mart - OTP Verification");
             System.out.println("\n" + "-".repeat(80));
@@ -155,7 +157,9 @@ public class EmailService {
             System.out.println("-".repeat(80));
             System.out.println(buildOtpEmailContent(otp));
             System.out.println("-".repeat(80));
-            System.out.println("\n🔑 YOUR OTP IS: " + otp);
+            System.out.println("\n🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥");
+            System.out.println("🎯 🎯 🎯     YOUR OTP IS: " + otp + "     🎯 🎯 🎯");
+            System.out.println("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥");
         }
         
         System.out.println("⏰ Valid for 5 minutes only!");

@@ -27,25 +27,193 @@ public class AuthController {
     // User registration
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequestDto dto) {
+        System.out.println("🔍 Registration request received:");
+        System.out.println("🔍 Name: '" + dto.getName() + "'");
+        System.out.println("🔍 Email: '" + dto.getEmail() + "'");
+        System.out.println("🔍 Phone: '" + dto.getPhone() + "'");
+        System.out.println("🔍 Password: " + (dto.getPassword() != null ? "[PROVIDED]" : "[NULL]"));
+        
+        // Validate required fields
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            return "Email is required";
+        }
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            return "Password is required";
+        }
+        
         dto.setRole("ROLE_USER");
         dto.setUserType("user");
-        return unifiedAuthService.register(dto);
+        
+        try {
+            return unifiedAuthService.register(dto);
+        } catch (RuntimeException e) {
+            if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
+                System.out.println("❌ Registration failed - email already exists: " + dto.getEmail());
+                return "This email is already registered. Please login instead or use a different email address.";
+            }
+            // Re-throw other exceptions
+            throw e;
+        }
     }
     
     // Vendor registration
     @PostMapping("/vendor/register")
     public String vendorRegister(@RequestBody RegisterRequestDto dto) {
+        System.out.println("🔍 Vendor registration request received:");
+        System.out.println("🔍 Name: '" + dto.getName() + "'");
+        System.out.println("🔍 Email: '" + dto.getEmail() + "'");
+        System.out.println("🔍 Phone: '" + dto.getPhone() + "'");
+        System.out.println("🔍 Password: " + (dto.getPassword() != null ? "[PROVIDED]" : "[NULL]"));
+        
+        // Validate required fields
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            return "Email is required";
+        }
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            return "Password is required";
+        }
+        
         dto.setRole("ROLE_VENDOR");
         dto.setUserType("vendor");
-        return unifiedAuthService.register(dto);
+        
+        try {
+            return unifiedAuthService.register(dto);
+        } catch (RuntimeException e) {
+            if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
+                System.out.println("❌ Vendor registration failed - email already exists: " + dto.getEmail());
+                return "This email is already registered. Please login instead or use a different email address.";
+            }
+            // Re-throw other exceptions
+            throw e;
+        }
     }
     
     // Admin registration
     @PostMapping("/admin/register")
     public String adminRegister(@RequestBody RegisterRequestDto dto) {
-        dto.setRole("ROLE_ADMIN");
+        System.out.println("🔍 Admin registration request received:");
+        System.out.println("🔍 Name: '" + dto.getName() + "'");
+        System.out.println("🔍 Email: '" + dto.getEmail() + "'");
+        System.out.println("🔍 Phone: '" + dto.getPhone() + "'");
+        System.out.println("🔍 Password: " + (dto.getPassword() != null ? "[PROVIDED]" : "[NULL]"));
+        
+        // Validate required fields
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            return "Email is required";
+        }
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            return "Password is required";
+        }
+        
+        dto.setRole("ADMIN");
         dto.setUserType("admin");
-        return unifiedAuthService.register(dto);
+        
+        try {
+            return unifiedAuthService.register(dto);
+        } catch (RuntimeException e) {
+            if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
+                System.out.println("❌ Admin registration failed - email already exists: " + dto.getEmail());
+                return "This email is already registered. Please login instead or use a different email address.";
+            }
+            // Re-throw other exceptions
+            throw e;
+        }
+    }
+    
+    // Support registration
+    @PostMapping("/support/register")
+    public String supportRegister(@RequestBody RegisterRequestDto dto) {
+        System.out.println("🔍 Support registration request received:");
+        System.out.println("🔍 Name: '" + dto.getName() + "'");
+        System.out.println("🔍 Email: '" + dto.getEmail() + "'");
+        System.out.println("🔍 Phone: '" + dto.getPhone() + "'");
+        System.out.println("🔍 Password: " + (dto.getPassword() != null ? "[PROVIDED]" : "[NULL]"));
+        
+        // Validate required fields
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            return "Email is required";
+        }
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            return "Password is required";
+        }
+        
+        dto.setRole("SUPPORT");
+        dto.setUserType("support");
+        
+        try {
+            return unifiedAuthService.register(dto);
+        } catch (RuntimeException e) {
+            if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
+                System.out.println("❌ Support registration failed - email already exists: " + dto.getEmail());
+                return "This email is already registered. Please login instead or use a different email address.";
+            }
+            // Re-throw other exceptions
+            throw e;
+        }
+    }
+    
+    // CTO registration
+    @PostMapping("/cto/register")
+    public String ctoRegister(@RequestBody RegisterRequestDto dto) {
+        System.out.println("🔍 CTO registration request received:");
+        System.out.println("🔍 Name: '" + dto.getName() + "'");
+        System.out.println("🔍 Email: '" + dto.getEmail() + "'");
+        System.out.println("🔍 Phone: '" + dto.getPhone() + "'");
+        System.out.println("🔍 Password: " + (dto.getPassword() != null ? "[PROVIDED]" : "[NULL]"));
+        
+        // Validate required fields
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            return "Email is required";
+        }
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            return "Password is required";
+        }
+        
+        dto.setRole("CTO");
+        dto.setUserType("cto");
+        
+        try {
+            return unifiedAuthService.register(dto);
+        } catch (RuntimeException e) {
+            if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
+                System.out.println("❌ CTO registration failed - email already exists: " + dto.getEmail());
+                return "This email is already registered. Please login instead or use a different email address.";
+            }
+            // Re-throw other exceptions
+            throw e;
+        }
+    }
+    
+    // Data Entry registration
+    @PostMapping("/data-entry/register")
+    public String dataEntryRegister(@RequestBody RegisterRequestDto dto) {
+        System.out.println("🔍 Data Entry registration request received:");
+        System.out.println("🔍 Name: '" + dto.getName() + "'");
+        System.out.println("🔍 Email: '" + dto.getEmail() + "'");
+        System.out.println("🔍 Phone: '" + dto.getPhone() + "'");
+        System.out.println("🔍 Password: " + (dto.getPassword() != null ? "[PROVIDED]" : "[NULL]"));
+        
+        // Validate required fields
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            return "Email is required";
+        }
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            return "Password is required";
+        }
+        
+        dto.setRole("DATA_ENTRY");
+        dto.setUserType("data_entry");
+        
+        try {
+            return unifiedAuthService.register(dto);
+        } catch (RuntimeException e) {
+            if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
+                System.out.println("❌ Data Entry registration failed - email already exists: " + dto.getEmail());
+                return "This email is already registered. Please login instead or use a different email address.";
+            }
+            // Re-throw other exceptions
+            throw e;
+        }
     }
     
     @PostMapping("/login")
@@ -53,22 +221,40 @@ public class AuthController {
         return handleRoleSpecificLogin(loginRequest, null); // Generic login (backward compatibility)
     }
     
-    // User-specific login endpoint
-    @PostMapping("/user/login")
-    public ResponseEntity<?> userLogin(@RequestBody LoginRequestDto loginRequest) {
-        return handleRoleSpecificLogin(loginRequest, "ROLE_USER");
+    // Buyer-specific login endpoint
+    @PostMapping("/buyer/login")
+    public ResponseEntity<?> buyerLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "BUYER");
     }
     
-    // Vendor-specific login endpoint
-    @PostMapping("/vendor/login")
-    public ResponseEntity<?> vendorLogin(@RequestBody LoginRequestDto loginRequest) {
-        return handleRoleSpecificLogin(loginRequest, "ROLE_VENDOR");
+    // Seller-specific login endpoint
+    @PostMapping("/seller/login")
+    public ResponseEntity<?> sellerLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "SELLER");
     }
     
     // Admin-specific login endpoint
     @PostMapping("/admin/login")
     public ResponseEntity<?> adminLogin(@RequestBody LoginRequestDto loginRequest) {
-        return handleRoleSpecificLogin(loginRequest, "ROLE_ADMIN");
+        return handleRoleSpecificLogin(loginRequest, "ADMIN");
+    }
+    
+    // Support-specific login endpoint
+    @PostMapping("/support/login")
+    public ResponseEntity<?> supportLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "SUPPORT");
+    }
+    
+    // CTO-specific login endpoint
+    @PostMapping("/cto/login")
+    public ResponseEntity<?> ctoLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "CTO");
+    }
+    
+    // Data Entry-specific login endpoint
+    @PostMapping("/data-entry/login")
+    public ResponseEntity<?> dataEntryLogin(@RequestBody LoginRequestDto loginRequest) {
+        return handleRoleSpecificLogin(loginRequest, "DATA_ENTRY");
     }
     
     private ResponseEntity<?> handleRoleSpecificLogin(LoginRequestDto loginRequest, String expectedRole) {

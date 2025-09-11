@@ -21,6 +21,9 @@ public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile
 
     // Basic finder methods
     Optional<EmployeeProfile> findByEmployeeCode(String employeeCode);
+    
+    // Migration support methods  
+    List<EmployeeProfile> findByUserIsNull();
     Optional<EmployeeProfile> findByWorkEmail(String workEmail);
     Optional<EmployeeProfile> findByUserId(Long userId);
     List<EmployeeProfile> findByDepartment(String department);

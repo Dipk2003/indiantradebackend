@@ -37,7 +37,8 @@ public class CategoryController {
             String description = (String) requestBody.get("description");
             Long parentCategoryId = requestBody.get("parentCategoryId") != null ? 
                 Long.valueOf(requestBody.get("parentCategoryId").toString()) : null;
-            Long employeeId = Long.valueOf(requestBody.get("employeeId").toString());
+            Long employeeId = requestBody.get("employeeId") != null ? 
+                Long.valueOf(requestBody.get("employeeId").toString()) : 1L; // Default to admin ID
             String iconUrl = (String) requestBody.get("iconUrl");
             Integer displayOrder = requestBody.get("displayOrder") != null ? 
                 Integer.valueOf(requestBody.get("displayOrder").toString()) : 0;

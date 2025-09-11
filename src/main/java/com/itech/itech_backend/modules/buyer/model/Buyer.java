@@ -1,6 +1,7 @@
 package com.itech.itech_backend.modules.buyer.model;
 
 import com.itech.itech_backend.modules.company.model.Company;
+import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.enums.VerificationStatus;
 import com.itech.itech_backend.enums.KycStatus;
 import jakarta.persistence.*;
@@ -24,6 +25,11 @@ public class Buyer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    // Link to unified User model (migration support)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     
     // Link to Company (One buyer can represent one company or individual)
     @ManyToOne

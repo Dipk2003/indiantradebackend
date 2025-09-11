@@ -10,6 +10,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\Veri
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\WebClientConfig.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\WebConfig.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\config\WebSocketConfig.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\controller\MigrationController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\controller\SubdomainController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\AttributeType.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\enums\KycDocumentType.java
@@ -38,15 +39,19 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\adm
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\controller\ContentManagementController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\controller\CTODashboardController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\controller\LeadController.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\controller\SiteConfigurationController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\model\Admins.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\model\Lead.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\model\SiteConfiguration.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\repository\AdminsRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\repository\LeadRepository.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\repository\SiteConfigurationRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\service\AdminService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\service\AdminsService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\service\ContentManagementService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\service\CTODashboardService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\service\LeadService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\admin\service\SiteConfigurationService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\analytics\controller\AdminAnalyticsController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\analytics\controller\AnalyticsController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\analytics\controller\AnalyticsDashboardController.java
@@ -73,6 +78,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buy
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\dto\LeadStatsDto.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\dto\UpdateBuyerDto.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\model\Buyer.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\model\BuyerProfile.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\model\Cart.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\model\CartItem.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\buyer\model\Category.java
@@ -148,10 +154,12 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\cor
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\controller\UserAddressController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\controller\UserController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\model\KycDocument.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\model\Location.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\model\OtpVerification.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\model\User.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\model\UserAddress.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\repository\KycDocumentRepository.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\repository\LocationRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\repository\OtpVerificationRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\repository\UserAddressRepository.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\repository\UserRepository.java
@@ -165,6 +173,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\cor
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\service\UserService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\core\util\UserCompatibilityHelper.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\controller\CityController.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\controller\LocationManagementController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\controller\StateController.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\entity\State.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\dataentry\repository\StateRepository.java
@@ -416,6 +425,7 @@ D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\ven
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\modules\vendor\service\VendorTaxService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\security\service\SecurityEventLogger.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\service\CacheService.java
+D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\service\DataMigrationService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\service\SubdomainService.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\util\JwtTokenUtil.java
 D:\itech-backend\itech-backend\src\main\java\com\itech\itech_backend\util\JwtUtil.java

@@ -14,6 +14,10 @@ public interface VendorsRepository extends JpaRepository<Vendors, Long> {
     Optional<Vendors> findByEmail(String email);
     Optional<Vendors> findByPhone(String phone);
     Optional<Vendors> findByEmailOrPhone(String email, String phone);
+    
+    // Migration support methods
+    List<Vendors> findByUserIsNull();
+    long countByUserIsNull();
     boolean existsByEmail(String email);
     boolean existsByPhone(String phone);
     Optional<Vendors> findByGstNumber(String gstNumber);

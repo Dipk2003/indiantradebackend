@@ -27,6 +27,13 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     boolean existsByEmail(String email);
     boolean existsByPhone(String phone);
     
+    @Query("SELECT b FROM Buyer b WHERE b.email = :emailOrPhone OR b.phone = :emailOrPhone")
+    Optional<Buyer> findByEmailOrPhone(@Param("emailOrPhone") String emailOrPhone1, @Param("emailOrPhone") String emailOrPhone2);
+    
+    // Migration support methods
+    List<Buyer> findByUserIsNull();
+    long countByUserIsNull();
+    
     Optional<Buyer> findByEmailAndBuyerStatus(String email, Buyer.BuyerStatus status);
     Optional<Buyer> findByPhoneAndBuyerStatus(String phone, Buyer.BuyerStatus status);
 

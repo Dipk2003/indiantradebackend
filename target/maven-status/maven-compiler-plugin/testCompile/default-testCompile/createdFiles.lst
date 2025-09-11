@@ -1,0 +1,5 @@
+com\itech\itech_backend\TestConfig$TestUtils.class
+com\itech\itech_backend\integration\VendorDashboardIntegrationTest.class
+com\itech\itech_backend\unit\BasicApplicationTest.class
+com\itech\itech_backend\integration\AuthControllerIntegrationTest.class
+com\itech\itech_backend\TestConfig.class

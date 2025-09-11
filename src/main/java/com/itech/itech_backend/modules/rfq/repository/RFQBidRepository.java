@@ -16,25 +16,25 @@ public interface RFQBidRepository extends JpaRepository<RFQBid, Long> {
     
     List<RFQBid> findByRfq_IdOrderByCreatedAtDesc(Long rfqId);
     
-    List<RFQBid> findByVendorIdOrderByCreatedAtDesc(String vendorId);
+    List<RFQBid> findByVendor_IdOrderByCreatedAtDesc(Long vendorId);
     
-    Page<RFQBid> findByVendorId(String vendorId, Pageable pageable);
+    Page<RFQBid> findByVendor_Id(Long vendorId, Pageable pageable);
     
     Page<RFQBid> findByRfq_Id(Long rfqId, Pageable pageable);
     
-    @Query("SELECT rb FROM RFQBid rb WHERE rb.rfq.id = :rfqId AND rb.vendorId = :vendorId")
+    @Query("SELECT rb FROM RFQBid rb WHERE rb.rfq.id = :rfqId AND rb.vendor.id = :vendorId")
     Optional<RFQBid> findByRfqIdAndVendorId(@Param("rfqId") Long rfqId, 
-                                           @Param("vendorId") String vendorId);
+                                           @Param("vendorId") Long vendorId);
     
     @Query("SELECT COUNT(rb) FROM RFQBid rb WHERE rb.rfq.id = :rfqId")
     Long countBidsByRfqId(@Param("rfqId") Long rfqId);
     
     @Query("SELECT rb FROM RFQBid rb WHERE rb.rfq.id = :rfqId AND rb.status = :status " +
-           "ORDER BY rb.unitPrice ASC")
+           "ORDER BY rb.priceQuote ASC")
     List<RFQBid> findByRfqIdAndStatusOrderByBidAmount(@Param("rfqId") Long rfqId,
                                                      @Param("status") RFQBid.BidStatus status);
     
-    @Query("SELECT COUNT(rb) FROM RFQBid rb WHERE rb.vendorId = :vendorId AND rb.status = :status")
-    Long countByVendorIdAndStatus(@Param("vendorId") String vendorId, 
+    @Query("SELECT COUNT(rb) FROM RFQBid rb WHERE rb.vendor.id = :vendorId AND rb.status = :status")
+    Long countByVendorIdAndStatus(@Param("vendorId") Long vendorId, 
                                  @Param("status") RFQBid.BidStatus status);
 }

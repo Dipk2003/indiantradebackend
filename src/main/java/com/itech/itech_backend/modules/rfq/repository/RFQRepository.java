@@ -14,18 +14,18 @@ import java.util.List;
 @Repository
 public interface RFQRepository extends JpaRepository<RFQ, Long> {
     
-    List<RFQ> findByBuyerIdOrderByCreatedAtDesc(String buyerId);
+    List<RFQ> findByBuyer_IdOrderByCreatedAtDesc(Long buyerId);
     
-    Page<RFQ> findByBuyerId(String buyerId, Pageable pageable);
+    Page<RFQ> findByBuyer_Id(Long buyerId, Pageable pageable);
     
     Page<RFQ> findByStatus(RFQ.RFQStatus status, Pageable pageable);
     
-    @Query("SELECT r FROM RFQ r WHERE r.status = 'ACTIVE' AND r.validUntil > :currentDate " +
+    @Query("SELECT r FROM RFQ r WHERE r.status = 'OPEN' AND r.validUntil > :currentDate " +
            "ORDER BY r.createdAt DESC")
     List<RFQ> findActiveRFQs(@Param("currentDate") LocalDateTime currentDate);
     
-    @Query("SELECT r FROM RFQ r WHERE r.status = 'ACTIVE' AND r.validUntil > :currentDate " +
-           "AND (:category IS NULL OR :category MEMBER OF r.categories) " +
+    @Query("SELECT r FROM RFQ r WHERE r.status = 'OPEN' AND r.validUntil > :currentDate " +
+           "AND (:category IS NULL OR r.category = :category) " +
            "ORDER BY r.createdAt DESC")
     List<RFQ> findActiveRFQsByCategory(@Param("currentDate") LocalDateTime currentDate,
                                       @Param("category") String category);
@@ -34,8 +34,8 @@ public interface RFQRepository extends JpaRepository<RFQ, Long> {
            "ORDER BY r.createdAt DESC")
     List<RFQ> searchRFQs(@Param("keyword") String keyword);
     
-    @Query("SELECT COUNT(r) FROM RFQ r WHERE r.buyerId = :buyerId AND r.status = :status")
-    Long countByBuyerIdAndStatus(@Param("buyerId") String buyerId, 
+    @Query("SELECT COUNT(r) FROM RFQ r WHERE r.buyer.id = :buyerId AND r.status = :status")
+    Long countByBuyerIdAndStatus(@Param("buyerId") Long buyerId, 
                                 @Param("status") RFQ.RFQStatus status);
     
     List<RFQ> findByValidUntilBeforeAndStatus(LocalDateTime validUntil, RFQ.RFQStatus status);

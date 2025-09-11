@@ -6,12 +6,19 @@ import com.itech.itech_backend.modules.shared.dto.RegisterRequestDto;
 import com.itech.itech_backend.modules.shared.dto.VerifyOtpRequestDto;
 import com.itech.itech_backend.modules.core.model.OtpVerification;
 import com.itech.itech_backend.modules.core.model.User;
+import com.itech.itech_backend.modules.core.model.UserAddress;
 import com.itech.itech_backend.modules.admin.model.Admins;
 import com.itech.itech_backend.modules.vendor.model.Vendors;
+import com.itech.itech_backend.modules.buyer.model.Buyer;
 import com.itech.itech_backend.modules.core.repository.OtpVerificationRepository;
 import com.itech.itech_backend.modules.core.repository.UserRepository;
 import com.itech.itech_backend.modules.vendor.repository.VendorsRepository;
 import com.itech.itech_backend.modules.admin.repository.AdminsRepository;
+import com.itech.itech_backend.modules.buyer.repository.BuyerRepository;
+import com.itech.itech_backend.modules.buyer.service.BuyerService;
+import com.itech.itech_backend.modules.buyer.dto.CreateBuyerDto;
+import com.itech.itech_backend.modules.buyer.dto.BuyerDto;
+import com.itech.itech_backend.modules.core.service.UserAddressService;
 import com.itech.itech_backend.modules.shared.service.EmailService;
 import com.itech.itech_backend.modules.shared.service.SmsService;
 import com.itech.itech_backend.util.JwtUtil;
@@ -31,6 +38,9 @@ public class UnifiedAuthService {
     private final UserRepository userRepository;
     private final VendorsRepository vendorsRepository;
     private final AdminsRepository adminsRepository;
+    private final BuyerRepository buyerRepository;
+    private final BuyerService buyerService;
+    private final UserAddressService userAddressService;
     private final OtpVerificationRepository otpRepo;
     private final EmailService emailService;
     private final SmsService smsService;
@@ -43,24 +53,44 @@ public class UnifiedAuthService {
         System.out.println("🔧 REGISTRATION DEBUG - Starting registration for: " + dto.getEmail());
         System.out.println("🔧 Role requested: " + dto.getRole());
         
+        try {
         // Check if user already exists in any table
-        boolean userExists = userRepository.existsByEmail(dto.getEmail()) || userRepository.existsByPhone(dto.getPhone());
-        boolean vendorExists = vendorsRepository.existsByEmail(dto.getEmail()) || vendorsRepository.existsByPhone(dto.getPhone());
-        boolean adminExists = adminsRepository.existsByEmail(dto.getEmail()) || adminsRepository.existsByPhone(dto.getPhone());
+        System.out.println("🔍 Checking existence for email: '" + dto.getEmail() + "', phone: '" + dto.getPhone() + "'");
         
-        if (userExists || vendorExists || adminExists) {
-            System.out.println("⚠️ User already exists with email: " + dto.getEmail());
+        boolean userExists = userRepository.existsByEmail(dto.getEmail());
+        boolean vendorExists = vendorsRepository.existsByEmail(dto.getEmail());
+        boolean adminExists = adminsRepository.existsByEmail(dto.getEmail());
+        boolean buyerExists = buyerRepository.existsByEmail(dto.getEmail());
+            
+        if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+            userExists = userExists || userRepository.existsByPhone(dto.getPhone());
+            vendorExists = vendorExists || vendorsRepository.existsByPhone(dto.getPhone());
+            adminExists = adminExists || adminsRepository.existsByPhone(dto.getPhone());
+            buyerExists = buyerExists || buyerRepository.existsByPhone(dto.getPhone());
+        }
+        
+    if (userExists || vendorExists || adminExists || buyerExists) {
+        System.out.println("⚠️ User already exists with email: " + dto.getEmail());
+        System.out.println("📊 Existence check - User: " + userExists + ", Vendor: " + vendorExists + ", Admin: " + adminExists + ", Buyer: " + buyerExists);
             
             // Find existing user from appropriate table
             User existingUser = null;
             
             if (userExists) {
-                Optional<User> userOpt = userRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+                // Try to find by email first, then by phone if provided
+                Optional<User> userOpt = userRepository.findByEmail(dto.getEmail());
+                if (!userOpt.isPresent() && dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+                    userOpt = userRepository.findByPhone(dto.getPhone());
+                }
                 if (userOpt.isPresent()) {
                     existingUser = userOpt.get();
                 }
             } else if (vendorExists) {
-                Optional<Vendors> vendorOpt = vendorsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+                // Try to find by email first, then by phone if provided
+                Optional<Vendors> vendorOpt = vendorsRepository.findByEmail(dto.getEmail());
+                if (!vendorOpt.isPresent() && dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+                    vendorOpt = vendorsRepository.findByPhone(dto.getPhone());
+                }
                 if (vendorOpt.isPresent()) {
                     Vendors vendor = vendorOpt.get();
                     existingUser = User.builder()
@@ -74,7 +104,11 @@ public class UnifiedAuthService {
                         .build();
                 }
             } else if (adminExists) {
-                Optional<Admins> adminOpt = adminsRepository.findByEmailOrPhone(dto.getEmail(), dto.getPhone());
+                // Try to find by email first, then by phone if provided
+                Optional<Admins> adminOpt = adminsRepository.findByEmail(dto.getEmail());
+                if (!adminOpt.isPresent() && dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+                    adminOpt = adminsRepository.findByPhone(dto.getPhone());
+                }
                 if (adminOpt.isPresent()) {
                     Admins admin = adminOpt.get();
                     existingUser = User.builder()
@@ -87,30 +121,81 @@ public class UnifiedAuthService {
                         .isVerified(admin.isVerified())
                         .build();
                 }
-            }
-            
-            if (existingUser != null) {
-                // If user is not verified, resend OTP
-                if (!existingUser.isVerified()) {
-                    System.out.println("🔄 User exists but not verified, resending OTP...");
-                    return sendRegistrationOtp(dto, existingUser);
+            } else if (buyerExists) {
+                // Try to find by email first, then by phone if provided
+                Optional<Buyer> buyerOpt = buyerRepository.findByEmail(dto.getEmail());
+                if (!buyerOpt.isPresent() && dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+                    buyerOpt = buyerRepository.findByPhone(dto.getPhone());
+                }
+                if (buyerOpt.isPresent()) {
+                    Buyer buyer = buyerOpt.get();
+                    existingUser = User.builder()
+                        .id(buyer.getId())
+                        .name(buyer.getBuyerName())
+                        .email(buyer.getEmail())
+                        .phone(buyer.getPhone())
+                        .password(buyer.getPassword())
+                        .role(User.UserRole.BUYER) // Buyers use BUYER role
+                        .isVerified(buyer.getIsEmailVerified() != null && buyer.getIsEmailVerified())
+                        .build();
                 }
             }
             
-            return "User already exists and is verified. Please login instead.";
+            if (existingUser != null) {
+                System.out.println("📝 Found existing user details:");
+                System.out.println("📝 - ID: " + existingUser.getId());
+                System.out.println("📝 - Name: " + existingUser.getName());
+                System.out.println("📝 - Email: " + existingUser.getEmail());
+                System.out.println("📝 - Role: " + existingUser.getRoleAsString());
+                System.out.println("📝 - Verified: " + existingUser.isVerified());
+                
+                // If user is not verified, resend OTP
+                if (!existingUser.isVerified()) {
+                    System.out.println("🔄 User exists but not verified, resending OTP for verification...");
+                    return sendRegistrationOtp(dto, existingUser);
+                } else {
+                    // User is already verified - should login instead
+                    System.out.println("✅ User already exists and is verified. Directing to login.");
+                    throw new RuntimeException("EMAIL_ALREADY_EXISTS");
+                }
+            }
+            
+            // Fallback message if user data couldn't be retrieved
+            throw new RuntimeException("EMAIL_ALREADY_EXISTS");
         }
         
         System.out.println("✅ User does not exist, proceeding with registration");
         
-        // Create user in User table
+        // Create user in User table and related entities
         User user = createUser(dto);
         System.out.println("✅ User created with ID: " + user.getId());
         
-        // Send OTP
-        System.out.println("📧 About to send registration OTP...");
-        String result = sendRegistrationOtp(dto, user);
-        System.out.println("🔧 Registration process completed: " + result);
-        return result;
+        // Create address if provided
+        createAddressIfProvided(dto, user);
+        
+            // Send OTP
+            System.out.println("📧 About to send registration OTP...");
+            String result = sendRegistrationOtp(dto, user);
+            System.out.println("🔧 Registration process completed: " + result);
+            return result;
+            
+        } catch (Exception e) {
+            System.out.println("❌ Registration failed with error: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Handle specific SQL constraint violations
+            if (e.getMessage() != null && e.getMessage().contains("cannot be null")) {
+                throw new RuntimeException("Registration failed: Required field missing. Please contact support.");
+            }
+            
+            // Re-throw existing RuntimeExceptions (like EMAIL_ALREADY_EXISTS)
+            if (e instanceof RuntimeException) {
+                throw e;
+            }
+            
+            // Handle unexpected errors
+            throw new RuntimeException("Registration failed: " + e.getMessage());
+        }
     }
 
     public JwtResponse directLogin(LoginRequestDto loginRequest) {
@@ -261,12 +346,43 @@ public class UnifiedAuthService {
 
     // Helper methods
     private User createUser(RegisterRequestDto dto) {
+        // Validate and set name - ensure name is not null or empty
+        String userName = dto.getName();
+        if (userName == null || userName.trim().isEmpty()) {
+            // If name is empty, try to derive it from email
+            if (dto.getEmail() != null && dto.getEmail().contains("@")) {
+                userName = dto.getEmail().substring(0, dto.getEmail().indexOf("@"));
+            } else {
+                userName = "User"; // Default fallback name
+            }
+            System.out.println("⚠️ Name was null/empty, using fallback name: " + userName);
+        }
+        
+        System.out.println("🔧 Creating user with name: '" + userName + "', email: '" + dto.getEmail() + "', phone: '" + dto.getPhone() + "'");
+        
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         
-        if ("ROLE_VENDOR".equals(dto.getRole())) {
-            // Create vendor in Vendors table
+        if ("ROLE_VENDOR".equals(dto.getRole()) || "SELLER".equals(dto.getRole()) || "VENDOR".equals(dto.getRole())) {
+            // First create the base User record
+            User baseUser = User.builder()
+                .name(userName)
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(encodedPassword)
+                .role(mapStringToUserRole(dto.getRole()))
+                .isVerified(false)
+                .isActive(true)
+                .country("India")
+                .createdAt(java.time.LocalDateTime.now())
+                .build();
+            
+            User savedUser = userRepository.save(baseUser);
+            System.out.println("✅ Base user created with ID: " + savedUser.getId());
+            
+            // Then create vendor record that references the user
             Vendors vendor = Vendors.builder()
-                .name(dto.getName())
+                .user(savedUser)  // Reference to the User object
+                .name(userName)
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
                 .password(encodedPassword)
@@ -279,21 +395,14 @@ public class UnifiedAuthService {
                 .build();
             
             Vendors savedVendor = vendorsRepository.save(vendor);
+            System.out.println("✅ Vendor created with ID: " + savedVendor.getId());
             
-            // Return a User object for consistency with the rest of the method
-            return User.builder()
-                .id(savedVendor.getId())
-                .name(savedVendor.getName())
-                .email(savedVendor.getEmail())
-                .phone(savedVendor.getPhone())
-                .password(savedVendor.getPassword())
-                .role(User.UserRole.valueOf(savedVendor.getRole()))
-                .isVerified(savedVendor.isVerified())
-                .build();
-        } else if ("ROLE_ADMIN".equals(dto.getRole())) {
+            // Return the User object (which is what the rest of the system expects)
+            return savedUser;
+        } else if ("ROLE_ADMIN".equals(dto.getRole()) || "ADMIN".equals(dto.getRole())) {
             // Create admin in Admins table
             Admins admin = Admins.builder()
-                .name(dto.getName())
+                .name(userName)
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
                 .password(encodedPassword)
@@ -312,26 +421,67 @@ public class UnifiedAuthService {
                 .email(savedAdmin.getEmail())
                 .phone(savedAdmin.getPhone())
                 .password(savedAdmin.getPassword())
-                .role(User.UserRole.valueOf(savedAdmin.getRole()))
+                .role(mapStringToUserRole(savedAdmin.getRole()))
                 .isVerified(savedAdmin.isVerified())
                 .build();
-        } else {
-            // Create regular user in User table
-            User.UserBuilder userBuilder = User.builder()
-                .name(dto.getName())
+        } else if ("ROLE_USER".equals(dto.getRole()) || "ROLE_BUYER".equals(dto.getRole()) || "BUYER".equals(dto.getRole())) {
+            // Create buyer - first create base User record, then Buyer record
+            User baseUser = User.builder()
+                .name(userName)
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
                 .password(encodedPassword)
-                .role(User.UserRole.valueOf(dto.getRole()))
-                .isVerified(false);
+                .role(User.UserRole.BUYER) // Normalize to BUYER for buyers
+                .isVerified(false)
+                .isActive(true)
+                .country("India")
+                .createdAt(java.time.LocalDateTime.now())
+                .build();
             
-            return userRepository.save(userBuilder.build());
+            User savedUser = userRepository.save(baseUser);
+            System.out.println("✅ Base user created for buyer with ID: " + savedUser.getId());
+            
+            // Create buyer record using BuyerService
+            CreateBuyerDto buyerDto = mapToBuyerDto(dto, userName);
+            try {
+                BuyerDto createdBuyer = buyerService.createBuyer(buyerDto);
+                System.out.println("✅ Buyer created with ID: " + createdBuyer.getId());
+            } catch (Exception e) {
+                System.out.println("⚠️ Buyer creation failed, but User exists: " + e.getMessage());
+                // Continue with user creation even if buyer creation fails
+            }
+            
+            return savedUser;
+        } else {
+            // Create regular user in User table for other roles
+            User user = User.builder()
+                .name(userName)
+                .email(dto.getEmail())
+                .phone(dto.getPhone())
+                .password(encodedPassword)
+                .role(mapStringToUserRole(dto.getRole()))
+                .isVerified(false)
+                .isActive(true)
+                .country("India")
+                .createdAt(java.time.LocalDateTime.now())
+                .build();
+            
+            System.out.println("🔧 Creating user with name: '" + user.getName() + "', verified: " + user.getIsVerified() + ", active: " + user.getIsActive());
+            return userRepository.save(user);
         }
     }
 
     private String sendRegistrationOtp(RegisterRequestDto dto, User user) {
         String otp = generateOtp();
         LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
+        
+        // 🚨 DEVELOPMENT ONLY: Log OTP to console for testing
+        System.out.println("\n========== OTP GENERATED FOR DEVELOPMENT ===========");
+        System.out.println("📧 Email: " + dto.getEmail());
+        System.out.println("📱 Phone: " + dto.getPhone());
+        System.out.println("🔢 OTP Code: " + otp);
+        System.out.println("⏰ Valid until: " + expiry);
+        System.out.println("===================================================\n");
         
         // Clean up old OTPs
         if (dto.getEmail() != null) {
@@ -393,6 +543,14 @@ public class UnifiedAuthService {
         String otp = generateOtp();
         LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
         
+        // 🚨 DEVELOPMENT ONLY: Log OTP to console for testing
+        System.out.println("\n========== LOGIN OTP GENERATED FOR DEVELOPMENT ===========");
+        System.out.println("📞 Contact: " + contact);
+        System.out.println("🔗 Role: " + role);
+        System.out.println("🔢 OTP Code: " + otp);
+        System.out.println("⏰ Valid until: " + expiry);
+        System.out.println("==========================================================\n");
+        
         otpRepo.deleteByEmailOrPhone(contact);
         otpRepo.save(OtpVerification.builder()
             .emailOrPhone(contact)
@@ -438,7 +596,7 @@ public class UnifiedAuthService {
                 .email(vendor.getEmail())
                 .phone(vendor.getPhone())
                 .password(vendor.getPassword())
-                .role(User.UserRole.valueOf(vendor.getRole()))
+                .role(mapStringToUserRole(vendor.getRole()))
                 .isVerified(vendor.isVerified())
                 .build();
         }
@@ -454,8 +612,24 @@ public class UnifiedAuthService {
                 .email(admin.getEmail())
                 .phone(admin.getPhone())
                 .password(admin.getPassword())
-                .role(User.UserRole.valueOf(admin.getRole()))
+                .role(mapStringToUserRole(admin.getRole()))
                 .isVerified(admin.isVerified())
+                .build();
+        }
+        
+        // Check Buyers table
+        Optional<Buyer> buyerOpt = buyerRepository.findByEmailOrPhone(emailOrPhone, emailOrPhone);
+        if (buyerOpt.isPresent()) {
+            System.out.println("✅ Found in Buyers table");
+            Buyer buyer = buyerOpt.get();
+            return User.builder()
+                .id(buyer.getId())
+                .name(buyer.getBuyerName())
+                .email(buyer.getEmail())
+                .phone(buyer.getPhone())
+                .password(buyer.getPassword())
+                .role(User.UserRole.BUYER) // Buyers use BUYER role
+                .isVerified(buyer.getIsEmailVerified() != null && buyer.getIsEmailVerified())
                 .build();
         }
         
@@ -496,6 +670,16 @@ public class UnifiedAuthService {
             Admins admin = adminOpt.get();
             admin.setVerified(verified);
             adminsRepository.save(admin);
+            return;
+        }
+        
+        // Check Buyers table
+        Optional<Buyer> buyerOpt = buyerRepository.findByEmail(email);
+        if (buyerOpt.isPresent()) {
+            System.out.println("✅ Updating in Buyers table");
+            Buyer buyer = buyerOpt.get();
+            buyer.setIsEmailVerified(verified);
+            buyerRepository.save(buyer);
             return;
         }
         
@@ -643,6 +827,16 @@ public class UnifiedAuthService {
             return;
         }
         
+        // Check Buyers table
+        Optional<Buyer> buyerOpt = buyerRepository.findByEmail(email);
+        if (buyerOpt.isPresent()) {
+            System.out.println("✅ Updating password in Buyers table");
+            Buyer buyer = buyerOpt.get();
+            buyer.setPassword(newPassword);
+            buyerRepository.save(buyer);
+            return;
+        }
+        
         System.out.println("❌ User not found in any table for password update");
     }
     
@@ -669,7 +863,7 @@ public class UnifiedAuthService {
                 User savedUser = userRepository.save(existingUser);
                 return createUserResponse(savedUser);
             }
-        } else if ("ROLE_VENDOR".equals(user.getRole())) {
+        } else if ("ROLE_VENDOR".equals(user.getRole()) || "SELLER".equals(user.getRole()) || "VENDOR".equals(user.getRole())) {
             Optional<Vendors> vendorOpt = vendorsRepository.findByEmail(user.getEmail());
             if (vendorOpt.isPresent()) {
                 Vendors vendor = vendorOpt.get();
@@ -681,7 +875,7 @@ public class UnifiedAuthService {
                 Vendors savedVendor = vendorsRepository.save(vendor);
                 return createVendorResponse(savedVendor);
             }
-        } else if ("ROLE_ADMIN".equals(user.getRole())) {
+        } else if ("ROLE_ADMIN".equals(user.getRole()) || "ADMIN".equals(user.getRole())) {
             Optional<Admins> adminOpt = adminsRepository.findByEmail(user.getEmail());
             if (adminOpt.isPresent()) {
                 Admins admin = adminOpt.get();
@@ -690,6 +884,35 @@ public class UnifiedAuthService {
                 
                 Admins savedAdmin = adminsRepository.save(admin);
                 return createAdminResponse(savedAdmin);
+            }
+        } else if ("ROLE_USER".equals(user.getRole()) || "BUYER".equals(user.getRole())) {
+            // Check if this is actually a buyer
+            Optional<Buyer> buyerOpt = buyerRepository.findByEmail(user.getEmail());
+            if (buyerOpt.isPresent()) {
+                Buyer buyer = buyerOpt.get();
+                if (name != null) buyer.setBuyerName(name);
+                if (phone != null) buyer.setPhone(phone);
+                if (address != null) {
+                    buyer.setBillingAddressLine1(address);
+                    if (buyer.getSameAsBilling() == null || buyer.getSameAsBilling()) {
+                        buyer.setShippingAddressLine1(address);
+                    }
+                }
+                
+                Buyer savedBuyer = buyerRepository.save(buyer);
+                return createBuyerResponse(savedBuyer);
+            }
+            
+            // Fall back to regular user update if not a buyer
+            Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+            if (userOpt.isPresent()) {
+                User existingUser = userOpt.get();
+                if (name != null) existingUser.setName(name);
+                if (phone != null) existingUser.setPhone(phone);
+                if (address != null) existingUser.setAddress(address);
+                
+                User savedUser = userRepository.save(existingUser);
+                return createUserResponse(savedUser);
             }
         }
         
@@ -710,10 +933,22 @@ public class UnifiedAuthService {
             if (vendorOpt.isPresent()) {
                 return createVendorResponse(vendorOpt.get());
             }
-        } else if ("ROLE_ADMIN".equals(user.getRole())) {
+        } else if ("ROLE_ADMIN".equals(user.getRole()) || "ADMIN".equals(user.getRole())) {
             Optional<Admins> adminOpt = adminsRepository.findByEmail(user.getEmail());
             if (adminOpt.isPresent()) {
                 return createAdminResponse(adminOpt.get());
+            }
+        } else if ("ROLE_USER".equals(user.getRole()) || "BUYER".equals(user.getRole())) {
+            // Check if this is actually a buyer
+            Optional<Buyer> buyerOpt = buyerRepository.findByEmail(user.getEmail());
+            if (buyerOpt.isPresent()) {
+                return createBuyerResponse(buyerOpt.get());
+            }
+            
+            // Fall back to regular user if not a buyer
+            Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+            if (userOpt.isPresent()) {
+                return createUserResponse(userOpt.get());
             }
         }
         
@@ -772,6 +1007,25 @@ public class UnifiedAuthService {
     }
     
     /**
+     * Create buyer response object
+     */
+    private Object createBuyerResponse(Buyer buyer) {
+        return Map.of(
+            "id", buyer.getId(),
+            "name", buyer.getBuyerName() != null ? buyer.getBuyerName() : "",
+            "email", buyer.getEmail(),
+            "phone", buyer.getPhone() != null ? buyer.getPhone() : "",
+            "address", buyer.getBillingAddressLine1() != null ? buyer.getBillingAddressLine1() : "",
+            "companyName", buyer.getFirstName() != null && buyer.getLastName() != null ? 
+                buyer.getFirstName() + " " + buyer.getLastName() : "",
+            "role", "user",
+            "userType", "buyer",
+            "isVerified", buyer.getIsEmailVerified() != null && buyer.getIsEmailVerified(),
+            "createdAt", buyer.getCreatedAt() != null ? buyer.getCreatedAt().toString() : ""
+        );
+    }
+    
+    /**
      * Send forgot password OTP
      */
     public String sendForgotPasswordOtp(String email) {
@@ -791,7 +1045,12 @@ public class UnifiedAuthService {
         String otp = generateOtp();
         LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
         
-        System.out.println("🔢 Generated OTP: " + otp + " for email: " + email);
+        // 🚨 DEVELOPMENT ONLY: Log OTP to console for testing
+        System.out.println("\n========== FORGOT PASSWORD OTP FOR DEVELOPMENT ===========");
+        System.out.println("📧 Email: " + email);
+        System.out.println("🔢 OTP Code: " + otp);
+        System.out.println("⏰ Valid until: " + expiry);
+        System.out.println("============================================================\n");
         
         // Clean up old OTPs for this email
         otpRepo.deleteByEmailOrPhone(email);
@@ -808,6 +1067,132 @@ public class UnifiedAuthService {
         emailService.sendForgotPasswordOtp(email, otp);
         
         return "OTP sent to your email for password recovery.";
+    }
+    
+    /**
+     * Create address if provided in registration data
+     */
+    private void createAddressIfProvided(RegisterRequestDto dto, User user) {
+        // Create address from registration data if address fields are provided
+        if (hasAddressData(dto)) {
+            try {
+                System.out.println("📍 Creating address for user: " + user.getId());
+                
+                UserAddress address = new UserAddress();
+                address.setAddressType("HOME"); // Default type
+                address.setFullName(user.getName());
+                address.setAddressLine1(dto.getBusinessAddress() != null ? dto.getBusinessAddress() : 
+                    (dto.getCity() != null ? "Address in " + dto.getCity() : null));
+                address.setCity(dto.getCity());
+                address.setState(dto.getState());
+                address.setPincode(dto.getPincode());
+                address.setPhone(dto.getPhone());
+                address.setDefault(true);
+                
+                if (address.getAddressLine1() != null || address.getCity() != null) {
+                    UserAddress savedAddress = userAddressService.createAddress(user.getId(), address);
+                    System.out.println("✅ Address created with ID: " + savedAddress.getId());
+                }
+            } catch (Exception e) {
+                System.out.println("⚠️ Address creation failed: " + e.getMessage());
+                // Continue without address - not critical for registration
+            }
+        }
+    }
+    
+    /**
+     * Check if registration data contains address information
+     */
+    private boolean hasAddressData(RegisterRequestDto dto) {
+        return dto.getBusinessAddress() != null || dto.getCity() != null || 
+               dto.getState() != null || dto.getPincode() != null;
+    }
+    
+    /**
+     * Map registration DTO to buyer DTO
+     */
+    private CreateBuyerDto mapToBuyerDto(RegisterRequestDto dto, String userName) {
+        CreateBuyerDto buyerDto = new CreateBuyerDto();
+        
+        // Basic information
+        buyerDto.setBuyerName(userName);
+        buyerDto.setEmail(dto.getEmail());
+        buyerDto.setPhone(dto.getPhone());
+        buyerDto.setPassword(dto.getPassword()); // Will be encoded by BuyerService
+        buyerDto.setBuyerType(Buyer.BuyerType.INDIVIDUAL); // Default
+        
+        // Personal information - extract from name if possible
+        String[] nameParts = userName.split(" ", 2);
+        buyerDto.setFirstName(nameParts[0]);
+        buyerDto.setLastName(nameParts.length > 1 ? nameParts[1] : "");
+        buyerDto.setDisplayName(userName);
+        
+        // Address information from registration
+        if (dto.getBusinessAddress() != null) {
+            buyerDto.setBillingAddressLine1(dto.getBusinessAddress());
+        }
+        if (dto.getCity() != null) {
+            buyerDto.setBillingCity(dto.getCity());
+        }
+        if (dto.getState() != null) {
+            buyerDto.setBillingState(dto.getState());
+        }
+        if (dto.getPincode() != null) {
+            buyerDto.setBillingPostalCode(dto.getPincode());
+        }
+        buyerDto.setBillingCountry("India");
+        
+        // Set same as billing for shipping
+        buyerDto.setSameAsBilling(true);
+        
+        // Default preferences
+        buyerDto.setEmailNotifications(true);
+        buyerDto.setSmsNotifications(false);
+        buyerDto.setMarketingEmails(true);
+        buyerDto.setPriceAlerts(false);
+        buyerDto.setNewProductAlerts(false);
+        buyerDto.setOrderUpdates(true);
+        
+        // Accept terms by default (should be validated on frontend)
+        buyerDto.setAcceptedTermsAndConditions(true);
+        buyerDto.setAcceptedPrivacyPolicy(true);
+        
+        return buyerDto;
+    }
+    
+    /**
+     * Map string role to UserRole enum
+     */
+    private User.UserRole mapStringToUserRole(String roleString) {
+        if (roleString == null) {
+            return User.UserRole.BUYER;
+        }
+        
+        switch (roleString.toUpperCase()) {
+            case "ROLE_USER":
+            case "ROLE_BUYER":
+            case "BUYER":
+                return User.UserRole.BUYER;
+            case "ROLE_VENDOR":
+            case "ROLE_SELLER":
+            case "SELLER":
+            case "VENDOR":
+                return User.UserRole.SELLER;
+            case "ROLE_ADMIN":
+            case "ADMIN":
+                return User.UserRole.ADMIN;
+            case "ROLE_SUPPORT":
+            case "SUPPORT":
+                return User.UserRole.SUPPORT;
+            case "ROLE_CTO":
+            case "CTO":
+                return User.UserRole.CTO;
+            case "ROLE_DATA_ENTRY":
+            case "DATA_ENTRY":
+                return User.UserRole.DATA_ENTRY;
+            default:
+                return User.UserRole.BUYER; // Default fallback
+        }
     }
     
     /**

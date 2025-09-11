@@ -1,5 +1,6 @@
 package com.itech.itech_backend.modules.rfq.model;
 
+import com.itech.itech_backend.modules.vendor.model.VendorProfile;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,14 +27,12 @@ public class RFQBid {
     @JoinColumn(name = "rfq_id", nullable = false)
     private RFQ rfq;
 
-    @Column(nullable = false)
-    private String vendorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id", nullable = false)
+    private VendorProfile vendor;
 
-    @Column(name = "unit_price", nullable = false)
-    private BigDecimal unitPrice;
-
-    @Column(name = "total_price", nullable = false)
-    private BigDecimal totalPrice;
+    @Column(name = "price_quote", nullable = false)
+    private BigDecimal priceQuote;
 
     private Integer quantity;
 
@@ -111,21 +110,17 @@ public class RFQBid {
     private LocalDateTime updatedAt;
 
     public enum BidStatus {
-        SUBMITTED,
-        UNDER_REVIEW,
-        SHORTLISTED,
-        NEGOTIATION,
+        PENDING,
         ACCEPTED,
-        REJECTED,
-        WITHDRAWN
+        REJECTED
     }
 
     @PrePersist
     @PreUpdate
     private void calculateTotals() {
-        if (unitPrice != null && quantity != null) {
+        if (priceQuote != null && quantity != null) {
             // Calculate base price
-            BigDecimal basePrice = unitPrice.multiply(BigDecimal.valueOf(quantity));
+            BigDecimal basePrice = priceQuote.multiply(BigDecimal.valueOf(quantity));
 
             // Add shipping cost if present
             if (shippingCost != null) {
@@ -144,7 +139,8 @@ public class RFQBid {
                 basePrice = basePrice.subtract(discountAmount);
             }
 
-            totalPrice = basePrice;
+            // Store the calculated total price (you may want to add this field back if needed)
+            // totalPrice = basePrice;
         }
     }
 }

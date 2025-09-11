@@ -1,5 +1,6 @@
 package com.itech.itech_backend.modules.admin.model;
 
+import com.itech.itech_backend.modules.core.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,11 @@ public class Admins {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    // Link to unified User model (migration support)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String name;
