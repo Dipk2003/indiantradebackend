@@ -1,0 +1,96 @@
+# Render Blueprint for Indian Trade Mart Backend
+# This file defines the infrastructure and deployment configuration for Render
+
+services:
+  # Main Spring Boot Application
+  - type: web
+    name: itech-backend
+    runtime: docker
+    repo: https://github.com/Dipk2003/indiantradebackend.git
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    
+    # Resource allocation
+    plan: starter  # Can be upgraded to standard/pro
+    
+    # Environment variables
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SERVER_PORT
+        value: 8080
+      - key: JAVA_OPTS
+        value: "-Xmx1g -Xms512m -XX:+UseG1GC"
+      
+      # Database configuration (set these in Render dashboard)
+      - key: DATABASE_URL
+        sync: false  # Set this in Render dashboard
+      - key: JDBC_DATABASE_USERNAME
+        sync: false
+      - key: JDBC_DATABASE_PASSWORD
+        sync: false
+        
+      # Redis configuration
+      - key: REDIS_HOST
+        sync: false
+      - key: REDIS_PORT
+        value: 6379
+        
+      # Security
+      - key: JWT_SECRET
+        sync: false  # Set this in Render dashboard
+        
+      # Payment gateway
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+        
+      # Email service
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 587
+      - key: EMAIL_USERNAME
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+        
+      # AWS S3
+      - key: AWS_S3_BUCKET
+        sync: false
+      - key: AWS_S3_REGION
+        value: us-west-2
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+        
+      # CORS configuration
+      - key: ALLOWED_ORIGINS
+        value: "*"  # Update this with your frontend domain
+    
+    # Health check endpoint
+    healthCheckPath: /actuator/health
+    
+    # Build settings
+    buildCommand: echo "Building via Dockerfile"
+    startCommand: echo "Starting via Dockerfile CMD"
+    
+    # Auto-deploy on git push
+    autoDeploy: true
+
+# Database service (if you want to use Render's PostgreSQL)
+databases:
+  - name: itech-postgres
+    databaseName: itech_db
+    user: itech_user
+    plan: free  # Can be upgraded to starter/standard/pro
+    
+# Redis service (if you want to use Render's Redis)  
+# Note: Redis is only available on paid plans
+# - type: redis
+#   name: itech-redis
+#   plan: starter
+#   maxMemory: 100MB
