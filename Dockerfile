@@ -15,8 +15,8 @@ RUN mvn dependency:go-offline -B
 # Copy source code
 COPY src ./src
 
-# Build the application for production
-RUN mvn clean package -DskipTests -Dspring.profiles.active=render
+# Build the application for minimal memory usage
+RUN mvn clean package -DskipTests -Dspring.profiles.active=minimal
 
 # =============================================================================
 # Stage 2: Runtime image
@@ -49,12 +49,12 @@ USER appuser
 EXPOSE 8080
 
 # Set environment variables optimized for Render free tier
-ENV SPRING_PROFILES_ACTIVE=render
-ENV JAVA_OPTS="-Xmx350m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -XX:MaxRAMPercentage=70 -Djava.awt.headless=true -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Dspring.jmx.enabled=false -Dspring.jpa.defer-datasource-initialization=true"
+ENV SPRING_PROFILES_ACTIVE=minimal
+ENV JAVA_OPTS="-Xmx200m -Xms32m -XX:+UseSerialGC -XX:MaxDirectMemorySize=32m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=32m -XX:ReservedCodeCacheSize=32m -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -Djava.awt.headless=true -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Dspring.jmx.enabled=false -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom"
 
 # Health check using PORT environment variable
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:${PORT:-8080}/actuator/health || exit 1
 
 # Optimized entrypoint for Render deployment - use PORT env var
-CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend on Render...' && echo 'Memory limit: 512MB, JVM max heap: 350MB' && echo 'Port: ${PORT:-8080}' && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=render -jar app.jar"]
+CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend on Render...' && echo 'Memory limit: 512MB, JVM max heap: 200MB' && echo 'Port: ${PORT:-8080}' && java $JAVA_OPTS -Dspring.profiles.active=minimal -jar app.jar"]
