@@ -1,0 +1,22 @@
+# 🔥 CORRECTED RENDER ENVIRONMENT VARIABLES
+# Copy these EXACT values to your Render Dashboard → Environment tab
+
+# CRITICAL FIXES APPLIED:
+SPRING_PROFILES_ACTIVE=render
+PORT=10000
+
+# Your existing variables (keep these):
+ALLOWED_ORIGINS=https://indiantrademart.com
+DATABASE_URL=postgresql://helloji_mufl_user:oaTUsJ3My5m0PGJxpfVpGtm77OiSUqDq@dpg-d2val5vdiees73du2i4g-a.oregon-postgres.render.com/helloji_mufl
+JDBC_DATABASE_PASSWORD=oaTUsJ3My5m0PGJxpfVpGtm77OiSUqDq
+JDBC_DATABASE_USERNAME=helloji_mufl_user
+JWT_SECRET=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5j6k7l8m9n0
+SMTP_HOST=smtp.gmail.com
+SMTP_PASSWORD=tqvipqgkpnxyuef
+SMTP_PORT=587
+SMTP_USERNAME=ultimate.itech4@gmail.com
+
+# EXPLANATION:
+# - SPRING_PROFILES_ACTIVE=render → Forces render profile (fixes JCache issue)
+# - PORT=10000 → Render's standard port (fixes "No open ports detected")
+# - JDBC_DATABASE_USERNAME=helloji_mufl_user → Fixed the username (was missing _user)
