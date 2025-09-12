@@ -223,8 +223,12 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     List<Buyer> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<Buyer> findByUpdatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     
-    @Query("SELECT b FROM Buyer b WHERE DATE(b.createdAt) = CURRENT_DATE")
-    List<Buyer> findBuyersRegisteredToday();
+    @Query("SELECT b FROM Buyer b WHERE b.createdAt >= :startOfDay AND b.createdAt < :endOfDay")
+    List<Buyer> findBuyersRegisteredToday(@Param("startOfDay") LocalDateTime startOfDay, @Param("endOfDay") LocalDateTime endOfDay);
+    
+    // Alternative method using native SQL for better compatibility
+    @Query(value = "SELECT * FROM buyers WHERE DATE(created_at) = CURRENT_DATE", nativeQuery = true)
+    List<Buyer> findBuyersRegisteredTodayNative();
     
     @Query("SELECT b FROM Buyer b WHERE b.createdAt >= :startOfWeek")
     List<Buyer> findBuyersRegisteredThisWeek(@Param("startOfWeek") LocalDateTime startOfWeek);
