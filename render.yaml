@@ -14,8 +14,19 @@ services:
     # Resource allocation
     plan: starter  # Can be upgraded to standard/pro
     
-    # Environment variables - All set in Render Dashboard
-    # See RENDER_ENV_FIXED.txt for the exact values
+    # Environment variables - Critical ones defined here, others in Render Dashboard
+    envVars:
+      # Server configuration - CRITICAL for Render deployment
+      - key: PORT
+        value: 10000
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+        
+      # Database configuration (using individual components for reliability)
+      - key: JDBC_DATABASE_USERNAME
+        sync: false  # Set in Render Dashboard
+      - key: JDBC_DATABASE_PASSWORD
+        sync: false  # Set in Render Dashboard
         
       # Redis configuration
       - key: REDIS_HOST
@@ -34,13 +45,13 @@ services:
         sync: false
         
       # Email service
-      - key: EMAIL_HOST
+      - key: SMTP_HOST
         value: smtp.gmail.com
-      - key: EMAIL_PORT
+      - key: SMTP_PORT
         value: 587
-      - key: EMAIL_USERNAME
+      - key: SMTP_USERNAME
         sync: false
-      - key: EMAIL_PASSWORD
+      - key: SMTP_PASSWORD
         sync: false
         
       # AWS S3
