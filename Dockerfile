@@ -16,7 +16,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Build the application for production
-RUN mvn clean package -DskipTests -Dspring.profiles.active=prod
+RUN mvn clean package -DskipTests -Dspring.profiles.active=render
 
 # =============================================================================
 # Stage 2: Runtime image
@@ -46,16 +46,16 @@ COPY --from=builder /app/target/*.jar app.jar
 USER appuser
 
 # Expose port
-EXPOSE 8080
+EXPOSE 10000
 
-# Set environment variables
-ENV SPRING_PROFILES_ACTIVE=prod
-ENV SERVER_PORT=8080
-ENV JAVA_OPTS="-Xmx1g -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+# Set environment variables optimized for Render free tier
+ENV SPRING_PROFILES_ACTIVE=render
+ENV SERVER_PORT=10000
+ENV JAVA_OPTS="-Xmx400m -Xms200m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -XX:MaxRAMPercentage=80 -Djava.awt.headless=true"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/actuator/health || exit 1
+    CMD curl -f http://localhost:10000/actuator/health || exit 1
 
 # Simple entrypoint - no external script needed
 CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend...' && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
