@@ -45,17 +45,16 @@ COPY --from=builder /app/target/*.jar app.jar
 # Switch to non-root user
 USER appuser
 
-# Expose port
-EXPOSE 10000
+# Expose port - Render assigns PORT dynamically
+EXPOSE 8080
 
 # Set environment variables optimized for Render free tier
 ENV SPRING_PROFILES_ACTIVE=render
-ENV SERVER_PORT=10000
 ENV JAVA_OPTS="-Xmx350m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -XX:MaxRAMPercentage=70 -Djava.awt.headless=true -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Dspring.jmx.enabled=false -Dspring.jpa.defer-datasource-initialization=true"
 
-# Health check
+# Health check using PORT environment variable
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:10000/actuator/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/actuator/health || exit 1
 
-# Optimized entrypoint for Render deployment
-CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend on Render...' && echo 'Memory limit: 512MB, JVM max heap: 350MB' && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=render -Dserver.port=10000 -jar app.jar"]
+# Optimized entrypoint for Render deployment - use PORT env var
+CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend on Render...' && echo 'Memory limit: 512MB, JVM max heap: 350MB' && echo 'Port: ${PORT:-8080}' && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=render -jar app.jar"]
