@@ -227,7 +227,7 @@ public interface BuyerRepository extends JpaRepository<Buyer, Long> {
     List<Buyer> findBuyersRegisteredToday(@Param("startOfDay") LocalDateTime startOfDay, @Param("endOfDay") LocalDateTime endOfDay);
     
     // Alternative method using native SQL for better compatibility
-    @Query(value = "SELECT * FROM buyers WHERE DATE(created_at) = CURRENT_DATE", nativeQuery = true)
+    @Query(value = "SELECT * FROM buyers WHERE created_at >= CURRENT_DATE", nativeQuery = true)
     List<Buyer> findBuyersRegisteredTodayNative();
     
     @Query("SELECT b FROM Buyer b WHERE b.createdAt >= :startOfWeek")

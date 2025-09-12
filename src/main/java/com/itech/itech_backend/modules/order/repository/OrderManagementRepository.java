@@ -125,10 +125,10 @@ public interface OrderManagementRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o.orderStatus, COUNT(o) FROM Order o GROUP BY o.orderStatus")
     List<Object[]> getOrderCountByStatus();
     
-    @Query("SELECT DATE(o.createdAt), COUNT(o) FROM Order o WHERE o.createdAt >= :fromDate GROUP BY DATE(o.createdAt)")
+    @Query("SELECT CAST(o.createdAt as date), COUNT(o) FROM Order o WHERE o.createdAt >= :fromDate GROUP BY CAST(o.createdAt as date)")
     List<Object[]> getDailyOrderCounts(@Param("fromDate") LocalDateTime fromDate);
     
-    @Query("SELECT MONTH(o.createdAt), COUNT(o), SUM(o.totalAmount) FROM Order o WHERE o.createdAt >= :fromDate GROUP BY MONTH(o.createdAt)")
+    @Query("SELECT EXTRACT(MONTH FROM o.createdAt), COUNT(o), SUM(o.totalAmount) FROM Order o WHERE o.createdAt >= :fromDate GROUP BY EXTRACT(MONTH FROM o.createdAt)")
     List<Object[]> getMonthlyOrderStats(@Param("fromDate") LocalDateTime fromDate);
     
     // ===============================

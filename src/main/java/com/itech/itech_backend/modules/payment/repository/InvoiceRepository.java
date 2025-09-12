@@ -41,7 +41,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT i.status as status, COUNT(i) as count FROM Invoice i GROUP BY i.status")
     List<Object[]> getInvoiceStatusCounts();
 
-    @Query("SELECT DATE(i.createdAt) as date, SUM(i.totalAmount) as amount FROM Invoice i WHERE i.status = 'PAID' AND i.createdAt >= :startDate GROUP BY DATE(i.createdAt) ORDER BY DATE(i.createdAt)")
+    @Query("SELECT CAST(i.createdAt as date) as date, SUM(i.totalAmount) as amount FROM Invoice i WHERE i.status = 'PAID' AND i.createdAt >= :startDate GROUP BY CAST(i.createdAt as date) ORDER BY CAST(i.createdAt as date)")
     List<Object[]> getDailyRevenue(@Param("startDate") LocalDateTime startDate);
 
     @Query("SELECT i.type as type, COUNT(i) as count, SUM(i.totalAmount) as total FROM Invoice i WHERE i.status = 'PAID' GROUP BY i.type")
