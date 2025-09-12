@@ -1,12 +1,12 @@
 package com.itech.itech_backend.config;
 
-// Temporarily disabled Caffeine cache
-// import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-// import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -26,18 +26,25 @@ import java.util.stream.Collectors;
 @EnableCaching
 public class CacheConfig {
 
-    // Temporarily disabled Caffeine cache manager
-    // @Bean
-    // public CacheManager caffeineCacheManager() {
-    //     CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-    //     cacheManager.setCaffeine(Caffeine.newBuilder()
-    //             .maximumSize(10000)
-    //             .expireAfterWrite(Duration.ofMinutes(5))
-    //             .recordStats());
-    //     return cacheManager;
-    // }
+    @Bean
+    @Profile({"render", "test"})
+    public CacheManager caffeineCacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.setCaffeine(Caffeine.newBuilder()
+                .maximumSize(10000)
+                .expireAfterWrite(Duration.ofMinutes(5))
+                .recordStats());
+        
+        // Set cache names for the render environment
+        cacheManager.setCacheNames(Arrays.asList(
+                "products", "categories", "vendors", "userProfiles", "searchResults"
+        ));
+        
+        return cacheManager;
+    }
 
     @Bean
+    @Profile({"prod", "production"})
     public CacheManager redisCacheManager(RedisConnectionFactory connectionFactory) {
         // Default configuration
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
@@ -62,6 +69,7 @@ public class CacheConfig {
     }
 
     @Bean
+    @Profile({"prod", "production"})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
