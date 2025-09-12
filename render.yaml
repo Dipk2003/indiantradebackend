@@ -68,8 +68,16 @@ services:
       - key: ALLOWED_ORIGINS
         value: "*"  # Update this with your frontend domain
     
-    # Health check endpoint
+    # Health check endpoint (optimized for faster startup)
     healthCheckPath: /actuator/health
+    
+    # Extended startup timeout for Java applications
+    startCommand: echo "Container starting with optimized JVM settings"
+    
+    # Service configuration
+    numInstances: 1
+    maxSurge: 1
+    maxUnavailable: 0
     
     # Build settings
     buildCommand: echo "Building via Dockerfile"

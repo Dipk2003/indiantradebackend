@@ -51,11 +51,11 @@ EXPOSE 10000
 # Set environment variables optimized for Render free tier
 ENV SPRING_PROFILES_ACTIVE=render
 ENV SERVER_PORT=10000
-ENV JAVA_OPTS="-Xmx400m -Xms200m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -XX:MaxRAMPercentage=80 -Djava.awt.headless=true"
+ENV JAVA_OPTS="-Xmx350m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -XX:MaxRAMPercentage=70 -Djava.awt.headless=true -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Dspring.jmx.enabled=false -Dspring.jpa.defer-datasource-initialization=true"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:10000/actuator/health || exit 1
 
-# Simple entrypoint - no external script needed
-CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend...' && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
+# Optimized entrypoint for Render deployment
+CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend on Render...' && echo 'Memory limit: 512MB, JVM max heap: 350MB' && java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=render -Dserver.port=10000 -jar app.jar"]
