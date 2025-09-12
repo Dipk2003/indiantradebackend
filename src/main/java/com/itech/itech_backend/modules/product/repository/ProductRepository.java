@@ -240,8 +240,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     
     List<Product> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     
-    @Query("SELECT p FROM Product p WHERE DATE(p.createdAt) = CURRENT_DATE")
-    List<Product> findProductsCreatedToday();
+    @Query("SELECT p FROM Product p WHERE p.createdAt >= :startOfDay")
+    List<Product> findProductsCreatedToday(@Param("startOfDay") LocalDateTime startOfDay);
     
     @Query("SELECT p FROM Product p WHERE p.createdAt >= :startOfWeek")
     List<Product> findProductsCreatedThisWeek(@Param("startOfWeek") LocalDateTime startOfWeek);
