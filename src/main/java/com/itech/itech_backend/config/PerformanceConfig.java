@@ -7,6 +7,7 @@ package com.itech.itech_backend.config;
 // import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -30,6 +31,7 @@ public class PerformanceConfig {
     // }
 
     @Bean(name = "asyncExecutor")
+    @Profile({"!minimal"})
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
@@ -39,8 +41,21 @@ public class PerformanceConfig {
         executor.initialize();
         return executor;
     }
+    
+    @Bean(name = "asyncExecutor")
+    @Profile({"minimal"})
+    public Executor minimalAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(3);
+        executor.setQueueCapacity(10);
+        executor.setThreadNamePrefix("AsyncThread-");
+        executor.initialize();
+        return executor;
+    }
 
     @Bean(name = "backgroundTaskExecutor")
+    @Profile({"!minimal"})
     public Executor backgroundTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5);
@@ -50,13 +65,38 @@ public class PerformanceConfig {
         executor.initialize();
         return executor;
     }
+    
+    @Bean(name = "backgroundTaskExecutor")
+    @Profile({"minimal"})
+    public Executor minimalBackgroundTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(2);
+        executor.setQueueCapacity(5);
+        executor.setThreadNamePrefix("BackgroundTask-");
+        executor.initialize();
+        return executor;
+    }
 
     @Bean(name = "scheduledTaskExecutor")
+    @Profile({"!minimal"})
     public Executor scheduledTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
         executor.setMaxPoolSize(5);
         executor.setQueueCapacity(10);
+        executor.setThreadNamePrefix("ScheduledTask-");
+        executor.initialize();
+        return executor;
+    }
+    
+    @Bean(name = "scheduledTaskExecutor")
+    @Profile({"minimal"})
+    public Executor minimalScheduledTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(2);
+        executor.setQueueCapacity(2);
         executor.setThreadNamePrefix("ScheduledTask-");
         executor.initialize();
         return executor;

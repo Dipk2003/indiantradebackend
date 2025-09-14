@@ -12,15 +12,25 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Configuration
-@Profile("render")
-@ConditionalOnProperty(value = "spring.profiles.active", havingValue = "render")
+@Profile({"render", "minimal"})
 public class RenderStartupConfig {
+    
+    private final org.springframework.core.env.Environment environment;
+    
+    public RenderStartupConfig(org.springframework.core.env.Environment environment) {
+        this.environment = environment;
+    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady(ApplicationReadyEvent event) {
+        String port = environment.getProperty("server.port", "8080");
+        String address = environment.getProperty("server.address", "0.0.0.0");
+        String profile = environment.getProperty("spring.profiles.active", "default");
+        
         log.info("🚀 Indian Trade Mart Backend successfully started on Render!");
         log.info("💾 Memory usage optimized for 512MB limit");
-        log.info("🌐 Service is ready to accept connections on port 10000");
+        log.info("🌐 Service is ready to accept connections on {}:{}", address, port);
+        log.info("🏷️  Active profile: {}", profile);
         
         // Force garbage collection to free up startup memory
         System.gc();

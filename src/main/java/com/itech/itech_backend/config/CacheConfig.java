@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class CacheConfig {
 
     @Bean
-    @Profile({"render", "test"})
+    @Profile({"render", "test", "minimal"})
     public CacheManager caffeineCacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(Caffeine.newBuilder()

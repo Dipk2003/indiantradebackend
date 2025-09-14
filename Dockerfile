@@ -39,10 +39,12 @@ WORKDIR /app
 RUN mkdir -p /app/logs /app/uploads && \
     chown -R appuser:appuser /app
 
-# Copy the built JAR from builder stage
+# Copy the built JAR from builder stage and startup script
 COPY --from=builder /app/target/*.jar app.jar
+COPY render-start.sh render-start.sh
 
-# Switch to non-root user
+# Make startup script executable and switch to non-root user
+RUN chmod +x render-start.sh
 USER appuser
 
 # Expose port - Render assigns PORT dynamically
@@ -56,5 +58,5 @@ ENV JAVA_OPTS="-Xmx200m -Xms32m -XX:+UseSerialGC -XX:MaxDirectMemorySize=32m -XX
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:${PORT:-8080}/actuator/health || exit 1
 
-# Optimized entrypoint for Render deployment - use PORT env var
-CMD ["sh", "-c", "echo 'Starting Indian Trade Mart Backend on Render...' && echo 'Memory limit: 512MB, JVM max heap: 200MB' && echo 'Port: ${PORT:-8080}' && java $JAVA_OPTS -Dspring.profiles.active=minimal -jar app.jar"]
+# Use the optimized startup script for Render deployment
+CMD ["./render-start.sh"]
