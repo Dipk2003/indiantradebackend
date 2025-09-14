@@ -31,14 +31,16 @@ public class ApiWelcomeController {
         endpoints.put("products", "/api/products/* - Product management");
         endpoints.put("categories", "/api/categories/* - Category management");
         endpoints.put("health", "/actuator/health - Health check");
+        endpoints.put("status", "/api/status - API status check");
+        endpoints.put("info", "/api/info - System information");
         
         response.put("availableEndpoints", endpoints);
         
         return ResponseEntity.ok(response);
     }
     
-    @GetMapping("/status")
-    public ResponseEntity<Map<String, Object>> status() {
+    @GetMapping("/info")
+    public ResponseEntity<Map<String, Object>> info() {
         Map<String, Object> response = new HashMap<>();
         
         response.put("service", "Indian Trade Mart Backend");
