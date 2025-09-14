@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<lombok.version>1.18.36</lombok.version>
 	</properties>
 <dependencies>
         <!-- OpenAPI Documentation -->
@@ -222,17 +223,7 @@
 			<version>2.20.162</version>
 		</dependency>
 
-		<!-- Spring Cache -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>
 
-		<!-- Redis for Caching -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
 
 		<!-- WebSocket Support -->
 		<dependency>
@@ -256,11 +247,6 @@
 			<artifactId>elasticsearch-java</artifactId>
 		</dependency>
 
-		<!-- Caffeine Cache -->
-		<dependency>
-			<groupId>com.github.ben-manes.caffeine</groupId>
-			<artifactId>caffeine</artifactId>
-		</dependency>
 
 		<!-- Micrometer for Metrics -->
 		<dependency>
@@ -292,6 +278,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

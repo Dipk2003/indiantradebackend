@@ -1,8 +1,8 @@
-package com.itech.itech_backend.controllers.migration;
+package com.itech.itech_backend.controller;
 
-import com.itech.itech_backend.services.migration.DataMigrationService;
-import com.itech.itech_backend.services.migration.DataMigrationService.MigrationConfig;
-import com.itech.itech_backend.services.migration.DataMigrationService.MigrationResult;
+import com.itech.itech_backend.service.DataMigrationService;
+import com.itech.itech_backend.service.DataMigrationService.MigrationConfig;
+import com.itech.itech_backend.service.DataMigrationService.MigrationResult;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

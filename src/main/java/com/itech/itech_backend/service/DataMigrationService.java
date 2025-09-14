@@ -1,4 +1,4 @@
-package com.itech.itech_backend.services.migration;
+package com.itech.itech_backend.service;
 
 import com.itech.itech_backend.modules.core.model.User;
 import com.itech.itech_backend.modules.core.repository.UserRepository;

@@ -13,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -354,7 +355,7 @@ public class BuyerProfile {
     public void incrementOrderStats(BigDecimal orderValue) {
         this.totalOrders += 1;
         this.totalOrderValue = this.totalOrderValue.add(orderValue);
-        this.averageOrderValue = this.totalOrderValue.divide(BigDecimal.valueOf(this.totalOrders), 2, BigDecimal.ROUND_HALF_UP);
+        this.averageOrderValue = this.totalOrderValue.divide(BigDecimal.valueOf(this.totalOrders), 2, RoundingMode.HALF_UP);
         this.lastOrderDate = LocalDateTime.now();
     }
 }
