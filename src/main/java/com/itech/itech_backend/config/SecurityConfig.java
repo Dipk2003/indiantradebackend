@@ -43,7 +43,9 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/actuator/**",
                     "/health/**",
-                    "/health"
+                    "/health",
+                    "/api/",
+                    "/api"
                 ).permitAll()
                 
                 // === ALL AUTH ENDPOINTS (REGISTRATION & LOGIN) ===
@@ -92,14 +94,16 @@ public class SecurityConfig {
         
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow all localhost variations for development
+        // Allow all localhost variations for development + Render URL
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
             "http://localhost:3001", 
             "http://127.0.0.1:3000",
             "http://127.0.0.1:3001",
             "https://localhost:3000",
-            "https://localhost:3001"
+            "https://localhost:3001",
+            "https://indiantradebackend.onrender.com",
+            "https://indiantrademart.com"
         ));
         
         // Allow all HTTP methods

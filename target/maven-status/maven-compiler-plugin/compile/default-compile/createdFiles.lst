@@ -451,6 +451,7 @@ com\itech\itech_backend\modules\vendor\model\VendorTaxProfile.class
 com\itech\itech_backend\modules\shared\model\Notification$NotificationBuilder.class
 com\itech\itech_backend\modules\buyer\controller\BuyerLeadController.class
 com\itech\itech_backend\modules\chat\model\ChatMessage$MessageType.class
+com\itech\itech_backend\controller\ApiWelcomeController.class
 com\itech\itech_backend\modules\support\controller\SupportTicketController.class
 com\itech\itech_backend\modules\buyer\service\BuyerService.class
 com\itech\itech_backend\modules\shared\dto\ProductSearchResponseDto$SearchStats.class

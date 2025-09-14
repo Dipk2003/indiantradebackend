@@ -11,6 +11,7 @@ D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\config\Verifica
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\config\WebClientConfig.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\config\WebConfig.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\config\WebSocketConfig.java
+D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\controller\ApiWelcomeController.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\controller\MigrationController.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\controller\SubdomainController.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\enums\AttributeType.java
