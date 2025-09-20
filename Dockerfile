@@ -47,16 +47,17 @@ COPY render-start.sh render-start.sh
 RUN chmod +x render-start.sh
 USER appuser
 
-# Expose port - Render assigns PORT dynamically
-EXPOSE 8080
+# Expose port - Render uses PORT=10000 by default
+EXPOSE 10000
 
-# Set environment variables optimized for Render free tier
+# Set environment variables optimized for Render 512MB memory limit
 ENV SPRING_PROFILES_ACTIVE=minimal
-ENV JAVA_OPTS="-Xmx200m -Xms32m -XX:+UseSerialGC -XX:MaxDirectMemorySize=32m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=32m -XX:ReservedCodeCacheSize=32m -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -Djava.awt.headless=true -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Dspring.jmx.enabled=false -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom"
+ENV SERVER_PORT=10000
+ENV JAVA_OPTS="-Xmx300m -Xms100m -XX:+UseSerialGC -XX:MaxDirectMemorySize=16m -XX:MaxMetaspaceSize=64m -XX:CompressedClassSpaceSize=16m -XX:ReservedCodeCacheSize=16m -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -Djava.awt.headless=true -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Dspring.jmx.enabled=false -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -XX:+UnlockExperimentalVMOptions -XX:+UseContainerSupport"
 
-# Health check using PORT environment variable
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8080}/actuator/health || exit 1
+# Health check for port 10000
+HEALTHCHECK --interval=45s --timeout=15s --start-period=120s --retries=3 \
+    CMD curl -f http://localhost:10000/actuator/health || exit 1
 
 # Use the optimized startup script for Render deployment
 CMD ["./render-start.sh"]
