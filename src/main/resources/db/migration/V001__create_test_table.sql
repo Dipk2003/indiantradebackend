@@ -1,15 +1,17 @@
 -- Simple test migration to verify Flyway is working
--- This will create a simple test table
+-- PostgreSQL compatible version
 
 CREATE TABLE flyway_test (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_flyway_test_name (name)
-) ENGINE=InnoDB COMMENT='Test table to verify Flyway migration';
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create index (PostgreSQL syntax)
+CREATE INDEX idx_flyway_test_name ON flyway_test (name);
 
 -- Insert test data
 INSERT INTO flyway_test (name) VALUES ('Flyway Migration Test');
 
--- Log migration completion
-SELECT 'V001: Test migration completed successfully' as status;
+-- Add comment to table
+COMMENT ON TABLE flyway_test IS 'Test table to verify Flyway migration';
