@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElastic
 import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(exclude = {
     RedisRepositoriesAutoConfiguration.class,
@@ -16,6 +18,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     ReactiveElasticsearchRepositoriesAutoConfiguration.class
 })
 @EnableJpaRepositories(basePackages = "com.itech.itech_backend.modules")
+@EnableAsync
+@EnableScheduling
 @EntityScan(basePackages = {
     "com.itech.itech_backend.modules.core",
     "com.itech.itech_backend.modules.buyer", 

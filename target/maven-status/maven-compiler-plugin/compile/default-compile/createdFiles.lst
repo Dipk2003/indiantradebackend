@@ -4,6 +4,7 @@ com\itech\itech_backend\modules\support\model\ChatAttachment.class
 com\itech\itech_backend\modules\buyer\model\Inquiry.class
 com\itech\itech_backend\modules\document\service\DocumentService.class
 com\itech\itech_backend\modules\shared\dto\LeadPurchaseDto.class
+com\itech\itech_backend\services\KeepAliveService.class
 com\itech\itech_backend\modules\vendor\model\VendorPackageFeature$VendorPackageFeatureBuilder.class
 com\itech\itech_backend\modules\product\model\ProductVideo$ProductVideoBuilder.class
 com\itech\itech_backend\modules\shared\dto\RegisterRequestDto.class
@@ -196,6 +197,7 @@ com\itech\itech_backend\modules\order\repository\OrderItemRepository.class
 com\itech\itech_backend\modules\shared\repository\ApiLogRepository.class
 com\itech\itech_backend\modules\shared\dto\ExcelImportDto.class
 com\itech\marketplace\service\TransactionService.class
+com\itech\itech_backend\config\RestTemplateConfig.class
 com\itech\itech_backend\modules\directory\model\ContactInquiry$InquiryStatus.class
 com\itech\itech_backend\modules\shared\dto\CategoryHierarchyDto$SubCategoryHierarchyDto.class
 com\itech\itech_backend\modules\buyer\model\BuyerProfile$BuyerType.class

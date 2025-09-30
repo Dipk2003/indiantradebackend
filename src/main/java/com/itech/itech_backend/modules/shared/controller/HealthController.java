@@ -1,13 +1,16 @@
 package com.itech.itech_backend.modules.shared.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,17 +32,43 @@ public class HealthController {
     
     @Autowired
     private Environment env;
+    
+    @Value("${app.keep-alive.enabled:true}")
+    private boolean keepAliveEnabled;
+    
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(HealthController.class);
 
     /**
-     * Root health endpoint for simple frontend checks
+     * Root health endpoint for simple frontend checks and Keep-Alive pings
      */
     @GetMapping("/health")
-    public ResponseEntity<Map<String, Object>> rootHealth() {
-        return health();
+    public ResponseEntity<Map<String, Object>> rootHealth(HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        String timestamp = LocalDateTime.now().format(formatter);
+        String userAgent = request.getHeader("User-Agent");
+        String clientIP = getClientIP(request);
+        
+        // Check if this is a keep-alive ping (Java User-Agent)
+        boolean isKeepAlivePing = userAgent != null && userAgent.toLowerCase().contains("java");
+        
+        if (isKeepAlivePing) {
+            logger.info("Keep-Alive ping received from: {} at {}", clientIP, timestamp);
+        } else {
+            logger.debug("Health check from: {} (User-Agent: {}) at {}", clientIP, userAgent, timestamp);
+        }
+        
+        response.put("status", "UP");
+        response.put("application", "itech-backend");
+        response.put("timestamp", timestamp);
+        response.put("keepAliveEnabled", keepAliveEnabled);
+        response.put("message", "Service is healthy and running");
+        
+        return ResponseEntity.ok(response);
     }
 
     /**
-     * Main health endpoint - Frontend compatible
+     * Main health endpoint - Frontend compatible with Keep-Alive information
      */
     @GetMapping("/api/health")
     public ResponseEntity<Map<String, Object>> health() {
@@ -47,10 +76,11 @@ public class HealthController {
         
         try {
             // Basic system info
-            healthInfo.put("status", "healthy");
-            healthInfo.put("timestamp", LocalDateTime.now().toString());
-            healthInfo.put("application", "iTech Backend");
-            healthInfo.put("version", "2.0.0");
+            healthInfo.put("status", "UP");
+            healthInfo.put("timestamp", LocalDateTime.now().format(formatter));
+            healthInfo.put("application", "itech-backend");
+            healthInfo.put("keepAliveService", keepAliveEnabled ? "ACTIVE" : "INACTIVE");
+            healthInfo.put("version", "1.0.0");
             healthInfo.put("environment", env.getProperty("spring.profiles.active", "development"));
             healthInfo.put("port", env.getProperty("server.port", "8080"));
             
@@ -117,6 +147,34 @@ public class HealthController {
             response.put("app", "itech-backend");
         }
         
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * Root endpoint with basic service info
+     */
+    @GetMapping("/")
+    public ResponseEntity<Map<String, Object>> root() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("service", "itech-backend");
+        response.put("status", "Running");
+        response.put("message", "IndianTradeMart Backend API is live!");
+        response.put("timestamp", LocalDateTime.now().format(formatter));
+        return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * Keep-Alive service status endpoint
+     */
+    @GetMapping("/keep-alive/status")
+    public ResponseEntity<Map<String, Object>> keepAliveStatus() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("keepAliveEnabled", keepAliveEnabled);
+        response.put("status", keepAliveEnabled ? "ACTIVE" : "INACTIVE");
+        response.put("message", keepAliveEnabled ? 
+            "Keep-Alive service is preventing the application from sleeping" : 
+            "Keep-Alive service is disabled");
+        response.put("timestamp", LocalDateTime.now().format(formatter));
         return ResponseEntity.ok(response);
     }
     
@@ -219,5 +277,23 @@ public class HealthController {
         }
         
         return dbHealth;
+    }
+    
+    /**
+     * Get client IP address from request
+     */
+    private String getClientIP(HttpServletRequest request) {
+        String clientIP = request.getHeader("X-Forwarded-For");
+        if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+            clientIP = request.getHeader("X-Real-IP");
+        }
+        if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+            clientIP = request.getRemoteAddr();
+        }
+        // Handle multiple IPs in X-Forwarded-For header
+        if (clientIP != null && clientIP.contains(",")) {
+            clientIP = clientIP.split(",")[0].trim();
+        }
+        return clientIP != null ? clientIP : "unknown";
     }
 }
