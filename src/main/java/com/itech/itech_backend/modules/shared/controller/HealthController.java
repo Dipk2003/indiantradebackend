@@ -151,19 +151,6 @@ public class HealthController {
     }
     
     /**
-     * Root endpoint with basic service info
-     */
-    @GetMapping("/")
-    public ResponseEntity<Map<String, Object>> root() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("service", "itech-backend");
-        response.put("status", "Running");
-        response.put("message", "IndianTradeMart Backend API is live!");
-        response.put("timestamp", LocalDateTime.now().format(formatter));
-        return ResponseEntity.ok(response);
-    }
-    
-    /**
      * Keep-Alive service status endpoint
      */
     @GetMapping("/keep-alive/status")
