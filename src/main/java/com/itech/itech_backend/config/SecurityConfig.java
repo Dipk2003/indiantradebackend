@@ -94,7 +94,7 @@ public class SecurityConfig {
         
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow all localhost variations for development + Render URL
+        // Allow all localhost variations for development + Production URLs
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
             "http://localhost:3001", 
@@ -103,7 +103,8 @@ public class SecurityConfig {
             "https://localhost:3000",
             "https://localhost:3001",
             "https://indiantradebackend.onrender.com",
-            "https://indiantrademart.com"
+            "https://indiantrademart.com",
+            "https://indiantrademar.netlify.app"
         ));
         
         // Allow all HTTP methods
