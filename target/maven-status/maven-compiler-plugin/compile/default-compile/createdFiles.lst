@@ -798,6 +798,7 @@ com\itech\itech_backend\modules\city\model\City$CityBuilder.class
 com\itech\itech_backend\modules\payment\model\Transaction$TransactionType.class
 com\itech\itech_backend\modules\support\controller\ChatController.class
 com\itech\itech_backend\modules\company\dto\UpdateCompanyDto.class
+com\itech\itech_backend\modules\core\controller\ApiAuthController.class
 com\itech\itech_backend\modules\core\model\User$UserBuilder.class
 com\itech\marketplace\dto\FinancialReportDto$RevenueDataPoint.class
 com\itech\marketplace\dto\RefundAnalyticsDto$RefundTrend$RefundTrendBuilder.class

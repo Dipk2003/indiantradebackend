@@ -150,6 +150,7 @@ D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\company
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\company\repository\CompanyRepository.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\company\service\CompanyService.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\company\service\CompanyServiceImpl.java
+D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\core\controller\ApiAuthController.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\core\controller\AuthController.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\core\controller\KycDocumentController.java
 D:\indiantradebackend-main\src\main\java\com\itech\itech_backend\modules\core\controller\PanVerificationController.java

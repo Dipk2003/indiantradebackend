@@ -18,8 +18,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.http.HttpMethod;
+import org.springframework.beans.factory.annotation.Value;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +30,9 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    
+    @Value("${ALLOWED_ORIGINS:http://localhost:3000,https://localhost:3000}")
+    private String allowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -91,21 +96,36 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         System.out.println("🌐 Configuring CORS for Frontend-Backend Integration");
+        System.out.println("🔧 ALLOWED_ORIGINS from environment: " + allowedOrigins);
         
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow all localhost variations for development + Production URLs
-        configuration.setAllowedOrigins(Arrays.asList(
+        // Parse environment variable for allowed origins
+        List<String> origins = new ArrayList<>();
+        
+        // Add localhost for development
+        origins.addAll(Arrays.asList(
             "http://localhost:3000",
             "http://localhost:3001", 
             "http://127.0.0.1:3000",
             "http://127.0.0.1:3001",
             "https://localhost:3000",
-            "https://localhost:3001",
-            "https://indiantradebackend.onrender.com",
-            "https://indiantrademart.com",
-            "https://indiantrademar.netlify.app"
+            "https://localhost:3001"
         ));
+        
+        // Add origins from environment variable
+        if (allowedOrigins != null && !allowedOrigins.trim().isEmpty()) {
+            String[] envOrigins = allowedOrigins.split(",");
+            for (String origin : envOrigins) {
+                String trimmedOrigin = origin.trim();
+                if (!trimmedOrigin.isEmpty()) {
+                    origins.add(trimmedOrigin);
+                    System.out.println("✅ Added CORS origin: " + trimmedOrigin);
+                }
+            }
+        }
+        
+        configuration.setAllowedOrigins(origins);
         
         // Allow all HTTP methods
         configuration.setAllowedMethods(Arrays.asList(
